@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/presetLayout"
+    android:orientation="vertical"
+	android:layout_width="fill_parent" android:layout_height="fill_parent">
+	<LinearLayout android:layout_width="fill_parent"
+		android:layout_height="wrap_content" android:orientation="horizontal"
+		android:gravity="center_vertical">
+
+
+		<Button android:text="@string/help" android:id="@+id/MenuHelp"
+			android:layout_width="65dip" android:layout_height="wrap_content"
+			android:layout_weight="0"></Button>
+
+		<TextView android:text="@+id/TextView01" android:id="@+id/TextView01"
+			android:layout_width="fill_parent" android:layout_height="wrap_content"
+			android:gravity="center" android:layout_weight="4"></TextView>
+
+		<Button android:text="@string/create" android:id="@+id/MenuCreate"
+			android:layout_width="65dip" android:layout_height="wrap_content"
+			android:layout_weight="0"></Button>
+
+	</LinearLayout>
+
+	<ListView android:id="@+id/presetListView" android:layout_width="fill_parent"
+		android:layout_height="fill_parent" android:layout_weight="4" />
+
+	<TextView android:layout_width="fill_parent"
+		android:layout_height="wrap_content" android:text="Share"
+		android:layout_weight="0" />
+</LinearLayout>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:bb="http://schemas.android.com/apk/res/com.ihunda.android.binauralbeat"
+    android:id="@+id/inProgramLayout"
+    android:orientation="vertical"
+	android:layout_width="fill_parent" android:layout_height="fill_parent">
+	<LinearLayout android:layout_width="fill_parent"
+		android:layout_height="wrap_content" android:orientation="horizontal"
+		android:gravity="center_vertical">
+
+
+		<Button android:text="@string/back" android:id="@+id/MenuBack"
+			android:layout_width="65dip" android:layout_height="wrap_content"
+			android:layout_weight="0"></Button>
+
+		<TextView android:text="@+id/TextView01" android:id="@+id/TextView01"
+			android:layout_width="fill_parent" android:layout_height="wrap_content"
+			android:gravity="center" android:layout_weight="4"></TextView>
+
+		<Button android:text="@string/pause" android:id="@+id/MenuPause"
+			android:layout_width="65dip" android:layout_height="wrap_content"
+			android:layout_weight="0"></Button>
+
+	</LinearLayout>
+
+	<com.ihunda.android.binauralbeat.VizualizationView android:id="@+id/VisualizationView" android:layout_width="fill_parent"
+		android:layout_height="fill_parent" android:layout_weight="4"/>
+	
+	<TextView android:id="@+id/Status"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content" android:text="timing..."
+		android:layout_weight="0" />
+</LinearLayout>

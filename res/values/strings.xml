@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hello">Hello World, Main!</string>
+    <string name="app_name">Binaural Beat</string>
+    <string name="back">Back</string>
+    <string name="next">Next</string>
+    <string name="help">Help</string>
+    <string name="create">Create</string>
+    <string name="pause">Pause</string>
+    <string name="info_timing" formatted="false">Main Voice %.2f Hz, Period %s:%s/%s:%s</string>
+</resources>

@@ -3,7 +3,6 @@ package com.ihunda.android.binauralbeat.viz;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.util.Log;
 
 import com.ihunda.android.binauralbeat.Visualization;
 

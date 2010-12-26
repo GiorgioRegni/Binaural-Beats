@@ -14,8 +14,12 @@ import android.view.View.OnClickListener;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationUtils;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 
 public class Main extends Activity {
@@ -34,10 +38,13 @@ public class Main extends Activity {
 	
 	private static final long ANIM_TIME_MS = 600;
 	
-	private LinearLayout mPresetList;
+	private LinearLayout mPresetView;
 	private LinearLayout mInProgram;
 	private VizualizationView mVizV;
 	private TextView mStatus;
+	private ListView mPresetList;
+	private ArrayList<String> lv_preset_arr;
+	private ArrayList<Program> all_programs;
 	
 	private appState state;
 	
@@ -72,7 +79,6 @@ public class Main extends Activity {
         b.setOnClickListener(new OnClickListener() {
 			
 			public void onClick(View v) {
-				startProgram(DefaultProgramsBuilder.SELF_HYPNOSIS());
 			}
 		});
         
@@ -84,27 +90,50 @@ public class Main extends Activity {
 			}
 		});
         
-        
         mInProgram = (LinearLayout) findViewById(R.id.inProgramLayout);
-        mPresetList = (LinearLayout) findViewById(R.id.presetLayout);
+        mPresetView = (LinearLayout) findViewById(R.id.presetLayout);
         mVizV = (VizualizationView) findViewById(R.id.VisualizationView);
         mStatus = (TextView) findViewById(R.id.Status);
         
+        setupProgramList();
+        
+        mPresetList = (ListView) findViewById(R.id.presetListView);
+        mPresetList.setAdapter(new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1, lv_preset_arr));
+        mPresetList.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
+					long arg3) {
+				startProgram(all_programs.get(arg2));
+			}
+		});
+        
+        
         state = appState.NONE;
         goToState(appState.SETUP);
+    }
+    
+    private void setupProgramList() {
+    	lv_preset_arr = new ArrayList<String>();
+    	lv_preset_arr.add(getString(R.string.program_self_hypnosis));
+    	lv_preset_arr.add(getString(R.string.program_highest_mental_activity));
+    	
+    	all_programs = new ArrayList<Program>();
+    	all_programs.add(DefaultProgramsBuilder.SELF_HYPNOSIS(new Program(getString(R.string.program_self_hypnosis))));
+    	all_programs.add(DefaultProgramsBuilder.AWAKE(new Program(getString(R.string.program_self_hypnosis))));
     }
 
 	private void goToState(appState newState) {
 		switch(state) {
 		case NONE:
 			mInProgram.setVisibility(View.GONE);
-			mPresetList.setVisibility(View.GONE);
+			mPresetView.setVisibility(View.GONE);
 			break;
 		case INPROGRAM:
 			runGoneAnimationOnView(mInProgram);
 			break;
 		case SETUP:
-			runGoneAnimationOnView(mPresetList);
+			runGoneAnimationOnView(mPresetView);
 			break;
 		default:
 			break;
@@ -113,7 +142,7 @@ public class Main extends Activity {
 		state = newState;
 		switch(state) {
 		case SETUP:
-			runComeBackAnimationOnView(mPresetList);
+			runComeBackAnimationOnView(mPresetView);
 			break;
 		case INPROGRAM:
 			runComeBackAnimationOnView(mInProgram);

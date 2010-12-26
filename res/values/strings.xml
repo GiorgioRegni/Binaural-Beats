@@ -8,4 +8,8 @@
     <string name="create">Create</string>
     <string name="pause">Pause</string>
     <string name="info_timing" formatted="false">Main Voice %.2f Hz, Period %s:%s/%s:%s</string>
+    
+    <string name="program_self_hypnosis">Self Hypnosis</string>
+    <string name="program_highest_mental_activity">Highest mental activity</string>
+    
 </resources>

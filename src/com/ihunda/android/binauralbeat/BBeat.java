@@ -50,6 +50,7 @@ public class BBeat extends Activity {
 	
 	private int soundA440;
 	private int soundWhiteNoise;
+	private int soundUnity;
 	private SoundPool mSoundPool;
 	
 	private NotificationManager mNotificationManager;
@@ -75,6 +76,7 @@ public class BBeat extends Activity {
         mSoundPool = new SoundPool(MAX_STREAMS, AudioManager.STREAM_MUSIC, 0);
         soundA440 = mSoundPool.load(this, R.raw.a440, 1);
         soundWhiteNoise = mSoundPool.load(this, R.raw.whitenoise, 1);
+        soundUnity = mSoundPool.load(this, R.raw.unity, 1);
         
         Button b = (Button) findViewById(R.id.MenuSetup);
         b.setOnClickListener(new OnClickListener() {
@@ -118,10 +120,12 @@ public class BBeat extends Activity {
     	lv_preset_arr = new ArrayList<String>();
     	lv_preset_arr.add(getString(R.string.program_self_hypnosis));
     	lv_preset_arr.add(getString(R.string.program_highest_mental_activity));
+    	lv_preset_arr.add(getString(R.string.program_unity));
     	
     	all_programs = new ArrayList<Program>();
     	all_programs.add(DefaultProgramsBuilder.SELF_HYPNOSIS(new Program(getString(R.string.program_self_hypnosis))));
     	all_programs.add(DefaultProgramsBuilder.AWAKE(new Program(getString(R.string.program_highest_mental_activity))));
+    	all_programs.add(DefaultProgramsBuilder.UNITY(new Program(getString(R.string.program_unity))));
     }
 
 	private void goToState(appState newState) {
@@ -238,6 +242,9 @@ public class BBeat extends Activity {
 		switch(background) {
 		case WHITE_NOISE:
 			playingBackground = mSoundPool.play(soundWhiteNoise, vol, vol, 1, -1, 1.0f);
+			break;
+		case UNITY:
+			playingBackground = mSoundPool.play(soundUnity, vol, vol, 1, -1, 1.0f);
 			break;
 		default:
 			playingBackground = -1;

@@ -8,10 +8,10 @@ import com.ihunda.android.binauralbeat.Visualization;
 
 public class SpiralDots implements Visualization {
 
-	private static final int COLOR_1 = Color.rgb(0x77, 0x88, 0x77);
-	private static final int COLOR_2_R = 0xaa;
-	private static final int COLOR_2_G = 0xbb;
-	private static final int COLOR_2_B = 0xbb;
+	private static final int COLOR_1 = Color.rgb(0x99, 0xee, 0x99);
+	private static final int COLOR_2_R = 0x99;
+	private static final int COLOR_2_G = 0xee;
+	private static final int COLOR_2_B = 0x99;
 	private static final int COLOR_BG = Color.rgb(0, 0, 0);
 	private static final int DOT_RADIUS = 10;
 	
@@ -32,7 +32,7 @@ public class SpiralDots implements Visualization {
 		int r = (Math.min(width, height) - DOT_RADIUS) / 2;
 		double ratio;
 		double phase;
-		double dperiod = 6 * period;
+		double dperiod = 8 * period;
 		
 		ratio = (now % dperiod) / dperiod;
 		phase = - ratio * 2 * Math.PI;
@@ -40,7 +40,7 @@ public class SpiralDots implements Visualization {
 		
 		pLed.setColor(COLOR_1);
 		
-		double inc = 0.15;
+		double inc = 0.20;
 		for (double i=0; i<1; i+=inc) {
 			float x = width/2 + (int) (Math.cos(phase + 2*Math.PI*i*4)*r*i);
 			float y = height/2 + (int) (Math.sin(phase + 2*Math.PI*i*4)*r*i);

@@ -27,7 +27,7 @@ public class Leds implements Visualization {
 	
 	public void redraw(Canvas c, int width, int height, float now,
 			float totalTime) {
-		int ledRadius = width / 10;
+		int ledRadius = width / 8;
 		float ratio;
 		float dperiod = period * 2 * 2 * 2;
 		

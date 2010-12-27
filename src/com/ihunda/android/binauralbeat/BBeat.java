@@ -22,7 +22,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
-public class Main extends Activity {
+public class BBeat extends Activity {
 	
 	enum eState {START, RUNNING, PAUSE, END};
 	enum appState {NONE, SETUP, INPROGRAM};
@@ -59,6 +59,7 @@ public class Main extends Activity {
 	
 	private Vector<Integer> playingStreams = new Vector<Integer>(MAX_STREAMS);
 	private int playingVoices[];
+	private int playingBackground = -1;
 	
     /** Called when the activity is first created. */
     @Override
@@ -143,9 +144,12 @@ public class Main extends Activity {
 		switch(state) {
 		case SETUP:
 			runComeBackAnimationOnView(mPresetView);
+			mPresetList.invalidate();
+			mVizV.setVisibility(View.GONE);
 			break;
 		case INPROGRAM:
 			runComeBackAnimationOnView(mInProgram);
+			mVizV.setVisibility(View.VISIBLE);
 			break;
 		}
 	}
@@ -225,6 +229,27 @@ public class Main extends Activity {
 		int[] res = {idLeft, idRight};
 		
 		return res;
+	}
+	
+	private void playBackgroundSample(SoundLoop background, float vol) {
+		switch(background) {
+		case WHITE_NOISE:
+			playingBackground = mSoundPool.play(soundWhiteNoise, vol, vol, 1, -1, 1.0f);
+			break;
+		default:
+			playingBackground = -1;
+			break;
+		}
+		
+		if (playingBackground != -1)
+			registerStream(playingBackground);
+	}
+	
+	private void stopBackgroundSample() {
+		if (playingBackground != -1) {
+			mSoundPool.stop(playingBackground);
+		}
+		playingBackground = -1;
 	}
 	
 	/**
@@ -307,8 +332,9 @@ public class Main extends Activity {
 			mVizV.startVisualization(p.getV(), p.getLength());
 			mVizV.setFrequency(p.getVoices().get(0).freqStart);
 			playVoices(p.voices);
+			playBackgroundSample(p.background, p.getBackgroundvol());
 		}
-		
+
 		private void inPeriod(Period p, float pos) {
 			float freq = skewVoices(p.voices, pos, p.length);
 
@@ -326,6 +352,7 @@ public class Main extends Activity {
 		
 		private void endPeriod() {
 			stopAllVoices();
+			stopBackgroundSample();
 			mVizV.stopVisualization();
 		}
 		

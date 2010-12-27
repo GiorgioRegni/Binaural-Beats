@@ -123,9 +123,10 @@ public class VizualizationView extends SurfaceView implements Callback {
 		Canvas c = null;
 		try {
 			c = mSurfaceHolder.lockCanvas(null);
-			synchronized (mSurfaceHolder) {
-				c.drawColor(Color.BLACK);
-			} 
+			if (c != null)
+				synchronized (mSurfaceHolder) {
+					c.drawColor(Color.TRANSPARENT);
+				} 
 		}
 		finally {
 			// do this in a finally so that if an exception is thrown

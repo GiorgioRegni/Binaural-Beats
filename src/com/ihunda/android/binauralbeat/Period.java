@@ -10,24 +10,17 @@ public class Period {
 	ArrayList<BinauralBeatVoice> voices;
 	
 	SoundLoop  background;
-	SoundLoop  effect;
+	private float backgroundvol;
 	
 	Visualization v;
 	
-	/**
-	 * 0 for always looping effect,
-	 * any other value controls when to replay effect in seconds
-	 */
-	float effectPeriod;
-
 	public Period(int length, SoundLoop background,
-			SoundLoop effect, Visualization v, float effectPeriod) {
+			float backgroundvol, Visualization v) {
 		super();
 		this.length = length;
 		this.background = background;
-		this.effect = effect;
+		this.setBackgroundvol(backgroundvol);
 		this.v = v;
-		this.effectPeriod = effectPeriod;
 	}
 
 	public int getLength() {
@@ -41,25 +34,17 @@ public class Period {
 	public SoundLoop getBackground() {
 		return background;
 	}
-
+	
 	public void setBackground(SoundLoop background) {
 		this.background = background;
 	}
 
-	public SoundLoop getEffect() {
-		return effect;
+	public void setBackgroundvol(float backgroundvol) {
+		this.backgroundvol = backgroundvol;
 	}
 
-	public void setEffect(SoundLoop effect) {
-		this.effect = effect;
-	}
-
-	public float getEffectPeriod() {
-		return effectPeriod;
-	}
-
-	public void setEffectPeriod(float effectPeriod) {
-		this.effectPeriod = effectPeriod;
+	public float getBackgroundvol() {
+		return backgroundvol;
 	}
 
 	public Visualization getV() {

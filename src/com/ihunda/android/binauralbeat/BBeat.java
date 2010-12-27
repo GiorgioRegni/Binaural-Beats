@@ -76,7 +76,7 @@ public class BBeat extends Activity {
         soundA440 = mSoundPool.load(this, R.raw.a440, 1);
         soundWhiteNoise = mSoundPool.load(this, R.raw.whitenoise, 1);
         
-        Button b = (Button) findViewById(R.id.MenuCreate);
+        Button b = (Button) findViewById(R.id.MenuSetup);
         b.setOnClickListener(new OnClickListener() {
 			
 			public void onClick(View v) {
@@ -121,7 +121,7 @@ public class BBeat extends Activity {
     	
     	all_programs = new ArrayList<Program>();
     	all_programs.add(DefaultProgramsBuilder.SELF_HYPNOSIS(new Program(getString(R.string.program_self_hypnosis))));
-    	all_programs.add(DefaultProgramsBuilder.AWAKE(new Program(getString(R.string.program_self_hypnosis))));
+    	all_programs.add(DefaultProgramsBuilder.AWAKE(new Program(getString(R.string.program_highest_mental_activity))));
     }
 
 	private void goToState(appState newState) {
@@ -190,6 +190,9 @@ public class BBeat extends Activity {
 	private void startProgram(Program p) {
 		if (programFSM != null)
 			programFSM.stopProgram();
+		
+		((TextView) findViewById(R.id.programName)).setText(p.getName());
+		
 		goToState(appState.INPROGRAM);
 		programFSM = new RunProgram(p, mHandler);
 	}

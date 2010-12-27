@@ -13,6 +13,18 @@ public class Program {
 		seq = new ArrayList<Period>();
 	}
 	
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
 	public void setDescription(String d) {
 		description = d;
 	}

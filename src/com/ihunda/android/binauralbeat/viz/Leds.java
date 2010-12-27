@@ -29,17 +29,17 @@ public class Leds implements Visualization {
 			float totalTime) {
 		int ledRadius = width / 10;
 		float ratio;
-		float dperiod = period * 2 * 2;
+		float dperiod = period * 2 * 2 * 2;
 		
 		ratio = (now % dperiod) / dperiod;
 		
 		c.drawColor(COLOR_BG);
 		
 		if (ratio > 0.5f) {
-			c.drawCircle(width/5, height/2, (int) (ledRadius*(ratio-0.5f)*2f), pLed);
+			c.drawCircle(width/5, height/3, (int) (ledRadius*(ratio-0.5f)*2f), pLed);
 		}
 		else {
-			c.drawCircle(4*width/5, height/2, (int) (ledRadius*(0.5f-ratio)*2f), pLed);
+			c.drawCircle(4*width/5, 2*height/3, (int) (ledRadius*(0.5f-ratio)*2f), pLed);
 		}
 	}
 

@@ -12,11 +12,11 @@
 			android:layout_width="65dip" android:layout_height="wrap_content"
 			android:layout_weight="0"></Button>
 
-		<TextView android:text="@+id/TextView01" android:id="@+id/TextView01"
+		<TextView android:text="@string/app_name" android:id="@+id/TextView01"
 			android:layout_width="fill_parent" android:layout_height="wrap_content"
 			android:gravity="center" android:layout_weight="4"></TextView>
 
-		<Button android:text="@string/create" android:id="@+id/MenuCreate"
+		<Button android:text="@string/setup" android:id="@+id/MenuSetup"
 			android:layout_width="65dip" android:layout_height="wrap_content"
 			android:layout_weight="0"></Button>
 

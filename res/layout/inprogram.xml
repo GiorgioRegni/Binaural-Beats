@@ -13,7 +13,7 @@
 			android:layout_width="65dip" android:layout_height="wrap_content"
 			android:layout_weight="0"></Button>
 
-		<TextView android:text="@+id/TextView01" android:id="@+id/TextView01"
+		<TextView android:id="@+id/programName"
 			android:layout_width="fill_parent" android:layout_height="wrap_content"
 			android:gravity="center" android:layout_weight="4"></TextView>
 

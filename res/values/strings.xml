@@ -6,6 +6,7 @@
     <string name="next">Next</string>
     <string name="help">Help</string>
     <string name="create">Create</string>
+    <string name="setup">Setup</string>
     <string name="pause">Pause</string>
     <string name="info_timing" formatted="false">Main Voice %.2f Hz, Period %s:%s/%s:%s</string>
     

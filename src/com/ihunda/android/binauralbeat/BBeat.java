@@ -26,13 +26,14 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.ihunda.android.binauralbeat.Note.NoteK;
+
 public class BBeat extends Activity {
 	
 	enum eState {START, RUNNING, PAUSE, END};
 	enum appState {NONE, SETUP, INPROGRAM};
 	
 	private static final int MAX_STREAMS = 10;
-	public static final float A4_FREQ = 440.00f;
 
 	public static final float W_DELTA_FREQ = 2.00f;
 	public static final float W_THETA_FREQ = 6.00f;
@@ -56,6 +57,8 @@ public class BBeat extends Activity {
 	private int soundWhiteNoise;
 	private int soundUnity;
 	private SoundPool mSoundPool;
+	
+	private Note A440 = new Note(NoteK.A, 4);
 	
 	private NotificationManager mNotificationManager;
 	private static final int NOTIFICATION_STARTED = 1;
@@ -239,21 +242,31 @@ public class BBeat extends Activity {
 			 playingStreams.remove(0);
     }
 	
+    
+    /*
+     * Return the speed ratio to use to skew the basic note on the
+     * left earbud to play a given note
+     */
+	private float getSpeedRatioLeft(Note base) {
+		return (float) (base.getPitchFreq() / A440.getPitchFreq());
+	}
+	
     /*
      * Return the speed ratio to use to skew the basic note on the
      * right earbud to play a binaural beat of frequency
      */
-	private float getSpeedRatioRight(float binaural_freq) {
-		float goal = A4_FREQ + binaural_freq;
+	private float getSpeedRatioRight(Note base, float binaural_freq) {
+		double baseFreq = base.getPitchFreq();
+		double goal = baseFreq + binaural_freq;
 		
-		return goal / A4_FREQ;
+		return (float) (goal / A440.getPitchFreq());
 	}
     
-	private int[] playBeat(float binaural_freq, float volume) {
+	private int[] playBeat(Note base, float binaural_freq, float volume) {
 		int idLeft, idRight;
 		
-		idLeft = mSoundPool.play(soundA440, volume, 0, 1, -1, 1.0f);
-		idRight = mSoundPool.play(soundA440, 0, volume, 1, -1, getSpeedRatioRight(binaural_freq));
+		idLeft = mSoundPool.play(soundA440, volume, 0, 1, -1, getSpeedRatioLeft(base));
+		idRight = mSoundPool.play(soundA440, 0, volume, 1, -1, getSpeedRatioRight(base, binaural_freq));
 		registerStream(idLeft);
 		registerStream(idRight);
 		
@@ -294,10 +307,12 @@ public class BBeat extends Activity {
 		playingVoices = new int[voices.size()*2];
 		
 		int i = 0;
+		int voiceId = 0;
 		for (BinauralBeatVoice b: voices) {
-			int[] ids = playBeat(b.freqStart, b.volume);
+			int[] ids = playBeat(voicetoNote(voiceId), b.freqStart, b.volume);
 			playingVoices[i++] = ids[0];
 			playingVoices[i++] = ids[1];
+			voiceId++;
 		}
 		
 	}
@@ -311,6 +326,7 @@ public class BBeat extends Activity {
 	protected float skewVoices(ArrayList<BinauralBeatVoice> voices, float pos, float length) {
 		int i = 0;
 		float res = 1;
+		int voiceId = 0;
 		
 		for (BinauralBeatVoice v: voices) {
 			@SuppressWarnings("unused")
@@ -321,7 +337,8 @@ public class BBeat extends Activity {
 			if (i == 2)
 				res = ratio*pos + v.freqStart;
 			//mSoundPool.setRate(idLeft, rate);
-			mSoundPool.setRate(idRight, getSpeedRatioRight(ratio*pos + v.freqStart));
+			mSoundPool.setRate(idRight, getSpeedRatioRight(voicetoNote(voiceId), ratio*pos + v.freqStart));
+			voiceId++;
 		}
 		
 		return res;
@@ -333,6 +350,25 @@ public class BBeat extends Activity {
 	protected void stopAllVoices() {
 		for (int i: playingVoices) {
 			mSoundPool.stop(i);
+		}
+	}
+	
+	private Note voicetoNote(int i) {
+		switch (i) {
+		case 0:
+			return new Note(NoteK.A);
+		case 1:
+			return new Note(NoteK.C);
+		case 2:
+			return new Note(NoteK.E);
+		case 3:
+			return new Note(NoteK.G);
+		case 4:
+			return new Note(NoteK.C, 5);
+		case 5:
+			return new Note(NoteK.E, 6);
+		default:
+			return new Note(NoteK.A, 7);	
 		}
 	}
 	

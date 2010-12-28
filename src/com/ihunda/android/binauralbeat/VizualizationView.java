@@ -115,7 +115,7 @@ public class VizualizationView extends SurfaceView implements Callback {
 		try {
 			c = mSurfaceHolder.lockCanvas(null);
 			synchronized (mSurfaceHolder) {
-				if (c != null) {
+				if (c != null && v != null ) {
 					v.redraw(c, width, height, now, length);
 				}
 			} 

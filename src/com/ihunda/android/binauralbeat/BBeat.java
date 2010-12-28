@@ -37,7 +37,7 @@ public class BBeat extends Activity {
 	enum eState {START, RUNNING, PAUSE, END};
 	enum appState {NONE, SETUP, INPROGRAM};
 	
-	private static final int MAX_STREAMS = 10;
+	private static final int MAX_STREAMS = 20;
 
 	public static final float W_DELTA_FREQ = 2.00f;
 	public static final float W_THETA_FREQ = 6.00f;
@@ -77,9 +77,9 @@ public class BBeat extends Activity {
 	private int playingBackground = -1;
 	
 	private static final String SOURCE_CODE_URL = "http://bit.ly/BBeats";
-	private static final String COMMUNITY_URL = "http://bit.ly/BBeatsBlog";
+	private static final String BLOG_URL = "http://bit.ly/BBeatsBlog";
 	private static final String HELP_URL = "http://bit.ly/BBeatsHelp";
-	private static final String FACEBOOK_URL = "http://www.facebook.com/pages/Ihunda/121737064536801";
+	private static final String FACEBOOK_URL = "http://www.facebook.com/pages/Binaural-Beat-Therapy/121737064536801";
 	
     /** Called when the activity is first created. */
     @Override
@@ -125,6 +125,13 @@ public class BBeat extends Activity {
         b.setOnClickListener(new OnClickListener() {
         	public void onClick(View v) {
         		gotoFacebook();
+        	}
+        });
+        
+        TextView t = (TextView) findViewById((R.id.jointhecommunityText));
+        t.setOnClickListener(new OnClickListener() {
+        	public void onClick(View v) {
+        		gotoBlog();
         	}
         });
         
@@ -291,6 +298,7 @@ public class BBeat extends Activity {
 	private void stopProgram() {
 		programFSM.stopProgram();
 		programFSM = null;
+		panic();
 		goToState(appState.SETUP);
 	}
 	
@@ -349,7 +357,7 @@ public class BBeat extends Activity {
 			break;
 		}
 		
-		if (playingBackground != -1)
+		if (playingBackground > 0)
 			registerStream(playingBackground);
 	}
 	
@@ -597,8 +605,8 @@ public class BBeat extends Activity {
     		return String.format("0%1d", t);
     }
 	
-    private void gotoCommunity() {
-    	gotoURL(COMMUNITY_URL);
+    private void gotoBlog() {
+    	gotoURL(BLOG_URL);
     }
     
     private void gotoSourceCode() {

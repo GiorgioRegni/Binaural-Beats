@@ -10,7 +10,7 @@ import android.view.SurfaceView;
 
 public class VizualizationView extends SurfaceView implements Callback {
 	
-	protected static final long DRAW_REFRESH_INTERVAL_MS = 1000 / 20;
+	protected static final long DRAW_REFRESH_INTERVAL_NS = 1000 * 1000 * 1000 / 20;
 	private SurfaceHolder mSurfaceHolder;
 	private int width;
 	private int height;
@@ -153,17 +153,17 @@ public class VizualizationView extends SurfaceView implements Callback {
 
 		public void run() {
 			while(running == true) {
-				long now = System.currentTimeMillis();
+				long now = System.nanoTime();
 				drawMain(pos, length);
 				
-				long elapsed = System.currentTimeMillis() - now;
-				while(elapsed < DRAW_REFRESH_INTERVAL_MS) {
+				long elapsed = System.nanoTime() - now;
+				while(elapsed < DRAW_REFRESH_INTERVAL_NS) {
 					try {
-						Thread.sleep(DRAW_REFRESH_INTERVAL_MS - elapsed, 0);
+						Thread.sleep((DRAW_REFRESH_INTERVAL_NS - elapsed) / 1000 / 1000, 0);
 					} catch (InterruptedException e) {
 
 					}
-					elapsed = System.currentTimeMillis() - now;
+					elapsed = System.nanoTime() - now;
 				}
 			}
 		}

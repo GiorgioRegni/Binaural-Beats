@@ -23,9 +23,12 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import com.ihunda.android.binauralbeat.Note.NoteK;
 
@@ -49,6 +52,7 @@ public class BBeat extends Activity {
 	private VizualizationView mVizV;
 	private TextView mStatus;
 	private ListView mPresetList;
+	private ToggleButton mPlayPause;
 	private ArrayList<String> lv_preset_arr;
 	private ArrayList<Program> all_programs;
 	
@@ -66,14 +70,16 @@ public class BBeat extends Activity {
 	
 	private Handler mHandler = new Handler();
 	private RunProgram programFSM;
-	private int pause_time = -1;
+	private long pause_time = -1;
 	
 	private Vector<Integer> playingStreams = new Vector<Integer>(MAX_STREAMS);
 	private int playingVoices[];
 	private int playingBackground = -1;
 	
 	private static final String SOURCE_CODE_URL = "http://bit.ly/BBeats";
-	private static final String COMMUNITY_URL = "http://binaural-beats.posterous.com/";
+	private static final String COMMUNITY_URL = "http://bit.ly/BBeatsBlog";
+	private static final String HELP_URL = "http://bit.ly/BBeatsHelp";
+	private static final String FACEBOOK_URL = "http://www.facebook.com/pages/Ihunda/121737064536801";
 	
     /** Called when the activity is first created. */
     @Override
@@ -103,7 +109,7 @@ public class BBeat extends Activity {
         b.setOnClickListener(new OnClickListener() {
 			
 			public void onClick(View v) {
-				gotoCommunity();
+				gotoHelp();
 			}
 		});
         
@@ -118,8 +124,19 @@ public class BBeat extends Activity {
         b = (Button) findViewById((R.id.likeButton));
         b.setOnClickListener(new OnClickListener() {
         	public void onClick(View v) {
-        		gotoCommunity();
+        		gotoFacebook();
         	}
+        });
+        
+        pause_time = -1;
+        mPlayPause = (ToggleButton) findViewById((R.id.MenuPause));
+        mPlayPause.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+
+			public void onCheckedChanged(CompoundButton buttonView,
+					boolean isChecked) {
+				pauseOrResume();
+			}
+        	
         });
 
         mInProgram = (LinearLayout) findViewById(R.id.inProgramLayout);
@@ -180,6 +197,8 @@ public class BBeat extends Activity {
 			runComeBackAnimationOnView(mPresetView);
 			mPresetList.invalidate();
 			mVizV.setVisibility(View.GONE);
+			mPlayPause.setChecked(true);
+			pause_time = -1;
 			break;
 		case INPROGRAM:
 			_start_notification(programFSM.getProgram().getName());
@@ -188,6 +207,28 @@ public class BBeat extends Activity {
 			break;
 		}
 	}
+	
+    private boolean isPaused() {
+    	if (pause_time > 0)
+    		return true;
+    	else
+    		return false;
+    }
+    
+    private void pauseOrResume() {
+    	if (state == appState.INPROGRAM) {
+    		if (pause_time > 0) {
+    			long delta = System.currentTimeMillis() - pause_time;
+    			//exerciseStartTime += delta;
+    			programFSM.catchUpAfterPause(delta);
+    			pause_time = -1;
+
+    		} else {
+    			/* This is a pause time */
+    			pause_time = System.currentTimeMillis();
+    		}
+    	}
+    }
 
 	@Override
 	protected void onDestroy() {
@@ -394,23 +435,23 @@ public class BBeat extends Activity {
 	
 	class RunProgram implements Runnable {
 
-		private static final long TIMER_FSM_DELAY = 50;
+		private static final long TIMER_FSM_DELAY = 1000 / 50;
 		
 		private Program pR; 
 		private int c; // current Period
 		private long cT; // current Period start time
-		private long startTime;
+		//private long startTime;
 		
 		private eState s;
 		private Handler h;
-
+		
 		public RunProgram(Program pR, Handler h) {
 			this.pR = pR;
 			this.h = h;
 			
 			s = eState.START;
 			
-			h.post(this);
+			h.postDelayed(this, TIMER_FSM_DELAY);
 		}
 		
 		public void stopProgram() {
@@ -430,7 +471,6 @@ public class BBeat extends Activity {
 
 			mVizV.setFrequency(freq);
 			mVizV.setProgress(pos);
-			
 			mStatus.setText(getString(R.string.info_timing,
 					freq,
 					formatTimeNumberwithLeadingZero((int) pos/60),
@@ -446,20 +486,25 @@ public class BBeat extends Activity {
 			mVizV.stopVisualization();
 		}
 		
+		public void catchUpAfterPause(long delta) {
+			cT += delta;
+		}
+		
 		public void run() {
 			long now = System.currentTimeMillis();
 			
 			switch(s) {
 			case START:
-				startTime = now;
 				s = eState.RUNNING;
 				c = 0;
 				cT = now;
-				startTime = -1;
 				startPeriod(pR.seq.get(c));
 			break;
 			
 			case RUNNING:
+				if (isPaused())
+					break;
+				
 				Period p = pR.seq.get(c);
 				float pos = (now - cT) / 1000f;
 				
@@ -485,6 +530,7 @@ public class BBeat extends Activity {
 				break;
 				
 			case END:
+				BBeat.this.stopProgram();
 				break;
 			}
 			
@@ -552,20 +598,25 @@ public class BBeat extends Activity {
     }
 	
     private void gotoCommunity() {
-    	try {
-			Intent i = new Intent(Intent.ACTION_VIEW);
-			i.setData(Uri.parse(COMMUNITY_URL));
-			startActivity(i);
-		}
-		catch(Exception e) {
-			
-		}
+    	gotoURL(COMMUNITY_URL);
     }
     
     private void gotoSourceCode() {
+    	gotoURL(SOURCE_CODE_URL);
+    }
+    
+    private void gotoFacebook() {
+    	gotoURL(FACEBOOK_URL);
+    }
+    
+    private void gotoHelp() {
+    	gotoURL(HELP_URL);
+    }
+    
+    private void gotoURL(String URL) {
     	try {
 			Intent i = new Intent(Intent.ACTION_VIEW);
-			i.setData(Uri.parse(SOURCE_CODE_URL));
+			i.setData(Uri.parse(URL));
 			startActivity(i);
 		}
 		catch(Exception e) {

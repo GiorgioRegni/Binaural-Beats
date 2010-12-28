@@ -17,9 +17,9 @@
 			android:layout_width="fill_parent" android:layout_height="wrap_content"
 			android:gravity="center" android:layout_weight="4"></TextView>
 
-		<Button android:text="@string/pause" android:id="@+id/MenuPause"
+		<ToggleButton android:textOn="@string/pause" android:textOff="@string/resume" android:id="@+id/MenuPause"
 			android:layout_width="65dip" android:layout_height="wrap_content"
-			android:layout_weight="0"></Button>
+			android:layout_weight="0"></ToggleButton>
 
 	</LinearLayout>
 

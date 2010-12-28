@@ -11,6 +11,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.media.SoundPool;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
@@ -71,6 +72,9 @@ public class BBeat extends Activity {
 	private int playingVoices[];
 	private int playingBackground = -1;
 	
+	private static final String SOURCE_CODE_URL = "http://bit.ly/BBeats";
+	private static final String COMMUNITY_URL = "http://binaural-beats.posterous.com/";
+	
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -87,10 +91,19 @@ public class BBeat extends Activity {
         soundWhiteNoise = mSoundPool.load(this, R.raw.whitenoise, 1);
         soundUnity = mSoundPool.load(this, R.raw.unity, 1);
         
-        Button b = (Button) findViewById(R.id.MenuSetup);
+        /* Setup all buttons */
+        Button b = (Button) findViewById(R.id.MenuSourceCode);
+        b.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				gotoSourceCode();
+			}
+		});
+        
+        b = (Button) findViewById(R.id.MenuHelp);
         b.setOnClickListener(new OnClickListener() {
 			
 			public void onClick(View v) {
+				gotoCommunity();
 			}
 		});
         
@@ -102,6 +115,13 @@ public class BBeat extends Activity {
 			}
 		});
         
+        b = (Button) findViewById((R.id.likeButton));
+        b.setOnClickListener(new OnClickListener() {
+        	public void onClick(View v) {
+        		gotoCommunity();
+        	}
+        });
+
         mInProgram = (LinearLayout) findViewById(R.id.inProgramLayout);
         mPresetView = (LinearLayout) findViewById(R.id.presetLayout);
         mVizV = (VizualizationView) findViewById(R.id.VisualizationView);
@@ -529,5 +549,27 @@ public class BBeat extends Activity {
     		return String.format("%2d", t);
     	else
     		return String.format("0%1d", t);
+    }
+	
+    private void gotoCommunity() {
+    	try {
+			Intent i = new Intent(Intent.ACTION_VIEW);
+			i.setData(Uri.parse(COMMUNITY_URL));
+			startActivity(i);
+		}
+		catch(Exception e) {
+			
+		}
+    }
+    
+    private void gotoSourceCode() {
+    	try {
+			Intent i = new Intent(Intent.ACTION_VIEW);
+			i.setData(Uri.parse(SOURCE_CODE_URL));
+			startActivity(i);
+		}
+		catch(Exception e) {
+			
+		}
     }
 }

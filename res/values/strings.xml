@@ -9,6 +9,10 @@
     <string name="setup">Setup</string>
     <string name="pause">Pause</string>
     
+    <string name="source">Source</string>
+    <string name="like">Like</string>
+    <string name="jointhecommunity">Join the community!</string>
+    
     <string name="notif_started">Binaural Beats</string>
     <string name="notif_descr" formatted="false">%s in progress</string>
     

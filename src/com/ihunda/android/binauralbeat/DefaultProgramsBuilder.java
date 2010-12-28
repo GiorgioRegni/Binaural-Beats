@@ -1,6 +1,7 @@
 package com.ihunda.android.binauralbeat;
 
 import com.ihunda.android.binauralbeat.viz.Flash;
+import com.ihunda.android.binauralbeat.viz.Glow;
 import com.ihunda.android.binauralbeat.viz.Leds;
 import com.ihunda.android.binauralbeat.viz.SpiralDots;
 
@@ -49,6 +50,20 @@ public class DefaultProgramsBuilder {
 				addVoice(new BinauralBeatVoice(2.5f, 2.5f, 0.25f)).
 				addVoice(new BinauralBeatVoice(5.9f, 5.9f, 0.25f)).
 				setV(new SpiralDots())
+		);
+		
+		return p;
+	}
+	
+	public static Program MORPHINE(Program p) {
+		// From http://www.bwgen.com/presets/desc263.htm
+		p.addPeriod(new Period(3600, SoundLoop.UNITY, 1f, null).
+				addVoice(new BinauralBeatVoice(15f, 0.5f, 0.25f)).
+				addVoice(new BinauralBeatVoice(10f, 10f, 0.25f)).
+				addVoice(new BinauralBeatVoice(9f, 9f, 0.25f)).
+				addVoice(new BinauralBeatVoice(7.5f, 7.5f, 0.25f)).
+				addVoice(new BinauralBeatVoice(38f, 38f, 0.25f)).
+				setV(new Glow())
 		);
 		
 		return p;

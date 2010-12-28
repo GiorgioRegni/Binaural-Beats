@@ -37,7 +37,7 @@ public class BBeat extends Activity {
 	enum eState {START, RUNNING, PAUSE, END};
 	enum appState {NONE, SETUP, INPROGRAM};
 	
-	private static final int MAX_STREAMS = 20;
+	private static final int MAX_STREAMS = 30;
 
 	public static final float W_DELTA_FREQ = 2.00f;
 	public static final float W_THETA_FREQ = 6.00f;
@@ -174,11 +174,13 @@ public class BBeat extends Activity {
     	lv_preset_arr.add(getString(R.string.program_self_hypnosis));
     	lv_preset_arr.add(getString(R.string.program_highest_mental_activity));
     	lv_preset_arr.add(getString(R.string.program_unity));
+    	lv_preset_arr.add(getString(R.string.program_morphine));
     	
     	all_programs = new ArrayList<Program>();
     	all_programs.add(DefaultProgramsBuilder.SELF_HYPNOSIS(new Program(getString(R.string.program_self_hypnosis))));
     	all_programs.add(DefaultProgramsBuilder.AWAKE(new Program(getString(R.string.program_highest_mental_activity))));
     	all_programs.add(DefaultProgramsBuilder.UNITY(new Program(getString(R.string.program_unity))));
+    	all_programs.add(DefaultProgramsBuilder.MORPHINE(new Program(getString(R.string.program_morphine))));
     }
 
 	private void goToState(appState newState) {
@@ -362,7 +364,7 @@ public class BBeat extends Activity {
 	}
 	
 	private void stopBackgroundSample() {
-		if (playingBackground != -1) {
+		if (playingBackground > 0) {
 			mSoundPool.stop(playingBackground);
 		}
 		playingBackground = -1;

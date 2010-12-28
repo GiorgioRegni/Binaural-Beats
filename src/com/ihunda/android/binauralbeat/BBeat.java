@@ -4,7 +4,11 @@ import java.util.ArrayList;
 import java.util.Vector;
 
 import android.app.Activity;
+import android.app.Notification;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.Bundle;
@@ -54,9 +58,11 @@ public class BBeat extends Activity {
 	private SoundPool mSoundPool;
 	
 	private NotificationManager mNotificationManager;
+	private static final int NOTIFICATION_STARTED = 1;
 	
 	private Handler mHandler = new Handler();
 	private RunProgram programFSM;
+	private int pause_time = -1;
 	
 	private Vector<Integer> playingStreams = new Vector<Integer>(MAX_STREAMS);
 	private int playingVoices[];
@@ -136,6 +142,7 @@ public class BBeat extends Activity {
 			break;
 		case INPROGRAM:
 			runGoneAnimationOnView(mInProgram);
+			_cancel_all_notifications();
 			break;
 		case SETUP:
 			runGoneAnimationOnView(mPresetView);
@@ -152,6 +159,7 @@ public class BBeat extends Activity {
 			mVizV.setVisibility(View.GONE);
 			break;
 		case INPROGRAM:
+			_start_notification(programFSM.getProgram().getName());
 			runComeBackAnimationOnView(mInProgram);
 			mVizV.setVisibility(View.VISIBLE);
 			break;
@@ -170,8 +178,6 @@ public class BBeat extends Activity {
 	@Override
 	protected void onPause() {
 		super.onPause();
-		
-		panic();
 	}
 
 
@@ -187,6 +193,22 @@ public class BBeat extends Activity {
 		playingStreams.clear();
 	}
 	
+    private void _start_notification(String programName) {
+    	Notification notification = new Notification(R.drawable.icon, getString(R.string.notif_started), System.currentTimeMillis());
+    	
+    	Context context = getApplicationContext();
+    	CharSequence contentTitle = getString(R.string.notif_started);
+    	CharSequence contentText = getString(R.string.notif_descr, programName);
+    	Intent notificationIntent = this.getIntent(); //new Intent(this, hiit.class);
+    	PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
+
+    	notification.setLatestEventInfo(context, contentTitle, contentText, contentIntent);
+    	notification.flags |= Notification.FLAG_ONGOING_EVENT | Notification.FLAG_NO_CLEAR;
+    	
+    	mNotificationManager.notify(NOTIFICATION_STARTED, notification);
+    }
+    
+	
     private void _cancel_all_notifications() {
     	mNotificationManager.cancelAll();
     }
@@ -197,12 +219,14 @@ public class BBeat extends Activity {
 		
 		((TextView) findViewById(R.id.programName)).setText(p.getName());
 		
-		goToState(appState.INPROGRAM);
+
 		programFSM = new RunProgram(p, mHandler);
+		goToState(appState.INPROGRAM);
 	}
 	
 	private void stopProgram() {
 		programFSM.stopProgram();
+		programFSM = null;
 		goToState(appState.SETUP);
 	}
 	
@@ -409,6 +433,10 @@ public class BBeat extends Activity {
 			}
 			
 			h.postDelayed(this, TIMER_FSM_DELAY);
+		}
+
+		public Program getProgram() {
+			return pR;
 		}
 	}
 

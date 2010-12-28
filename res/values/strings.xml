@@ -8,6 +8,10 @@
     <string name="create">Create</string>
     <string name="setup">Setup</string>
     <string name="pause">Pause</string>
+    
+    <string name="notif_started">Binaural Beats</string>
+    <string name="notif_descr" formatted="false">%s in progress</string>
+    
     <string name="info_timing" formatted="false">Main Voice %.2f Hz, Period %s:%s/%s:%s</string>
     
     <string name="program_self_hypnosis">Self Hypnosis</string>

@@ -15,6 +15,7 @@ public class VizualizationView extends SurfaceView implements Callback {
 	private int width;
 	private int height;
 	private Visualization v;
+	private boolean running;
 	
 	protected float pos;
 	protected float length;
@@ -29,6 +30,7 @@ public class VizualizationView extends SurfaceView implements Callback {
         
         setFocusable(true); // make sure we get key events
         v = null;
+        running = false;
 	}
 	
     /* Callback invoked when the surface dimensions change. */
@@ -39,10 +41,15 @@ public class VizualizationView extends SurfaceView implements Callback {
    }
     
 	public void surfaceCreated(SurfaceHolder holder) {
+		if (vThread == null) {
+			running = true;
+			vThread = new Thread(vizThread);
+			vThread.start();
+		}
 	}
 
 	public void surfaceDestroyed(SurfaceHolder holder) {
-		this.v = null;
+		running = false;
 		boolean retry = true;
 		
 		if (vThread != null)  {
@@ -69,13 +76,17 @@ public class VizualizationView extends SurfaceView implements Callback {
 		this.v = v;
 		this.pos = 0;
 		this.length = length;
+		
+		running = true;
 		vThread = new Thread(vizThread);
 		vThread.start();
 	}
 	
 	public void stopVisualization() {
-		this.v = null;
 		boolean retry = true;
+		
+		this.v = null;
+		running = false;
 		
 		if (vThread != null)  {
 			while (retry) {
@@ -104,7 +115,7 @@ public class VizualizationView extends SurfaceView implements Callback {
 		try {
 			c = mSurfaceHolder.lockCanvas(null);
 			synchronized (mSurfaceHolder) {
-				if (v!= null) {
+				if (c != null) {
 					v.redraw(c, width, height, now, length);
 				}
 			} 
@@ -125,7 +136,7 @@ public class VizualizationView extends SurfaceView implements Callback {
 			c = mSurfaceHolder.lockCanvas(null);
 			if (c != null)
 				synchronized (mSurfaceHolder) {
-					c.drawColor(Color.TRANSPARENT);
+					c.drawColor(Color.BLACK);
 				} 
 		}
 		finally {
@@ -141,7 +152,7 @@ public class VizualizationView extends SurfaceView implements Callback {
 	private Runnable vizThread = new Runnable() {
 
 		public void run() {
-			while(v != null) {
+			while(running == true) {
 				long now = System.currentTimeMillis();
 				drawMain(pos, length);
 				

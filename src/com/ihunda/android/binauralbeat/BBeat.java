@@ -34,7 +34,7 @@ import com.ihunda.android.binauralbeat.Note.NoteK;
 
 public class BBeat extends Activity {
 	
-	enum eState {START, RUNNING, PAUSE, END};
+	enum eState {START, RUNNING, END};
 	enum appState {NONE, SETUP, INPROGRAM};
 	
 	private static final int MAX_STREAMS = 30;
@@ -72,7 +72,7 @@ public class BBeat extends Activity {
 	private RunProgram programFSM;
 	private long pause_time = -1;
 	
-	private Vector<Integer> playingStreams = new Vector<Integer>(MAX_STREAMS);
+	private Vector<StreamVoice> playingStreams = new Vector<StreamVoice>(MAX_STREAMS);
 	private int playingVoices[];
 	private int playingBackground = -1;
 	
@@ -206,13 +206,13 @@ public class BBeat extends Activity {
 			runComeBackAnimationOnView(mPresetView);
 			mPresetList.invalidate();
 			mVizV.setVisibility(View.GONE);
-			mPlayPause.setChecked(true);
-			pause_time = -1;
 			break;
 		case INPROGRAM:
 			_start_notification(programFSM.getProgram().getName());
 			runComeBackAnimationOnView(mInProgram);
 			mVizV.setVisibility(View.VISIBLE);
+			mPlayPause.setChecked(true);
+			pause_time = -1;
 			break;
 		}
 	}
@@ -228,13 +228,14 @@ public class BBeat extends Activity {
     	if (state == appState.INPROGRAM) {
     		if (pause_time > 0) {
     			long delta = System.currentTimeMillis() - pause_time;
-    			//exerciseStartTime += delta;
     			programFSM.catchUpAfterPause(delta);
     			pause_time = -1;
+    			unmuteAll();
 
     		} else {
     			/* This is a pause time */
     			pause_time = System.currentTimeMillis();
+    			muteAll();
     		}
     	}
     }
@@ -261,8 +262,8 @@ public class BBeat extends Activity {
     
 	private void panic() {
 		// Stop all sounds
-		for (Integer i: playingStreams)
-			mSoundPool.stop(i);
+		for (StreamVoice v: playingStreams)
+			mSoundPool.stop(v.streamID);
 		playingStreams.clear();
 	}
 	
@@ -304,16 +305,44 @@ public class BBeat extends Activity {
 		goToState(appState.SETUP);
 	}
 	
-	/*
-	 * Record all playing stream ids to be able to stop sound on pause/panic
-	 */
-    private void registerStream(int i) {
-		 playingStreams.add(new Integer(i));
-		 if (playingStreams.size() > MAX_STREAMS)
-			 playingStreams.remove(0);
-    }
-	
+	int play(int soundID, float leftVolume, float rightVolume, int priority, int loop, float rate) {
+		int id = mSoundPool.play(soundID, leftVolume, rightVolume, priority, loop, rate);
+		
+		/*
+		 * Record all playing stream ids to be able to stop sound on pause/panic
+		 */
+		playingStreams.add(new StreamVoice(id, leftVolume, rightVolume, loop, rate));
+		if (playingStreams.size() > MAX_STREAMS) {
+			 StreamVoice v = playingStreams.remove(0);
+			 mSoundPool.stop(v.streamID);
+		}
+		
+		return id;
+	}
     
+	void stop(int soundID) {
+		mSoundPool.stop(soundID);
+		playingStreams.removeElement(new Integer(soundID));
+	}
+	
+	/**
+	 * Loop through all playing voices and lower volume to 0 but do not stop
+	 */
+	void muteAll() {
+		for (StreamVoice v: playingStreams) {
+			mSoundPool.setVolume(v.streamID, 0, 0);
+		}
+	}
+	
+	/**
+	 * Loop through all playing voices and lower volume to 0 but do not stop
+	 */
+	void unmuteAll() {
+		for (StreamVoice v: playingStreams) {
+			mSoundPool.setVolume(v.streamID, v.leftVol, v.rightVol);
+		}
+	}
+	
     /*
      * Return the speed ratio to use to skew the basic note on the
      * left earbud to play a given note
@@ -336,10 +365,8 @@ public class BBeat extends Activity {
 	private int[] playBeat(Note base, float binaural_freq, float volume) {
 		int idLeft, idRight;
 		
-		idLeft = mSoundPool.play(soundA440, volume, 0, 1, -1, getSpeedRatioLeft(base));
-		idRight = mSoundPool.play(soundA440, 0, volume, 1, -1, getSpeedRatioRight(base, binaural_freq));
-		registerStream(idLeft);
-		registerStream(idRight);
+		idLeft = play(soundA440, volume, 0, 1, -1, getSpeedRatioLeft(base));
+		idRight = play(soundA440, 0, volume, 1, -1, getSpeedRatioRight(base, binaural_freq));
 		
 		int[] res = {idLeft, idRight};
 		
@@ -349,24 +376,19 @@ public class BBeat extends Activity {
 	private void playBackgroundSample(SoundLoop background, float vol) {
 		switch(background) {
 		case WHITE_NOISE:
-			playingBackground = mSoundPool.play(soundWhiteNoise, vol, vol, 1, -1, 1.0f);
+			playingBackground = play(soundWhiteNoise, vol, vol, 2, -1, 1.0f);
 			break;
 		case UNITY:
-			playingBackground = mSoundPool.play(soundUnity, vol, vol, 1, -1, 1.0f);
+			playingBackground = play(soundUnity, vol, vol, 2, -1, 1.0f);
 			break;
 		default:
 			playingBackground = -1;
 			break;
 		}
-		
-		if (playingBackground > 0)
-			registerStream(playingBackground);
 	}
 	
 	private void stopBackgroundSample() {
-		if (playingBackground > 0) {
-			mSoundPool.stop(playingBackground);
-		}
+		stop(playingBackground);
 		playingBackground = -1;
 	}
 	
@@ -420,7 +442,10 @@ public class BBeat extends Activity {
 	 */
 	protected void stopAllVoices() {
 		for (int i: playingVoices) {
-			mSoundPool.stop(i);
+			stop(i);
+		}
+		for (int i = 0; i< playingVoices.length; i++) {
+			playingVoices[i] = 0;
 		}
 	}
 	
@@ -541,7 +566,7 @@ public class BBeat extends Activity {
 				
 			case END:
 				BBeat.this.stopProgram();
-				break;
+				return;
 			}
 			
 			h.postDelayed(this, TIMER_FSM_DELAY);

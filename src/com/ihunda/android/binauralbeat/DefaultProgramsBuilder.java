@@ -12,15 +12,15 @@ public class DefaultProgramsBuilder {
 				"Glides down to theta waves, plateau for 10 minutes then slowly come back up to awake state.");
 		
 		p.addPeriod(new Period(300, SoundLoop.WHITE_NOISE, 1f, null).
-				addVoice(new BinauralBeatVoice(12f, 4f, 1f)).
+				addVoice(new BinauralBeatVoice(12f, 4f, 0.6f)).
 				setV(new Flash())
 		).
 		addPeriod(new Period(600, SoundLoop.WHITE_NOISE, 1f, null).
-				addVoice(new BinauralBeatVoice(4f, 4f, 0.9f)).
+				addVoice(new BinauralBeatVoice(4f, 4f, 0.7f)).
 				setV(new Flash())
 		).
 		addPeriod(new Period(300, SoundLoop.WHITE_NOISE, 1f, null).
-				addVoice(new BinauralBeatVoice(4f, 12f, 0.9f)).
+				addVoice(new BinauralBeatVoice(4f, 12f, 0.6f)).
 				setV(new Flash())
 		);
 		

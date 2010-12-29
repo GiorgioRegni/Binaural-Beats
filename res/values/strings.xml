@@ -10,6 +10,9 @@
     <string name="pause">Pause</string>
     <string name="resume">Resume</string>
     <string name="ok">Ok</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="confirm_reset">Stop program and go back to Setup screen?</string>
     
     
     <string name="welcome_text">Welcome to Binarual Beats Therapy! This app is free and open source, have fun and join the community!</string>

@@ -17,6 +17,7 @@ import android.media.SoundPool;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.animation.Animation;
@@ -86,6 +87,7 @@ public class BBeat extends Activity {
 	
 	/* All dialogs declaration go here */
 	private static final int DIALOG_WELCOME = 1;
+	private static final int DIALOG_CONFIRM_RESET = 2;
 	
     /** Called when the activity is first created. */
     @Override
@@ -97,11 +99,6 @@ public class BBeat extends Activity {
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
         
         mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        
-        mSoundPool = new SoundPool(MAX_STREAMS, AudioManager.STREAM_MUSIC, 0);
-        soundA440 = mSoundPool.load(this, R.raw.a440, 1);
-        soundWhiteNoise = mSoundPool.load(this, R.raw.whitenoise, 1);
-        soundUnity = mSoundPool.load(this, R.raw.unity, 1);
         
         /* Setup all buttons */
         Button b = (Button) findViewById(R.id.MenuSourceCode);
@@ -170,14 +167,42 @@ public class BBeat extends Activity {
 			}
 		});
         
+        showDialog(DIALOG_WELCOME);
+        
+        mSoundPool = new SoundPool(MAX_STREAMS, AudioManager.STREAM_MUSIC, 0);
+        soundA440 = mSoundPool.load(this, R.raw.a440, 1);
+        soundWhiteNoise = mSoundPool.load(this, R.raw.whitenoise, 1);
+        soundUnity = mSoundPool.load(this, R.raw.unity, 1);
+		
         playingStreams = new Vector<StreamVoice>(MAX_STREAMS);
         playingBackground = -1;
         
         state = appState.NONE;
         goToState(appState.SETUP);
-        
-        showDialog(DIALOG_WELCOME);
     }
+    
+	@Override
+	protected void onStart() {
+		super.onStart();
+	}
+	
+	@Override
+	protected void onStop() {
+		super.onStop();
+	}
+    
+	 @Override
+	    public boolean onKeyDown(int keyCode, KeyEvent event)  {
+	        if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
+	            // ask for confirmation during workout
+	        	if (state == appState.INPROGRAM) {
+	        		showDialog(DIALOG_CONFIRM_RESET);
+	        		return true;
+	        	}
+	        }
+
+	        return super.onKeyDown(keyCode, event);
+	    }
     
     private void setupProgramList() {
     	lv_preset_arr = new ArrayList<String>();
@@ -286,6 +311,24 @@ public class BBeat extends Activity {
 
 			AlertDialog alert = builder.create();
 			return alert;
+		}
+		
+		case DIALOG_CONFIRM_RESET: {
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+	    	builder.setMessage(R.string.confirm_reset)
+	    	       .setCancelable(false)
+	    	       .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+	    	           public void onClick(DialogInterface dialog, int id) {
+	    	        	   BBeat.this.stopProgram();
+	    	           }
+	    	       })
+	    	       .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+	    	           public void onClick(DialogInterface dialog, int id) {
+	    	                dialog.cancel();
+	    	           }
+	    	       });
+	    	AlertDialog alert = builder.create();
+	    	return alert;
 		}
 		}
 		

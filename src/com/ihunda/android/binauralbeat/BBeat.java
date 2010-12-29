@@ -17,6 +17,7 @@ import android.media.SoundPool;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.PowerManager;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -72,6 +73,9 @@ public class BBeat extends Activity {
 	private NotificationManager mNotificationManager;
 	private static final int NOTIFICATION_STARTED = 1;
 	
+	private PowerManager mPm;
+	private PowerManager.WakeLock  mWl;
+	
 	private Handler mHandler = new Handler();
 	private RunProgram programFSM;
 	private long pause_time = -1;
@@ -99,6 +103,12 @@ public class BBeat extends Activity {
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
         
         mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        
+        /*
+         * Sets up power management, device should not go to sleep during a program
+         */
+        mPm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+        mWl = mPm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK, "BBTherapy");
         
         /* Setup all buttons */
         Button b = (Button) findViewById(R.id.MenuSourceCode);
@@ -225,6 +235,9 @@ public class BBeat extends Activity {
 			mPresetView.setVisibility(View.GONE);
 			break;
 		case INPROGRAM:
+	    	if (mWl.isHeld())
+	    		mWl.release();
+	    	
 			runGoneAnimationOnView(mInProgram);
 			_cancel_all_notifications();
 			break;
@@ -243,6 +256,9 @@ public class BBeat extends Activity {
 			mVizV.setVisibility(View.GONE);
 			break;
 		case INPROGRAM:
+			// Acquire power management lock
+			mWl.acquire();
+			
 			_start_notification(programFSM.getProgram().getName());
 			runComeBackAnimationOnView(mInProgram);
 			mVizV.setVisibility(View.VISIBLE);

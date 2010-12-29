@@ -4,10 +4,13 @@ import java.util.ArrayList;
 import java.util.Vector;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.media.SoundPool;
@@ -72,7 +75,7 @@ public class BBeat extends Activity {
 	private RunProgram programFSM;
 	private long pause_time = -1;
 	
-	private Vector<StreamVoice> playingStreams = new Vector<StreamVoice>(MAX_STREAMS);
+	private Vector<StreamVoice> playingStreams;
 	private int playingVoices[];
 	private int playingBackground = -1;
 	
@@ -80,6 +83,9 @@ public class BBeat extends Activity {
 	private static final String BLOG_URL = "http://bit.ly/BBeatsBlog";
 	private static final String HELP_URL = "http://bit.ly/BBeatsHelp";
 	private static final String FACEBOOK_URL = "http://www.facebook.com/pages/Binaural-Beat-Therapy/121737064536801";
+	
+	/* All dialogs declaration go here */
+	private static final int DIALOG_WELCOME = 1;
 	
     /** Called when the activity is first created. */
     @Override
@@ -164,9 +170,13 @@ public class BBeat extends Activity {
 			}
 		});
         
+        playingStreams = new Vector<StreamVoice>(MAX_STREAMS);
+        playingBackground = -1;
         
         state = appState.NONE;
         goToState(appState.SETUP);
+        
+        showDialog(DIALOG_WELCOME);
     }
     
     private void setupProgramList() {
@@ -260,6 +270,28 @@ public class BBeat extends Activity {
 		super.onResume();
 	}
     
+	@Override
+	protected Dialog onCreateDialog(int id) {
+		
+		switch(id) {
+		case DIALOG_WELCOME: {
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			builder.setMessage(R.string.welcome_text)
+			.setCancelable(false)
+			.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int id) {
+					dialog.cancel();
+				}
+			});
+
+			AlertDialog alert = builder.create();
+			return alert;
+		}
+		}
+		
+		return null;
+	};
+	
 	private void panic() {
 		// Stop all sounds
 		for (StreamVoice v: playingStreams)

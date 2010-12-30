@@ -585,7 +585,7 @@ public class BBeat extends Activity {
 	
 	class RunProgram implements Runnable {
 
-		private static final long TIMER_FSM_DELAY = 1000 / 50;
+		private static final long TIMER_FSM_DELAY = 1000 / 20;
 		
 		private Program pR; 
 		private int c; // current Period

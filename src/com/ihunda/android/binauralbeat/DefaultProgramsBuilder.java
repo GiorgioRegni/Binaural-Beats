@@ -60,7 +60,7 @@ public class DefaultProgramsBuilder {
 				addVoice(new BinauralBeatVoice(9f, 9f, 0.25f)).
 				addVoice(new BinauralBeatVoice(7.5f, 7.5f, 0.25f)).
 				addVoice(new BinauralBeatVoice(38f, 38f, 0.25f)).
-				setV(new Glow())
+				setV(new Morphine())
 		);
 		
 		return p;

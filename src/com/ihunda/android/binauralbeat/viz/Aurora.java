@@ -15,7 +15,6 @@ public class Aurora implements Visualization {
 	/**
 	 * Beat frequency in Hz
 	 */
-	private double freq;
 	private double period;
 	private Bitmap background;
 	private Paint pTag;
@@ -52,12 +51,9 @@ public class Aurora implements Visualization {
 		
 		pTag.setColor(Color.argb((int) trans, 255, 255, 255));
 		c.drawCircle(width/4, height/2, radius*0.4f, pTag);
-		
-
 	}
 
 	public void setFrequency(float beat_frequency) {
-		freq = beat_frequency;
 		period = 1f / beat_frequency;
 	}
 

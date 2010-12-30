@@ -1,10 +1,6 @@
 package com.ihunda.android.binauralbeat;
 
-import com.ihunda.android.binauralbeat.viz.Aurora;
-import com.ihunda.android.binauralbeat.viz.Flash;
-import com.ihunda.android.binauralbeat.viz.Glow;
-import com.ihunda.android.binauralbeat.viz.Leds;
-import com.ihunda.android.binauralbeat.viz.SpiralDots;
+import com.ihunda.android.binauralbeat.viz.*;
 
 public class DefaultProgramsBuilder {
 	
@@ -14,15 +10,15 @@ public class DefaultProgramsBuilder {
 		
 		p.addPeriod(new Period(300, SoundLoop.WHITE_NOISE, 1f, null).
 				addVoice(new BinauralBeatVoice(12f, 4f, 0.6f)).
-				setV(new Flash())
+				setV(new HypnoFlash())
 		).
 		addPeriod(new Period(600, SoundLoop.WHITE_NOISE, 1f, null).
 				addVoice(new BinauralBeatVoice(4f, 4f, 0.7f)).
-				setV(new Flash())
+				setV(new HypnoFlash())
 		).
 		addPeriod(new Period(300, SoundLoop.WHITE_NOISE, 1f, null).
 				addVoice(new BinauralBeatVoice(4f, 12f, 0.6f)).
-				setV(new Flash())
+				setV(new HypnoFlash())
 		);
 		
 		return p;

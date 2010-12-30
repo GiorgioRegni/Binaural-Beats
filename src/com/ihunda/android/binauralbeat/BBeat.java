@@ -130,7 +130,7 @@ public class BBeat extends Activity {
         b.setOnClickListener(new OnClickListener() {
 			
 			public void onClick(View v) {
-				stopProgram();
+				showDialog(DIALOG_CONFIRM_RESET);
 			}
 		});
         

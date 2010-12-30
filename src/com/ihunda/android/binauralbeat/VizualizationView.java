@@ -10,7 +10,7 @@ import android.view.SurfaceView;
 
 public class VizualizationView extends SurfaceView implements Callback {
 	
-	protected static final long DRAW_REFRESH_INTERVAL_NS = 1000 * 1000 * 1000 / 10; // 10 refresh per seconds
+	protected static final long DRAW_REFRESH_INTERVAL_NS = 1000 * 1000 * 1000 / 16; // # refresh per seconds
 	private SurfaceHolder mSurfaceHolder;
 	private int width;
 	private int height;

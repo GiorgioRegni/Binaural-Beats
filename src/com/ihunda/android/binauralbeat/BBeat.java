@@ -32,6 +32,8 @@ import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.SeekBar;
+import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
@@ -82,6 +84,9 @@ public class BBeat extends Activity {
 	private Vector<StreamVoice> playingStreams;
 	private int playingVoices[];
 	private int playingBackground = -1;
+
+	private SeekBar soundV;
+	private float mSoundVolume;
 	
 	private static final String SOURCE_CODE_URL = "http://bit.ly/BBeats";
 	private static final String BLOG_URL = "http://bit.ly/BBeatsBlog";
@@ -164,6 +169,26 @@ public class BBeat extends Activity {
         	
         });
 
+        /* Set up volume bar */
+        soundV = (SeekBar) findViewById((R.id.soundVolumeBar));
+        soundV.setMax(100);
+        soundV.setProgress(70);
+        mSoundVolume = 0.70f;
+        soundV.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
+
+			public void onStopTrackingTouch(SeekBar seekBar) {
+			}
+			
+			public void onStartTrackingTouch(SeekBar seekBar) {
+			}
+			
+			public void onProgressChanged(SeekBar seekBar, int progress,
+					boolean fromUser) {
+				mSoundVolume = ((float) progress)/100.f;
+				resetAllVolumes();
+			}
+		});
+        
         mInProgram = (LinearLayout) findViewById(R.id.inProgramLayout);
         mPresetView = (LinearLayout) findViewById(R.id.presetLayout);
         mVizV = (VizualizationView) findViewById(R.id.VisualizationView);
@@ -421,7 +446,8 @@ public class BBeat extends Activity {
 	}
 	
 	int play(int soundID, float leftVolume, float rightVolume, int priority, int loop, float rate) {
-		int id = mSoundPool.play(soundID, leftVolume, rightVolume, priority, loop, rate);
+		int id = mSoundPool.play(soundID, leftVolume * mSoundVolume, rightVolume * mSoundVolume,
+				priority, loop, rate);
 		
 		/*
 		 * Record all playing stream ids to be able to stop sound on pause/panic
@@ -438,6 +464,15 @@ public class BBeat extends Activity {
 	void stop(int soundID) {
 		mSoundPool.stop(soundID);
 		playingStreams.removeElement(new Integer(soundID));
+	}
+	
+	/**
+	 * Loop through all playing voices and lower volume to 0 but do not stop
+	 */
+	void resetAllVolumes() {
+		for (StreamVoice v: playingStreams) {
+			mSoundPool.setVolume(v.streamID, v.leftVol * mSoundVolume, v.rightVol * mSoundVolume);
+		}
 	}
 	
 	/**

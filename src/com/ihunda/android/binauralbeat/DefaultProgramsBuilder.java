@@ -13,7 +13,7 @@ public class DefaultProgramsBuilder {
 				setV(new HypnoFlash())
 		).
 		addPeriod(new Period(600, SoundLoop.WHITE_NOISE, 1f, null).
-				addVoice(new BinauralBeatVoice(4f, 4f, 0.7f)).
+				addVoice(new BinauralBeatVoice(4f, 4f, 0.65f)).
 				setV(new HypnoFlash())
 		).
 		addPeriod(new Period(300, SoundLoop.WHITE_NOISE, 1f, null).
@@ -26,15 +26,15 @@ public class DefaultProgramsBuilder {
 	
 	public static Program AWAKE(Program p) {
 		p.addPeriod(new Period(120, SoundLoop.WHITE_NOISE, 1f, null).
-				addVoice(new BinauralBeatVoice(12f, 70f, 0.25f)).
+				addVoice(new BinauralBeatVoice(12f, 70f, 0.55f)).
 				setV(new Leds())
 		).
 		addPeriod(new Period(600, SoundLoop.WHITE_NOISE, 1f, null).
-				addVoice(new BinauralBeatVoice(70f, 50f, 0.35f)).
+				addVoice(new BinauralBeatVoice(70f, 50f, 0.65f)).
 				setV(new Leds())
 		).
 		addPeriod(new Period(120, SoundLoop.WHITE_NOISE, 1f, null).
-				addVoice(new BinauralBeatVoice(50f, 12f, 0.25f)).
+				addVoice(new BinauralBeatVoice(50f, 12f, 0.55f)).
 				setV(new Leds())
 		);
 		
@@ -43,9 +43,9 @@ public class DefaultProgramsBuilder {
 	
 	public static Program UNITY(Program p) {
 		p.addPeriod(new Period(3600, SoundLoop.UNITY, 1f, null).
-				addVoice(new BinauralBeatVoice(3.7f, 3.7f, 0.25f)).
-				addVoice(new BinauralBeatVoice(2.5f, 2.5f, 0.25f)).
-				addVoice(new BinauralBeatVoice(5.9f, 5.9f, 0.25f)).
+				addVoice(new BinauralBeatVoice(3.7f, 3.7f, 0.35f)).
+				addVoice(new BinauralBeatVoice(2.5f, 2.5f, 0.35f)).
+				addVoice(new BinauralBeatVoice(5.9f, 5.9f, 0.35f)).
 				setV(new Aurora())
 		);
 		
@@ -55,11 +55,11 @@ public class DefaultProgramsBuilder {
 	public static Program MORPHINE(Program p) {
 		// From http://www.bwgen.com/presets/desc263.htm
 		p.addPeriod(new Period(3600, SoundLoop.UNITY, 1f, null).
-				addVoice(new BinauralBeatVoice(15f, 0.5f, 0.25f)).
-				addVoice(new BinauralBeatVoice(10f, 10f, 0.25f)).
-				addVoice(new BinauralBeatVoice(9f, 9f, 0.25f)).
-				addVoice(new BinauralBeatVoice(7.5f, 7.5f, 0.25f)).
-				addVoice(new BinauralBeatVoice(38f, 38f, 0.25f)).
+				addVoice(new BinauralBeatVoice(15f, 0.5f, 0.35f)).
+				addVoice(new BinauralBeatVoice(10f, 10f, 0.30f)).
+				addVoice(new BinauralBeatVoice(9f, 9f, 0.30f)).
+				addVoice(new BinauralBeatVoice(7.5f, 7.5f, 0.30f)).
+				addVoice(new BinauralBeatVoice(38f, 38f, 0.30f)).
 				setV(new Morphine())
 		);
 		

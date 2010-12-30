@@ -26,6 +26,12 @@
 	<com.ihunda.android.binauralbeat.VizualizationView android:id="@+id/VisualizationView" android:layout_width="fill_parent"
 		android:layout_height="fill_parent" android:layout_weight="4"/>
 	
+	
+	<SeekBar android:id="@+id/soundVolumeBar"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:layout_weight="0" />
+		
 	<TextView android:id="@+id/Status"
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content" android:text="timing..."

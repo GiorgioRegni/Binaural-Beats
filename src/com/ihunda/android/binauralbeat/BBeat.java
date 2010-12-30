@@ -59,7 +59,6 @@ public class BBeat extends Activity {
 	private ListView mPresetList;
 	private ToggleButton mPlayPause;
 	private ArrayList<String> lv_preset_arr;
-	private ArrayList<Program> all_programs;
 	
 	private appState state;
 	
@@ -92,6 +91,12 @@ public class BBeat extends Activity {
 	/* All dialogs declaration go here */
 	private static final int DIALOG_WELCOME = 1;
 	private static final int DIALOG_CONFIRM_RESET = 2;
+	
+	/* 
+	 * Not sure this is the best way to do it but it seems to work
+	 * Some of the vizualisation need to get pointer to resources to load iamges, sounds, etc...
+	 *  */
+	private static BBeat instance;
 	
     /** Called when the activity is first created. */
     @Override
@@ -164,6 +169,9 @@ public class BBeat extends Activity {
         mVizV = (VizualizationView) findViewById(R.id.VisualizationView);
         mStatus = (TextView) findViewById(R.id.Status);
         
+        // Set a static pointer to this instance so that vizualisation can access it
+        setInstance(this);
+        
         setupProgramList();
         
         mPresetList = (ListView) findViewById(R.id.presetListView);
@@ -173,12 +181,24 @@ public class BBeat extends Activity {
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
 					long arg3) {
-				startProgram(all_programs.get(arg2));
+				startProgram(lv_preset_arr.get(arg2));
 			}
 		});
         
         showDialog(DIALOG_WELCOME);
         
+        initSounds();
+        
+        state = appState.NONE;
+        goToState(appState.SETUP);
+    }
+    
+    void initSounds() {
+		if (mSoundPool != null) {
+			mSoundPool.release();
+			mSoundPool = null;
+		}
+		
         mSoundPool = new SoundPool(MAX_STREAMS, AudioManager.STREAM_MUSIC, 0);
         soundA440 = mSoundPool.load(this, R.raw.a440, 1);
         soundWhiteNoise = mSoundPool.load(this, R.raw.whitenoise, 1);
@@ -186,9 +206,6 @@ public class BBeat extends Activity {
 		
         playingStreams = new Vector<StreamVoice>(MAX_STREAMS);
         playingBackground = -1;
-        
-        state = appState.NONE;
-        goToState(appState.SETUP);
     }
     
 	@Override
@@ -220,12 +237,6 @@ public class BBeat extends Activity {
     	lv_preset_arr.add(getString(R.string.program_highest_mental_activity));
     	lv_preset_arr.add(getString(R.string.program_unity));
     	lv_preset_arr.add(getString(R.string.program_morphine));
-    	
-    	all_programs = new ArrayList<Program>();
-    	all_programs.add(DefaultProgramsBuilder.SELF_HYPNOSIS(new Program(getString(R.string.program_self_hypnosis))));
-    	all_programs.add(DefaultProgramsBuilder.AWAKE(new Program(getString(R.string.program_highest_mental_activity))));
-    	all_programs.add(DefaultProgramsBuilder.UNITY(new Program(getString(R.string.program_unity))));
-    	all_programs.add(DefaultProgramsBuilder.MORPHINE(new Program(getString(R.string.program_morphine))));
     }
 
 	private void goToState(appState newState) {
@@ -240,6 +251,9 @@ public class BBeat extends Activity {
 	    	
 			runGoneAnimationOnView(mInProgram);
 			_cancel_all_notifications();
+			
+			/* Reinit all sounds */
+			initSounds();
 			break;
 		case SETUP:
 			runGoneAnimationOnView(mPresetView);
@@ -378,13 +392,23 @@ public class BBeat extends Activity {
     	mNotificationManager.cancelAll();
     }
 	
-	private void startProgram(Program p) {
+	private void startProgram(String name) {
 		if (programFSM != null)
 			programFSM.stopProgram();
 		
+		Program p;
+		
+		if (name.equals(getString(R.string.program_self_hypnosis)))
+			p = DefaultProgramsBuilder.SELF_HYPNOSIS(new Program(name));
+		else if (name.equals(getString(R.string.program_highest_mental_activity)))
+			p = DefaultProgramsBuilder.AWAKE(new Program(name));
+		else if (name.equals(getString(R.string.program_unity)))
+			p = DefaultProgramsBuilder.UNITY(new Program(name));
+		else
+			p = DefaultProgramsBuilder.MORPHINE(new Program(name));
+		
 		((TextView) findViewById(R.id.programName)).setText(p.getName());
 		
-
 		programFSM = new RunProgram(p, mHandler);
 		goToState(appState.INPROGRAM);
 	}
@@ -749,4 +773,12 @@ public class BBeat extends Activity {
 			
 		}
     }
+
+	private static void setInstance(BBeat instance) {
+		BBeat.instance = instance;
+	}
+
+	public static BBeat getInstance() {
+		return instance;
+	}
 }

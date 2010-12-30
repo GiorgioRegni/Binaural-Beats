@@ -1,5 +1,6 @@
 package com.ihunda.android.binauralbeat;
 
+import com.ihunda.android.binauralbeat.viz.Aurora;
 import com.ihunda.android.binauralbeat.viz.Flash;
 import com.ihunda.android.binauralbeat.viz.Glow;
 import com.ihunda.android.binauralbeat.viz.Leds;
@@ -49,7 +50,7 @@ public class DefaultProgramsBuilder {
 				addVoice(new BinauralBeatVoice(3.7f, 3.7f, 0.25f)).
 				addVoice(new BinauralBeatVoice(2.5f, 2.5f, 0.25f)).
 				addVoice(new BinauralBeatVoice(5.9f, 5.9f, 0.25f)).
-				setV(new SpiralDots())
+				setV(new Aurora())
 		);
 		
 		return p;

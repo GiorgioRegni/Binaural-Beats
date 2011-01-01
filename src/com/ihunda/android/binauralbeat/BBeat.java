@@ -96,6 +96,7 @@ public class BBeat extends Activity {
 	/* All dialogs declaration go here */
 	private static final int DIALOG_WELCOME = 1;
 	private static final int DIALOG_CONFIRM_RESET = 2;
+	private static final int DIALOG_GETTING_INVOLVED = 3;
 	
 	/* 
 	 * Not sure this is the best way to do it but it seems to work
@@ -262,6 +263,7 @@ public class BBeat extends Activity {
     	lv_preset_arr.add(getString(R.string.program_highest_mental_activity));
     	lv_preset_arr.add(getString(R.string.program_unity));
     	lv_preset_arr.add(getString(R.string.program_morphine));
+    	lv_preset_arr.add(getString(R.string.getting_involved));
     }
 
 	private void goToState(appState newState) {
@@ -385,6 +387,25 @@ public class BBeat extends Activity {
 	    	AlertDialog alert = builder.create();
 	    	return alert;
 		}
+		
+		case DIALOG_GETTING_INVOLVED: {
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+	    	builder.setMessage(R.string.getting_involved_dialog)
+	    	       .setCancelable(false)
+	    	       .setPositiveButton(R.string.contact, new DialogInterface.OnClickListener() {
+	    	           public void onClick(DialogInterface dialog, int id) {
+	    	        	   shareWith(getString(R.string.app_name), getString(R.string.share_text));
+	    	           }
+	    	       })
+	    	       .setNegativeButton(R.string.close, new DialogInterface.OnClickListener() {
+	    	           public void onClick(DialogInterface dialog, int id) {
+	    	                dialog.cancel();
+	    	           }
+	    	       });
+	    	AlertDialog alert = builder.create();
+	    	return alert;
+		}
+		
 		}
 		
 		return null;
@@ -422,6 +443,13 @@ public class BBeat extends Activity {
 			programFSM.stopProgram();
 		
 		Program p;
+		
+		if (name.equals(getString(R.string.getting_involved)))
+		{
+			// Special hook to show getting involved dialog
+			showDialog(DIALOG_GETTING_INVOLVED);
+			return;
+		}
 		
 		if (name.equals(getString(R.string.program_self_hypnosis)))
 			p = DefaultProgramsBuilder.SELF_HYPNOSIS(new Program(name));
@@ -808,6 +836,16 @@ public class BBeat extends Activity {
 			
 		}
     }
+    
+    public void shareWith(String subject,String text) {
+    	 final Intent intent = new Intent(Intent.ACTION_SEND);
+
+    	 intent.setType("text/plain");
+    	 intent.putExtra(Intent.EXTRA_SUBJECT, subject);
+    	 intent.putExtra(Intent.EXTRA_TEXT, text);
+
+    	 startActivity(Intent.createChooser(intent, getString(R.string.share)));
+    	}
 
 	private static void setInstance(BBeat instance) {
 		BBeat.instance = instance;

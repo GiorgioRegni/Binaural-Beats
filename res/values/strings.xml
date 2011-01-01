@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="hello">Hello World, Main!</string>
-    <string name="app_name">Binaural Beat</string>
+    <string name="app_name">Binaural Beats Therapy</string>
     <string name="back">Back</string>
     <string name="next">Next</string>
     <string name="help">Help</string>
@@ -14,8 +14,15 @@
     <string name="no">No</string>
     <string name="confirm_reset">Stop program and go back to Setup screen?</string>
     
+    <string name="getting_involved">Getting Involved?</string>
+    <string name="getting_involved_dialog">This application is free and open source, anyone can participate and make it better.
+    I am looking for people to help on graphics, sounds, tone presets, documentation, video tutorial, ideas etc... as well as developers too!</string>
+    <string name="share">Share</string>
+    <string name="share_text">Binaural Beats Therapy @GiorgioRegni</string>
+    <string name="close">Close</string>
+    <string name="contact">Contact</string>
     
-    <string name="welcome_text">Welcome to Binarual Beats Therapy! This app is free and open source, have fun and join the community!</string>
+    <string name="welcome_text">Welcome to Binaural Beats Therapy! This app is free and open source, have fun and join the community!</string>
     
     <string name="source">Source</string>
     <string name="like">Like</string>

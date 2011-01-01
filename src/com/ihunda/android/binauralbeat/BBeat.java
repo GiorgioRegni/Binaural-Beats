@@ -97,6 +97,7 @@ public class BBeat extends Activity {
 	private static final int DIALOG_WELCOME = 1;
 	private static final int DIALOG_CONFIRM_RESET = 2;
 	private static final int DIALOG_GETTING_INVOLVED = 3;
+	private static final int DIALOG_JOIN_COMMUNITY = 4;
 	
 	/* 
 	 * Not sure this is the best way to do it but it seems to work
@@ -155,7 +156,7 @@ public class BBeat extends Activity {
         TextView t = (TextView) findViewById((R.id.jointhecommunityText));
         t.setOnClickListener(new OnClickListener() {
         	public void onClick(View v) {
-        		gotoBlog();
+        		showDialog(DIALOG_JOIN_COMMUNITY);
         	}
         });
         
@@ -359,7 +360,7 @@ public class BBeat extends Activity {
 		case DIALOG_WELCOME: {
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
 			builder.setMessage(R.string.welcome_text)
-			.setCancelable(false)
+			.setCancelable(true)
 			.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int id) {
 					dialog.cancel();
@@ -373,7 +374,7 @@ public class BBeat extends Activity {
 		case DIALOG_CONFIRM_RESET: {
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
 	    	builder.setMessage(R.string.confirm_reset)
-	    	       .setCancelable(false)
+	    	       .setCancelable(true)
 	    	       .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
 	    	           public void onClick(DialogInterface dialog, int id) {
 	    	        	   BBeat.this.stopProgram();
@@ -400,6 +401,24 @@ public class BBeat extends Activity {
 	    	       .setNegativeButton(R.string.rate_on_market, new DialogInterface.OnClickListener() {
 	    	           public void onClick(DialogInterface dialog, int id) {
 	    	                gotoMarket();
+	    	           }
+	    	       });
+	    	AlertDialog alert = builder.create();
+	    	return alert;
+		}
+		
+		case DIALOG_JOIN_COMMUNITY: {
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+	    	builder.setMessage(R.string.jointhecommunity)
+	    	       .setCancelable(true)
+	    	       .setPositiveButton(R.string.contact, new DialogInterface.OnClickListener() {
+	    	           public void onClick(DialogInterface dialog, int id) {
+	    	        	   shareWith(getString(R.string.app_name), getString(R.string.share_text));
+	    	           }
+	    	       })
+	    	       .setNegativeButton(R.string.blog, new DialogInterface.OnClickListener() {
+	    	           public void onClick(DialogInterface dialog, int id) {
+	    	                gotoBlog();
 	    	           }
 	    	       });
 	    	AlertDialog alert = builder.create();
@@ -844,7 +863,9 @@ public class BBeat extends Activity {
     public void shareWith(String subject,String text) {
     	 final Intent intent = new Intent(Intent.ACTION_SEND);
 
+    	 String aEmailList[] = { "binaural-beats@posterous.com" };  
     	 intent.setType("text/plain");
+    	 intent.putExtra(android.content.Intent.EXTRA_EMAIL, aEmailList);  
     	 intent.putExtra(Intent.EXTRA_SUBJECT, subject);
     	 intent.putExtra(Intent.EXTRA_TEXT, text);
 

@@ -409,7 +409,7 @@ public class BBeat extends Activity {
 		
 		case DIALOG_JOIN_COMMUNITY: {
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
-	    	builder.setMessage(R.string.jointhecommunity)
+	    	builder.setMessage(R.string.getting_involved_dialog)
 	    	       .setCancelable(true)
 	    	       .setPositiveButton(R.string.contact, new DialogInterface.OnClickListener() {
 	    	           public void onClick(DialogInterface dialog, int id) {

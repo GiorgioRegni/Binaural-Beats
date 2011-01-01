@@ -391,15 +391,15 @@ public class BBeat extends Activity {
 		case DIALOG_GETTING_INVOLVED: {
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
 	    	builder.setMessage(R.string.getting_involved_dialog)
-	    	       .setCancelable(false)
+	    	       .setCancelable(true)
 	    	       .setPositiveButton(R.string.contact, new DialogInterface.OnClickListener() {
 	    	           public void onClick(DialogInterface dialog, int id) {
 	    	        	   shareWith(getString(R.string.app_name), getString(R.string.share_text));
 	    	           }
 	    	       })
-	    	       .setNegativeButton(R.string.close, new DialogInterface.OnClickListener() {
+	    	       .setNegativeButton(R.string.rate_on_market, new DialogInterface.OnClickListener() {
 	    	           public void onClick(DialogInterface dialog, int id) {
-	    	                dialog.cancel();
+	    	                gotoMarket();
 	    	           }
 	    	       });
 	    	AlertDialog alert = builder.create();
@@ -824,6 +824,10 @@ public class BBeat extends Activity {
     
     private void gotoHelp() {
     	gotoURL(HELP_URL);
+    }
+    
+    private void gotoMarket() {
+    	gotoURL("market://details?id=com.ihunda.android.binauralbeat");
     }
     
     private void gotoURL(String URL) {

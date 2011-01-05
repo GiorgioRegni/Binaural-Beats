@@ -26,7 +26,8 @@
     <string name="blog">Blog</string>
     <string name="rate_on_market">Rate on market</string>
     
-    <string name="welcome_text">Welcome to Binaural Beats Therapy! This app is free and open source, have fun and join the community!</string>
+    <string name="welcome_text">Welcome to Binaural Beats Therapy! This app is free and open source, have fun and join the community! 
+    Headphones and a safe environment are required.</string>
     
     <string name="source">Source</string>
     <string name="like">Like</string>

@@ -28,8 +28,8 @@ import com.ihunda.android.binauralbeat.viz.*;
 public class DefaultProgramsBuilder {
 	
 	public static Program SELF_HYPNOSIS(Program p) {
-		p.setDescription("Deep meditation preset to unite your conscious and subconsious mind. " +
-				"Glides down to theta waves, plateau for 10 minutes then slowly come back up to awake state.");
+		p.setDescription("Short meditation preset to unite your conscious and subconsious mind. " +
+				"Glide down to theta waves, plateau for 10 minutes then slowly come back up to awake state.");
 		
 		p.addPeriod(new Period(300, SoundLoop.WHITE_NOISE, 1f, null).
 				addVoice(new BinauralBeatVoice(12f, 4f, 0.6f)).
@@ -48,6 +48,9 @@ public class DefaultProgramsBuilder {
 	}
 	
 	public static Program AWAKE(Program p) {
+		p.setDescription("A quick cafeine boost, this preset shorly reaches Gamma waves, provides "+
+				"higher mental activity, including perception, problem solving, and consciousness.");
+		
 		p.addPeriod(new Period(120, SoundLoop.WHITE_NOISE, 1f, null).
 				addVoice(new BinauralBeatVoice(12f, 70f, 0.55f)).
 				setV(new Leds())
@@ -65,6 +68,10 @@ public class DefaultProgramsBuilder {
 	}
 	
 	public static Program UNITY(Program p) {
+		
+		p.setDescription("Wander in deep relaxing delta waves and let your mind explore freely and without bounds." 
+				+" May induce dreamless sleep and loss of body awareness.");
+		
 		p.addPeriod(new Period(3600, SoundLoop.UNITY, 1f, null).
 				addVoice(new BinauralBeatVoice(3.7f, 3.7f, 0.35f)).
 				addVoice(new BinauralBeatVoice(2.5f, 2.5f, 0.35f)).
@@ -76,6 +83,10 @@ public class DefaultProgramsBuilder {
 	}
 	
 	public static Program MORPHINE(Program p) {
+		
+		p.setDescription("A relaxing, southing mix of beats that slowly but surely appease any pain point."
+				+ " The brain runs the body as you will discover with this preset.");
+		
 		// From http://www.bwgen.com/presets/desc263.htm
 		p.addPeriod(new Period(3600, SoundLoop.UNITY, 1f, null).
 				addVoice(new BinauralBeatVoice(15f, 0.5f, 0.35f)).

@@ -459,11 +459,16 @@ public class BBeat extends Activity {
 		
 		case DIALOG_PROGRAM_PREVIEW: {
 			Program p = _tmp_program_holder;
+			int length = p.getLength();
 			
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
 			builder.setTitle(p.getName())
 			.setIcon(android.R.drawable.ic_dialog_info)
-			.setMessage(p.getDescription())
+			.setMessage(p.getDescription() + 
+			String.format(" %sh%smin.",
+					formatTimeNumberwithLeadingZero(length/60/60),
+					formatTimeNumberwithLeadingZero((length/60)%60))		
+			)
 	    	       .setCancelable(true)
 	    	       .setPositiveButton(R.string.start, new DialogInterface.OnClickListener() {
 	    	           public void onClick(DialogInterface dialog, int id) {

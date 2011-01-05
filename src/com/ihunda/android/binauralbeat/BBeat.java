@@ -121,12 +121,21 @@ public class BBeat extends Activity {
 	private static final int DIALOG_CONFIRM_RESET = 2;
 	private static final int DIALOG_GETTING_INVOLVED = 3;
 	private static final int DIALOG_JOIN_COMMUNITY = 4;
+	private static final int DIALOG_PROGRAM_PREVIEW = 5;
 	
 	/* 
 	 * Not sure this is the best way to do it but it seems to work
 	 * Some of the vizualisation need to get pointer to resources to load iamges, sounds, etc...
 	 *  */
 	private static BBeat instance;
+	
+	/*
+	 * Keeps a reference to a selected program only for the purpose of the
+	 * preview dialog, should always be null when the preview dialog is not
+	 * displayed
+	 */
+	private static Program _tmp_program_holder;
+	
 	
     /** Called when the activity is first created. */
     @Override
@@ -231,7 +240,7 @@ public class BBeat extends Activity {
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
 					long arg3) {
-				startProgram(lv_preset_arr.get(arg2));
+				selectProgram(lv_preset_arr.get(arg2));
 			}
 		});
         
@@ -448,6 +457,29 @@ public class BBeat extends Activity {
 	    	return alert;
 		}
 		
+		case DIALOG_PROGRAM_PREVIEW: {
+			Program p = _tmp_program_holder;
+			
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			builder.setTitle(p.getName())
+			.setIcon(android.R.drawable.ic_dialog_info)
+			.setMessage(p.getDescription())
+	    	       .setCancelable(true)
+	    	       .setPositiveButton(R.string.start, new DialogInterface.OnClickListener() {
+	    	           public void onClick(DialogInterface dialog, int id) {
+	    	        	   StartPreviouslySelectedProgram();
+	    	        	   removeDialog(DIALOG_PROGRAM_PREVIEW);
+	    	           }
+	    	       })
+	    	       .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+	    	           public void onClick(DialogInterface dialog, int id) {
+	    	        	   removeDialog(DIALOG_PROGRAM_PREVIEW);
+	    	           }
+	    	       });
+	    	AlertDialog alert = builder.create();
+	    	return alert;
+		}
+		
 		}
 		
 		return null;
@@ -480,7 +512,7 @@ public class BBeat extends Activity {
     	mNotificationManager.cancelAll();
     }
 	
-	private void startProgram(String name) {
+	private void selectProgram(String name) {
 		if (programFSM != null)
 			programFSM.stopProgram();
 		
@@ -501,6 +533,15 @@ public class BBeat extends Activity {
 			p = DefaultProgramsBuilder.UNITY(new Program(name));
 		else
 			p = DefaultProgramsBuilder.MORPHINE(new Program(name));
+		
+		_tmp_program_holder = p;
+		
+		showDialog(DIALOG_PROGRAM_PREVIEW);
+	}
+	
+	private void StartPreviouslySelectedProgram() {
+		Program p = _tmp_program_holder;
+		_tmp_program_holder = null;
 		
 		((TextView) findViewById(R.id.programName)).setText(p.getName());
 		

@@ -108,8 +108,10 @@ public class BBeat extends Activity {
 	private int playingVoices[];
 	private int playingBackground = -1;
 
-	private SeekBar soundV;
-	private float mSoundVolume;
+	private SeekBar soundBeatV;
+	private float mSoundBeatVolume;
+	private SeekBar soundBGV;
+	private float mSoundBGVolume;
 	
 	private static final String SOURCE_CODE_URL = "http://bit.ly/BBeats";
 	private static final String BLOG_URL = "http://bit.ly/BBeatsBlog";
@@ -204,11 +206,11 @@ public class BBeat extends Activity {
         });
 
         /* Set up volume bar */
-        soundV = (SeekBar) findViewById((R.id.soundVolumeBar));
-        soundV.setMax(100);
-        soundV.setProgress(70);
-        mSoundVolume = 0.70f;
-        soundV.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
+        soundBeatV = (SeekBar) findViewById((R.id.soundVolumeBar));
+        soundBeatV.setMax(100);
+        soundBeatV.setProgress(70);
+        mSoundBeatVolume = 0.70f;
+        soundBeatV.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
 
 			public void onStopTrackingTouch(SeekBar seekBar) {
 			}
@@ -218,7 +220,27 @@ public class BBeat extends Activity {
 			
 			public void onProgressChanged(SeekBar seekBar, int progress,
 					boolean fromUser) {
-				mSoundVolume = ((float) progress)/100.f;
+				mSoundBeatVolume = ((float) progress)/100.f;
+				resetAllVolumes();
+			}
+		});
+        
+        /* Set up background volume bar */
+        soundBGV = (SeekBar) findViewById((R.id.soundBGVolumeBar));
+        soundBGV.setMax(100);
+        soundBGV.setProgress(60);
+        mSoundBGVolume = 0.60f;
+        soundBGV.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
+
+			public void onStopTrackingTouch(SeekBar seekBar) {
+			}
+			
+			public void onStartTrackingTouch(SeekBar seekBar) {
+			}
+			
+			public void onProgressChanged(SeekBar seekBar, int progress,
+					boolean fromUser) {
+				mSoundBGVolume = ((float) progress)/100.f;
 				resetAllVolumes();
 			}
 		});
@@ -562,7 +584,7 @@ public class BBeat extends Activity {
 	}
 	
 	int play(int soundID, float leftVolume, float rightVolume, int priority, int loop, float rate) {
-		int id = mSoundPool.play(soundID, leftVolume * mSoundVolume, rightVolume * mSoundVolume,
+		int id = mSoundPool.play(soundID, leftVolume * mSoundBeatVolume, rightVolume * mSoundBeatVolume,
 				priority, loop, rate);
 		
 		/*
@@ -587,7 +609,10 @@ public class BBeat extends Activity {
 	 */
 	void resetAllVolumes() {
 		for (StreamVoice v: playingStreams) {
-			mSoundPool.setVolume(v.streamID, v.leftVol * mSoundVolume, v.rightVol * mSoundVolume);
+			if (v.streamID == playingBackground)
+				mSoundPool.setVolume(v.streamID, v.leftVol * mSoundBGVolume, v.rightVol * mSoundBGVolume);
+			else
+				mSoundPool.setVolume(v.streamID, v.leftVol * mSoundBeatVolume, v.rightVol * mSoundBeatVolume);
 		}
 	}
 	
@@ -651,6 +676,9 @@ public class BBeat extends Activity {
 			playingBackground = -1;
 			break;
 		}
+		
+		if (playingBackground != -1)
+			mSoundPool.setVolume(playingBackground, vol * mSoundBGVolume, vol * mSoundBGVolume);
 	}
 	
 	private void stopBackgroundSample() {

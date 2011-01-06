@@ -26,6 +26,9 @@
     <string name="blog">Blog</string>
     <string name="rate_on_market">Rate on market</string>
     
+    <string name="voices">Voices</string>
+    <string name="background">Background</string>
+    
     <string name="welcome_text">Welcome to Binaural Beats Therapy! This app is free and open source, have fun and join the community! 
     Headphones and a safe environment are required.</string>
     
@@ -36,7 +39,7 @@
     <string name="notif_started">Binaural Beats</string>
     <string name="notif_descr" formatted="false">%s in progress</string>
     
-    <string name="info_timing" formatted="false">Main Voice %.2f Hz, Period %s:%s/%s:%s</string>
+    <string name="info_timing" formatted="false">Beat %.2f Hz, Period %s:%s/%s:%s</string>
     
     <string name="program_self_hypnosis">Self Hypnosis</string>
     <string name="program_highest_mental_activity">Highest mental activity</string>

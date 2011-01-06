@@ -228,8 +228,8 @@ public class BBeat extends Activity {
         /* Set up background volume bar */
         soundBGV = (SeekBar) findViewById((R.id.soundBGVolumeBar));
         soundBGV.setMax(100);
-        soundBGV.setProgress(60);
-        mSoundBGVolume = 0.60f;
+        soundBGV.setProgress(40);
+        mSoundBGVolume = 0.40f;
         soundBGV.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
 
 			public void onStopTrackingTouch(SeekBar seekBar) {

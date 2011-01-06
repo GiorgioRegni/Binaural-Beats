@@ -72,7 +72,7 @@ public class DefaultProgramsBuilder {
 		p.setDescription("Wander in deep relaxing delta waves and let your mind explore freely and without bounds." 
 				+" May induce dreamless sleep and loss of body awareness.");
 		
-		p.addPeriod(new Period(3600, SoundLoop.UNITY,  0.8f, null).
+		p.addPeriod(new Period(3600, SoundLoop.UNITY,  0.9f, null).
 				addVoice(new BinauralBeatVoice(3.7f, 3.7f, 0.6f)).
 				addVoice(new BinauralBeatVoice(2.5f, 2.5f, 0.6f)).
 				addVoice(new BinauralBeatVoice(5.9f, 5.9f, 0.6f)).
@@ -88,7 +88,7 @@ public class DefaultProgramsBuilder {
 				+ " The brain runs the body as you will discover with this preset.");
 		
 		// From http://www.bwgen.com/presets/desc263.htm
-		p.addPeriod(new Period(3600, SoundLoop.UNITY, 0.8f, null).
+		p.addPeriod(new Period(3600, SoundLoop.UNITY, 0.9f, null).
 				addVoice(new BinauralBeatVoice(15f, 0.5f, 0.5f)).
 				addVoice(new BinauralBeatVoice(10f, 10f, 0.5f)).
 				addVoice(new BinauralBeatVoice(9f, 9f, 0.5f)).

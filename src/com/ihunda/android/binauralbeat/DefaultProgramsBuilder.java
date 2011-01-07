@@ -31,15 +31,15 @@ public class DefaultProgramsBuilder {
 		p.setDescription("Short meditation preset to unite your conscious and subconsious mind. " +
 				"Glide down to theta waves, plateau for 10 minutes then slowly come back up to awake state.");
 		
-		p.addPeriod(new Period(300, SoundLoop.WHITE_NOISE, 0.8f, null).
+		p.addPeriod(new Period(300, SoundLoop.WHITE_NOISE, 0.7f, null).
 				addVoice(new BinauralBeatVoice(12f, 4f, 0.6f)).
 				setV(new HypnoFlash())
 		).
-		addPeriod(new Period(600, SoundLoop.WHITE_NOISE, 0.8f, null).
+		addPeriod(new Period(600, SoundLoop.WHITE_NOISE, 0.7f, null).
 				addVoice(new BinauralBeatVoice(4f, 4f, 0.65f)).
 				setV(new HypnoFlash())
 		).
-		addPeriod(new Period(300, SoundLoop.WHITE_NOISE, 0.8f, null).
+		addPeriod(new Period(300, SoundLoop.WHITE_NOISE, 0.7f, null).
 				addVoice(new BinauralBeatVoice(4f, 12f, 0.6f)).
 				setV(new HypnoFlash())
 		);
@@ -51,15 +51,15 @@ public class DefaultProgramsBuilder {
 		p.setDescription("A quick cafeine boost, this preset shorly reaches Gamma waves, provides "+
 				"higher mental activity, including perception, problem solving, and consciousness.");
 		
-		p.addPeriod(new Period(120, SoundLoop.WHITE_NOISE, 0.8f, null).
+		p.addPeriod(new Period(120, SoundLoop.WHITE_NOISE, 0.7f, null).
 				addVoice(new BinauralBeatVoice(12f, 70f, 0.60f)).
 				setV(new Leds())
 		).
-		addPeriod(new Period(600, SoundLoop.WHITE_NOISE, 0.8f, null).
+		addPeriod(new Period(600, SoundLoop.WHITE_NOISE, 0.7f, null).
 				addVoice(new BinauralBeatVoice(70f, 50f, 0.65f)).
 				setV(new Leds())
 		).
-		addPeriod(new Period(120, SoundLoop.WHITE_NOISE, 0.8f, null).
+		addPeriod(new Period(120, SoundLoop.WHITE_NOISE, 0.7f, null).
 				addVoice(new BinauralBeatVoice(50f, 12f, 0.60f)).
 				setV(new Leds())
 		);

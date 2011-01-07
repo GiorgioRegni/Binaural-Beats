@@ -769,14 +769,25 @@ public class BBeat extends Activity {
 		private Program pR; 
 		private int c; // current Period
 		private long cT; // current Period start time
-		//private long startTime;
-		
+		private long startTime;
+		private long programLength;
+		private String sProgramLength;
+		private String formatString;
+		private long oldDelta; // Utilized to reduce the amount of redraw for the program legend
 		private eState s;
 		private Handler h;
 		
 		public RunProgram(Program pR, Handler h) {
 			this.pR = pR;
 			this.h = h;
+			
+			programLength = pR.getLength();
+			sProgramLength = getString(R.string.time_format, 
+					formatTimeNumberwithLeadingZero((int) programLength/60),
+					formatTimeNumberwithLeadingZero((int) programLength%60));
+			formatString = getString(R.string.info_timing);
+			startTime = System.currentTimeMillis();
+			oldDelta = -1;
 			
 			s = eState.START;
 			
@@ -795,18 +806,25 @@ public class BBeat extends Activity {
 			playBackgroundSample(p.background, p.getBackgroundvol());
 		}
 
-		private void inPeriod(Period p, float pos) {
+		private void inPeriod(long now, Period p, float pos) {
 			float freq = skewVoices(p.voices, pos, p.length);
 
 			mVizV.setFrequency(freq);
 			mVizV.setProgress(pos);
-			mStatus.setText(getString(R.string.info_timing,
-					freq,
-					formatTimeNumberwithLeadingZero((int) pos/60),
-					formatTimeNumberwithLeadingZero((int) pos%60),
-					formatTimeNumberwithLeadingZero((int) p.length/60),
-					formatTimeNumberwithLeadingZero((int) p.length%60)
-			));
+			
+			long delta = (now - startTime) / 20; // Do not refresh too often
+			if (oldDelta != delta) {
+				oldDelta = delta;
+				delta = delta/50; // Down to seconds
+				mStatus.setText(String.format(formatString, 
+						freq,
+						formatTimeNumberwithLeadingZero((int) delta/60),
+						formatTimeNumberwithLeadingZero((int) delta%60)
+				)
+				+
+				sProgramLength
+				);
+			}
 		}
 		
 		private void endPeriod() {
@@ -854,7 +872,7 @@ public class BBeat extends Activity {
 					/**
 					 * In the middle of current period, adjust each beat voice
 					 */
-					inPeriod(p, pos);
+					inPeriod(now, p, pos);
 				}
 				break;
 				

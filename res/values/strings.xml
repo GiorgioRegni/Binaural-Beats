@@ -39,7 +39,8 @@
     <string name="notif_started">Binaural Beats</string>
     <string name="notif_descr" formatted="false">%s in progress</string>
     
-    <string name="info_timing" formatted="false">Beat %.2f Hz, Period %s:%s/%s:%s</string>
+    <string name="info_timing" formatted="false">Main Beat %.2fHz - %s:%s/</string>
+    <string name="time_format" formatted="false">%s:%s</string>
     
     <string name="program_self_hypnosis">Self Hypnosis</string>
     <string name="program_highest_mental_activity">Highest mental activity</string>

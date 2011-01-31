@@ -117,6 +117,7 @@ public class BBeat extends Activity {
 	private static final String BLOG_URL = "http://bit.ly/BBeatsBlog";
 	private static final String HELP_URL = "http://bit.ly/BBeatsHelp";
 	private static final String FACEBOOK_URL = "http://www.facebook.com/pages/Binaural-Beat-Therapy/121737064536801";
+	private static final String CONTACT_EMAIL = "binaural-beats@ihunda.com";
 	
 	/* All dialogs declaration go here */
 	private static final int DIALOG_WELCOME = 1;
@@ -978,7 +979,7 @@ public class BBeat extends Activity {
     public void shareWith(String subject,String text) {
     	 final Intent intent = new Intent(Intent.ACTION_SEND);
 
-    	 String aEmailList[] = { "binaural-beats@posterous.com" };  
+    	 String aEmailList[] = {CONTACT_EMAIL};  
     	 intent.setType("text/plain");
     	 intent.putExtra(android.content.Intent.EXTRA_EMAIL, aEmailList);  
     	 intent.putExtra(Intent.EXTRA_SUBJECT, subject);

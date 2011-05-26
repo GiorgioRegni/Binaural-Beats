@@ -88,11 +88,13 @@ public class BBeat extends Activity {
 	private appState state;
 	
 	private int soundA440;
+	private int soundA220;
 	private int soundWhiteNoise;
 	private int soundUnity;
 	private SoundPool mSoundPool;
 	
 	private Note A440 = new Note(NoteK.A, 4);
+	private Note A220 = new Note(NoteK.A, 3);
 	
 	private NotificationManager mNotificationManager;
 	private static final int NOTIFICATION_STARTED = 1;
@@ -110,7 +112,6 @@ public class BBeat extends Activity {
 
 	private SeekBar soundBeatV;
 	private float mSoundBeatVolume;
-	private SeekBar soundBGV;
 	private float mSoundBGVolume;
 	
 	private static final String SOURCE_CODE_URL = "http://bit.ly/BBeats";
@@ -118,6 +119,7 @@ public class BBeat extends Activity {
 	private static final String HELP_URL = "http://bit.ly/BBeatsHelp";
 	private static final String FACEBOOK_URL = "http://www.facebook.com/pages/Binaural-Beat-Therapy/121737064536801";
 	private static final String CONTACT_EMAIL = "binaural-beats@ihunda.com";
+	private static final String LOGBBEAT = "BBT-MAIN";
 	
 	/* All dialogs declaration go here */
 	private static final int DIALOG_WELCOME = 1;
@@ -125,6 +127,10 @@ public class BBeat extends Activity {
 	private static final int DIALOG_GETTING_INVOLVED = 3;
 	private static final int DIALOG_JOIN_COMMUNITY = 4;
 	private static final int DIALOG_PROGRAM_PREVIEW = 5;
+
+	private static final float DEFAULT_VOLUME = 0.6f;
+
+	private static final float BG_VOLUME_RATIO = 0.4f;
 	
 	/* 
 	 * Not sure this is the best way to do it but it seems to work
@@ -210,7 +216,7 @@ public class BBeat extends Activity {
         soundBeatV = (SeekBar) findViewById((R.id.soundVolumeBar));
         soundBeatV.setMax(100);
         soundBeatV.setProgress(70);
-        mSoundBeatVolume = 0.70f;
+        mSoundBeatVolume = DEFAULT_VOLUME;
         soundBeatV.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
 
 			public void onStopTrackingTouch(SeekBar seekBar) {
@@ -222,29 +228,12 @@ public class BBeat extends Activity {
 			public void onProgressChanged(SeekBar seekBar, int progress,
 					boolean fromUser) {
 				mSoundBeatVolume = ((float) progress)/100.f;
+				mSoundBGVolume = mSoundBeatVolume * 0.50f;
 				resetAllVolumes();
 			}
 		});
         
-        /* Set up background volume bar */
-        soundBGV = (SeekBar) findViewById((R.id.soundBGVolumeBar));
-        soundBGV.setMax(100);
-        soundBGV.setProgress(40);
-        mSoundBGVolume = 0.40f;
-        soundBGV.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
-
-			public void onStopTrackingTouch(SeekBar seekBar) {
-			}
-			
-			public void onStartTrackingTouch(SeekBar seekBar) {
-			}
-			
-			public void onProgressChanged(SeekBar seekBar, int progress,
-					boolean fromUser) {
-				mSoundBGVolume = ((float) progress)/100.f;
-				resetAllVolumes();
-			}
-		});
+		mSoundBGVolume = mSoundBeatVolume * BG_VOLUME_RATIO;
         
         mInProgram = (LinearLayout) findViewById(R.id.inProgramLayout);
         mPresetView = (LinearLayout) findViewById(R.id.presetLayout);
@@ -282,7 +271,8 @@ public class BBeat extends Activity {
 		}
 		
         mSoundPool = new SoundPool(MAX_STREAMS, AudioManager.STREAM_MUSIC, 0);
-        soundA440 = mSoundPool.load(this, R.raw.a440, 1);
+        soundA440 = mSoundPool.load(this, R.raw.a440s, 1);
+        soundA220 = mSoundPool.load(this, R.raw.a220s, 1);
         soundWhiteNoise = mSoundPool.load(this, R.raw.whitenoise, 1);
         soundUnity = mSoundPool.load(this, R.raw.unity, 1);
 		
@@ -319,6 +309,7 @@ public class BBeat extends Activity {
     	lv_preset_arr.add(getString(R.string.program_highest_mental_activity));
     	lv_preset_arr.add(getString(R.string.program_unity));
     	lv_preset_arr.add(getString(R.string.program_morphine));
+    	lv_preset_arr.add(getString(R.string.program_learning));
     	lv_preset_arr.add(getString(R.string.getting_involved));
     }
 
@@ -559,8 +550,10 @@ public class BBeat extends Activity {
 			p = DefaultProgramsBuilder.AWAKE(new Program(name));
 		else if (name.equals(getString(R.string.program_unity)))
 			p = DefaultProgramsBuilder.UNITY(new Program(name));
-		else
+		else if (name.equals(getString(R.string.program_morphine)))
 			p = DefaultProgramsBuilder.MORPHINE(new Program(name));
+		else
+			p = DefaultProgramsBuilder.LEARNING(new Program(name));
 		
 		_tmp_program_holder = p;
 		
@@ -627,12 +620,10 @@ public class BBeat extends Activity {
 	}
 	
 	/**
-	 * Loop through all playing voices and lower volume to 0 but do not stop
+	 * Loop through all playing voices and set volume back
 	 */
 	void unmuteAll() {
-		for (StreamVoice v: playingStreams) {
-			mSoundPool.setVolume(v.streamID, v.leftVol, v.rightVol);
-		}
+		resetAllVolumes();
 	}
 	
     /*
@@ -673,6 +664,9 @@ public class BBeat extends Activity {
 		case UNITY:
 			playingBackground = play(soundUnity, vol, vol, 2, -1, 1.0f);
 			break;
+		case NONE:
+			playingBackground = -1;
+			break;
 		default:
 			playingBackground = -1;
 			break;
@@ -683,7 +677,8 @@ public class BBeat extends Activity {
 	}
 	
 	private void stopBackgroundSample() {
-		stop(playingBackground);
+		if (playingBackground != -1)
+			stop(playingBackground);
 		playingBackground = -1;
 	}
 	
@@ -711,7 +706,7 @@ public class BBeat extends Activity {
 	 * @param length
 	 * @return beat frequency of first voice
 	 */
-	protected float skewVoices(ArrayList<BinauralBeatVoice> voices, float pos, float length) {
+	protected float skewVoices(ArrayList<BinauralBeatVoice> voices, float pos, float length, boolean doskew) {
 		int i = 0;
 		float res = 1;
 		int voiceId = 0;
@@ -725,7 +720,10 @@ public class BBeat extends Activity {
 			if (i == 2)
 				res = ratio*pos + v.freqStart;
 			//mSoundPool.setRate(idLeft, rate);
-			mSoundPool.setRate(idRight, getSpeedRatioRight(voicetoNote(voiceId), ratio*pos + v.freqStart));
+			if (doskew) {
+				//Log.e("JENlQ", String.format("%f",pos));
+				mSoundPool.setRate(idRight, getSpeedRatioRight(voicetoNote(voiceId), ratio*pos + v.freqStart));
+			}
 			voiceId++;
 		}
 		
@@ -808,12 +806,13 @@ public class BBeat extends Activity {
 		}
 
 		private void inPeriod(long now, Period p, float pos) {
-			float freq = skewVoices(p.voices, pos, p.length);
+			long delta = (now - startTime) / 20; // Do not refresh too often
+			
+			float freq = skewVoices(p.voices, pos, p.length, oldDelta != delta);
 
 			mVizV.setFrequency(freq);
 			mVizV.setProgress(pos);
 			
-			long delta = (now - startTime) / 20; // Do not refresh too often
 			if (oldDelta != delta) {
 				oldDelta = delta;
 				delta = delta/50; // Down to seconds

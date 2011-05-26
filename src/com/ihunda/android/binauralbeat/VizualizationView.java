@@ -27,6 +27,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceHolder.Callback;
 import android.view.SurfaceView;
@@ -34,6 +35,7 @@ import android.view.SurfaceView;
 public class VizualizationView extends SurfaceView implements Callback {
 	
 	protected static final long DRAW_REFRESH_INTERVAL_NS = 1000 * 1000 * 1000 / 16; // # refresh per seconds
+	private static final String LOGVIZVIEW = "BBT-VIZ";
 	private SurfaceHolder mSurfaceHolder;
 	private int width;
 	private int height;
@@ -65,6 +67,7 @@ public class VizualizationView extends SurfaceView implements Callback {
     
 	public void surfaceCreated(SurfaceHolder holder) {
 		if (vThread == null) {
+			Log.e(LOGVIZVIEW, "SURFACE NEW THREAD");	
 			running = true;
 			vThread = new Thread(vizThread);
 			vThread.start();
@@ -88,9 +91,6 @@ public class VizualizationView extends SurfaceView implements Callback {
 	}
 	
 	public void startVisualization(Visualization v, float length) {
-		assert(this.v == null);
-		assert(vThread == null);
-		
 		drawClear();
 		
 		if (v == null)
@@ -99,10 +99,14 @@ public class VizualizationView extends SurfaceView implements Callback {
 		this.v = v;
 		this.pos = 0;
 		this.length = length;
-		
+				
 		running = true;
-		vThread = new Thread(vizThread);
-		vThread.start();
+		if (vThread == null) {
+			Log.e(LOGVIZVIEW, "START VIZ NEW THREAD");
+				
+			vThread = new Thread(vizThread);
+			vThread.start();
+		}
 	}
 	
 	public void stopVisualization() {
@@ -175,9 +179,16 @@ public class VizualizationView extends SurfaceView implements Callback {
 	private Runnable vizThread = new Runnable() {
 
 		public void run() {
+			int i = 0;
+			
+
 			while(running == true) {
 				long now = System.nanoTime();
+				
+				//Log.e("JENlA", String.format("%d %d %s", now, i, vizThread.toString()));
+				
 				drawMain(pos, length);
+				i++;
 				
 				long elapsed = System.nanoTime() - now;
 				while(elapsed < DRAW_REFRESH_INTERVAL_NS) {
@@ -189,6 +200,7 @@ public class VizualizationView extends SurfaceView implements Callback {
 					elapsed = System.nanoTime() - now;
 				}
 			}
+			Log.e(LOGVIZVIEW, String.format("END THREAD redrew %d times", i));		
 		}
 	};
 }

@@ -28,6 +28,7 @@
     
     <string name="voices">Voices</string>
     <string name="background">Background</string>
+    <string name="volume">Volume</string>
     
     <string name="welcome_text">Welcome to Binaural Beats Therapy! This app is free and open source, have fun and join the community! 
     Headphones and a safe environment are required.</string>
@@ -47,5 +48,6 @@
     <string name="program_unity">Unity</string>
     <string name="program_morphine">Morphine pain killer</string>
     <string name="program_hgh">Human Growth Hormone</string>
+    <string name="program_learning">Study and learning</string>
     
 </resources>

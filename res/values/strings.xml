@@ -49,5 +49,7 @@
     <string name="program_morphine">Morphine pain killer</string>
     <string name="program_hgh">Human Growth Hormone</string>
     <string name="program_learning">Study and learning</string>
+    <string name="program_creativity">Creativity</string>
+    <string name="program_schumann">Schumann Resonance</string>
     
 </resources>

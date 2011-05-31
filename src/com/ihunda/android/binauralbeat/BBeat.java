@@ -272,7 +272,7 @@ public class BBeat extends Activity {
 		
         mSoundPool = new SoundPool(MAX_STREAMS, AudioManager.STREAM_MUSIC, 0);
         soundA440 = mSoundPool.load(this, R.raw.a440s, 1);
-        soundA220 = mSoundPool.load(this, R.raw.a220s, 1);
+        //soundA220 = mSoundPool.load(this, R.raw.a220s, 1);
         soundWhiteNoise = mSoundPool.load(this, R.raw.whitenoise, 1);
         soundUnity = mSoundPool.load(this, R.raw.unity, 1);
 		
@@ -310,6 +310,8 @@ public class BBeat extends Activity {
     	lv_preset_arr.add(getString(R.string.program_unity));
     	lv_preset_arr.add(getString(R.string.program_morphine));
     	lv_preset_arr.add(getString(R.string.program_learning));
+    	lv_preset_arr.add(getString(R.string.program_creativity));
+    	lv_preset_arr.add(getString(R.string.program_schumann));
     	lv_preset_arr.add(getString(R.string.getting_involved));
     }
 
@@ -552,8 +554,12 @@ public class BBeat extends Activity {
 			p = DefaultProgramsBuilder.UNITY(new Program(name));
 		else if (name.equals(getString(R.string.program_morphine)))
 			p = DefaultProgramsBuilder.MORPHINE(new Program(name));
-		else
+		else if (name.equals(getString(R.string.program_learning)))
 			p = DefaultProgramsBuilder.LEARNING(new Program(name));
+		else if (name.equals(getString(R.string.program_creativity)))
+			p = DefaultProgramsBuilder.CREATIVITY(new Program(name));
+		else
+			p = DefaultProgramsBuilder.SCHUMANN_RESONANCE(new Program(name));
 		
 		_tmp_program_holder = p;
 		

@@ -88,13 +88,13 @@ public class BBeat extends Activity {
 	private appState state;
 	
 	private int soundA440;
-	private int soundA220;
+	//private int soundA220;
 	private int soundWhiteNoise;
 	private int soundUnity;
 	private SoundPool mSoundPool;
 	
 	private Note A440 = new Note(NoteK.A, 4);
-	private Note A220 = new Note(NoteK.A, 3);
+	//private Note A220 = new Note(NoteK.A, 3);
 	
 	private NotificationManager mNotificationManager;
 	private static final int NOTIFICATION_STARTED = 1;
@@ -480,7 +480,7 @@ public class BBeat extends Activity {
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
 			builder.setTitle(p.getName())
 			.setIcon(android.R.drawable.ic_dialog_info)
-			.setMessage(p.getDescription() + 
+			.setMessage(p.getDescription() + " " + p.getAuthor() +
 			String.format(" %sh%smin.",
 					formatTimeNumberwithLeadingZero(length/60/60),
 					formatTimeNumberwithLeadingZero((length/60)%60))		
@@ -663,6 +663,7 @@ public class BBeat extends Activity {
 	}
 	
 	private void playBackgroundSample(SoundLoop background, float vol) {
+		
 		switch(background) {
 		case WHITE_NOISE:
 			playingBackground = play(soundWhiteNoise, vol, vol, 2, -1, 1.0f);

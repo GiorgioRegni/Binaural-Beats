@@ -30,6 +30,7 @@ public class Program {
 	protected String name;
 	protected String description;
 	protected ArrayList<Period> seq;
+	private String author = "@GiorgioRegni";
 	
 	public Program(String name) {
 		this.name = name;
@@ -65,6 +66,14 @@ public class Program {
 		}
 		
 		return len;
+	}
+
+	public void setAuthor(String name) {
+		author  = name;
+	}
+	
+	public String getAuthor() {
+		return author;
 	}
 	
 }

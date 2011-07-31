@@ -112,6 +112,7 @@ public class BBeat extends Activity {
 
 	private SeekBar soundBeatV;
 	private float mSoundBeatVolume;
+	private SeekBar soundBGV;
 	private float mSoundBGVolume;
 	
 	private static final String SOURCE_CODE_URL = "http://bit.ly/BBeats";
@@ -215,8 +216,8 @@ public class BBeat extends Activity {
         /* Set up volume bar */
         soundBeatV = (SeekBar) findViewById((R.id.soundVolumeBar));
         soundBeatV.setMax(100);
-        soundBeatV.setProgress(70);
         mSoundBeatVolume = DEFAULT_VOLUME;
+        soundBeatV.setProgress((int) (mSoundBeatVolume*100));
         soundBeatV.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
 
 			public void onStopTrackingTouch(SeekBar seekBar) {
@@ -228,12 +229,28 @@ public class BBeat extends Activity {
 			public void onProgressChanged(SeekBar seekBar, int progress,
 					boolean fromUser) {
 				mSoundBeatVolume = ((float) progress)/100.f;
-				mSoundBGVolume = mSoundBeatVolume * 0.50f;
 				resetAllVolumes();
 			}
 		});
-        
-		mSoundBGVolume = mSoundBeatVolume * BG_VOLUME_RATIO;
+        /* Set up background volume bar */
+        soundBGV = (SeekBar) findViewById((R.id.soundBGVolumeBar));
+        soundBGV.setMax(100);
+        mSoundBGVolume = mSoundBeatVolume * BG_VOLUME_RATIO;
+        soundBGV.setProgress((int) (mSoundBGVolume*100));
+        soundBGV.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
+        	public void onStopTrackingTouch(SeekBar seekBar) {
+        	}
+        	public void onStartTrackingTouch(SeekBar seekBar) {
+        	}
+        	public void onProgressChanged(SeekBar seekBar, int progress,
+
+        			boolean fromUser) {
+
+        		mSoundBGVolume = ((float) progress)/100.f;
+
+        		resetAllVolumes();
+        	}
+        });
         
         mInProgram = (LinearLayout) findViewById(R.id.inProgramLayout);
         mPresetView = (LinearLayout) findViewById(R.id.presetLayout);

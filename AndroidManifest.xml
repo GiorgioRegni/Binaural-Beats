@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
       package="com.ihunda.android.binauralbeat"
-      android:versionCode="19"
+      android:versionCode="20"
       android:versionName="1">
-    <application android:icon="@drawable/icon" android:label="@string/app_name" android:theme="@android:style/Theme.NoTitleBar">
+    <application android:icon="@drawable/icon" android:label="@string/app_name" android:theme="@android:style/Theme.NoTitleBar" android:allowBackup="true">
         <activity android:name=".BBeat"
                   android:label="@string/app_name"
                   android:screenOrientation="portrait"
@@ -16,6 +16,7 @@
         </activity>
 
     </application>
-    <uses-sdk android:minSdkVersion="7" />
 	<uses-permission android:name="android.permission.WAKE_LOCK"></uses-permission>
+
+
 </manifest> 

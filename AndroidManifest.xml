@@ -20,4 +20,6 @@
 
 
 <uses-sdk android:minSdkVersion="7"></uses-sdk>
+
+
 </manifest> 

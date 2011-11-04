@@ -154,7 +154,7 @@ public class VizualizationView extends SurfaceView implements Callback {
 			if (c != null) {
 				mSurfaceHolder.unlockCanvasAndPost(c);
 			}
-       }
+		}
 	}
 	
 	void drawClear() {

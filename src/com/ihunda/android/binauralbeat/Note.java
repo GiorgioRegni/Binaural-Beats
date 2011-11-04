@@ -24,7 +24,7 @@ package com.ihunda.android.binauralbeat;
  */
 
 public class Note {
-	public static final double A_FREQ = 440.0;
+	public static final double A_FREQ = 432.0; // The nicest pitch http://www.omega432.com/music.html
 	
 	public enum NoteK {A, AD, B, C, CD, D, DD, E, F, FD, G, GD}; 
 	int octave; // 4 = A4

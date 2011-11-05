@@ -34,7 +34,8 @@ import android.view.SurfaceView;
 
 public class VizualizationView extends SurfaceView implements Callback {
 	
-	protected static final long DRAW_REFRESH_INTERVAL_NS = 1000 * 1000 * 1000 / 16; // # refresh per seconds
+	protected static final long DRAW_REFRESH_INTERVAL_NS = 1000 * 1000 * 1000 / 16; // # time between refreshes
+	protected static final long DRAW_REFRESH_INTERVAL_MIN_NS = 1000 * 1000 * 1000 / 20; // # time between refreshes
 	private static final String LOGVIZVIEW = "BBT-VIZ";
 	private SurfaceHolder mSurfaceHolder;
 	private int width;
@@ -181,6 +182,7 @@ public class VizualizationView extends SurfaceView implements Callback {
 		public void run() {
 			int i = 0;
 			
+			Log.e(LOGVIZVIEW, String.format("START THREAD"));	
 
 			while(running == true) {
 				long now = System.nanoTime();
@@ -200,6 +202,7 @@ public class VizualizationView extends SurfaceView implements Callback {
 					elapsed = System.nanoTime() - now;
 				}
 			}
+			
 			Log.e(LOGVIZVIEW, String.format("END THREAD redrew %d times", i));		
 		}
 	};

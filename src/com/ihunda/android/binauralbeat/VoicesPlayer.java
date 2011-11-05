@@ -22,6 +22,9 @@ public class VoicesPlayer extends Thread {
 	int bufFrames;
 	private FloatSinTable sinT;
 	long startTime;
+	float TwoPi;
+	
+	//short[] fakeS;
 	
 	boolean playing = false;
 
@@ -38,6 +41,7 @@ public class VoicesPlayer extends Thread {
 		calcFrames = audiobuf/16;
 		bufFrames = audiobuf;
 		sinT = new FloatSinTable();
+		TwoPi = (float) (2*Math.PI);
 		
 		Log.e(LOGVP, String.format("minsize %d bufsize %d ", minSize, audiobuf));
 	}
@@ -62,6 +66,8 @@ public class VoicesPlayer extends Thread {
 			}
 		}
 		
+		//fakeS = fillSamples();
+		
 		playing = true;
 		track.play();
 	}
@@ -83,7 +89,7 @@ public class VoicesPlayer extends Thread {
 	@Override
 	public synchronized void run() {
 		
-		android.os.Process.setThreadPriority(android.os.Process.THREAD_PRIORITY_URGENT_AUDIO);
+		android.os.Process.setThreadPriority(android.os.Process.THREAD_PRIORITY_AUDIO);
 		
 		while(true)
 		{
@@ -98,21 +104,30 @@ public class VoicesPlayer extends Thread {
 			}
 			
 			
-			long start = System.currentTimeMillis();
+			//long start = System.currentTimeMillis();
 			short[] samples = fillSamples();
-			long end = System.currentTimeMillis();
+			//short[] samples = fakeS;
+			//long end = System.currentTimeMillis();
 			
-			Log.v(LOGVP, String.format("Calc took %d ms", end-start));
+			//Log.v(LOGVP, String.format("Calc took %d ms", end-start));
 			
-			start = System.currentTimeMillis();
+			//start = System.currentTimeMillis();
 			int out = track.write(samples, 0, samples.length);
-			end = System.currentTimeMillis();
+			//end = System.currentTimeMillis();
 
-			Log.v(LOGVP, String.format("Write took %d ms", end-start));
-			Log.v(LOGVP, String.format("Written %d short out of %d", out, samples.length));
+			//Log.v(LOGVP, String.format("Write took %d ms", end-start));
 			
 			
-			assert(out == samples.length);
+			if (out != samples.length) {
+				Log.v(LOGVP, String.format("IMPOSSIBLE happened"));
+				Log.v(LOGVP, String.format("Written %d short out of %d", out, samples.length));
+				try {
+					sleep(calcFrames*1000/HZ/2);
+				} catch (InterruptedException e) {
+					// ignore
+				}
+				continue;
+			}
 		}
 	}
 
@@ -125,8 +140,8 @@ public class VoicesPlayer extends Thread {
 		for (int j=0; j<freqs.length; j++) { //freqs.length
 			float frequency = voicetoPitch(j);
 			
-			float inc1 = (float)(2*Math.PI) * (frequency+freqs[j]) / HZ;
-			float inc2 = (float)(2*Math.PI) * (frequency) / HZ;
+			float inc1 = TwoPi * (frequency+freqs[j]) / HZ;
+			float inc2 = TwoPi * (frequency) / HZ;
 			float angle1 = anglesL[j];
 			float angle2 = anglesR[j];
 			
@@ -138,8 +153,8 @@ public class VoicesPlayer extends Thread {
 				angle2 += inc2;
 			}
 
-			anglesL[j] = angle1;
-			anglesR[j] = angle2;
+			anglesL[j] = ((angle1*720/TwoPi) % 720) * TwoPi / 720;
+			anglesR[j] = ((angle2*720/TwoPi) % 720) * TwoPi / 720;
 		}
 		
 

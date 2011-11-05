@@ -66,7 +66,7 @@ public class BBeat extends Activity {
 	enum eState {START, RUNNING, END};
 	enum appState {NONE, SETUP, INPROGRAM};
 	
-	private static final int MAX_STREAMS = 30;
+	private static final int MAX_STREAMS = 5;
 
 	public static final float W_DELTA_FREQ = 2.00f;
 	public static final float W_THETA_FREQ = 6.00f;
@@ -291,6 +291,7 @@ public class BBeat extends Activity {
         playingBackground = -1;
         
         vp =  new VoicesPlayer();
+		vp.start();
     }
     
 	@Override
@@ -682,7 +683,6 @@ public class BBeat extends Activity {
 	protected void playVoices(ArrayList<BinauralBeatVoice> voices) {
 		vp.playVoices(voices);
 		vp.setVolume(mSoundBeatVolume);
-		vp.start();
 		
 	}
 	

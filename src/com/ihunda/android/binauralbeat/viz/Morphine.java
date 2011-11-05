@@ -57,7 +57,7 @@ public class Morphine implements Visualization {
 			float totalTime) {
 		int ledRadius = width / 2;
 		float ratio;
-		float dperiod = period * 2 * 2 * 2;
+		float dperiod = period * 2 * 2 * 2 * 2;
 		
 		ratio = (now % dperiod) / dperiod;
 		

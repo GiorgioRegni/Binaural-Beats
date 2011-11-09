@@ -290,8 +290,10 @@ public class BBeat extends Activity {
         playingStreams = new Vector<StreamVoice>(MAX_STREAMS);
         playingBackground = -1;
         
-        vp =  new VoicesPlayer();
-		vp.start();
+        if (vp == null) {
+        	vp =  new VoicesPlayer();
+        	vp.start();
+        }
     }
     
 	@Override
@@ -592,8 +594,10 @@ public class BBeat extends Activity {
 	}
 	
 	private void stopProgram() {
-		programFSM.stopProgram();
-		programFSM = null;
+		if (programFSM != null) {
+			programFSM.stopProgram();
+			programFSM = null;
+		}
 		panic();
 		goToState(appState.SETUP);
 	}

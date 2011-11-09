@@ -16,13 +16,14 @@ public class VoicesPlayer extends Thread {
 	static int HZ = 8192;
 	float freqs[];
 	float vols[];
-	float anglesL[];
-	float anglesR[];
+	int anglesL[];
+	int anglesR[];
 	int calcFrames;
 	int bufFrames;
 	private FloatSinTable sinT;
 	long startTime;
-	float TwoPi;
+	int TwoPi;
+	static int ISCALE = 1440;
 	
 	//short[] fakeS;
 	
@@ -40,8 +41,8 @@ public class VoicesPlayer extends Thread {
 				audiobuf, AudioTrack.MODE_STREAM);
 		calcFrames = audiobuf/16;
 		bufFrames = audiobuf;
-		sinT = new FloatSinTable();
-		TwoPi = (float) (2*Math.PI);
+		sinT = new FloatSinTable(ISCALE);
+		TwoPi = ISCALE;
 		
 		Log.e(LOGVP, String.format("minsize %d bufsize %d ", minSize, audiobuf));
 	}
@@ -56,11 +57,11 @@ public class VoicesPlayer extends Thread {
 			for (int i =0; i<freqs.length; i++) {
 				vols[i] = voices.get(i).volume;
 			}
-			anglesL = new float[voices.size()];
+			anglesL = new int[voices.size()];
 			for (int i =0; i<anglesL.length; i++) {
 				anglesL[i] = 0;
 			}
-			anglesR = new float[voices.size()];
+			anglesR = new int[voices.size()];
 			for (int i =0; i<anglesR.length; i++) {
 				anglesR[i] = 0;
 			}
@@ -97,6 +98,7 @@ public class VoicesPlayer extends Thread {
 			if (!playing) {
 				try {
 					sleep(500);
+					Log.v(LOGVP, "Sleeping");
 				} catch (InterruptedException e) {
 					// ignore
 				}
@@ -106,27 +108,47 @@ public class VoicesPlayer extends Thread {
 			
 			//long start = System.currentTimeMillis();
 			short[] samples = fillSamples();
-			//short[] samples = fakeS;
-			//long end = System.currentTimeMillis();
+			int totalWritten = 0;
+			int total = samples.length;
 			
-			//Log.v(LOGVP, String.format("Calc took %d ms", end-start));
-			
-			//start = System.currentTimeMillis();
-			int out = track.write(samples, 0, samples.length);
-			//end = System.currentTimeMillis();
-
-			//Log.v(LOGVP, String.format("Write took %d ms", end-start));
-			
-			
-			if (out != samples.length) {
-				Log.v(LOGVP, String.format("IMPOSSIBLE happened"));
-				Log.v(LOGVP, String.format("Written %d short out of %d", out, samples.length));
-				try {
-					sleep(calcFrames*1000/HZ/2);
-				} catch (InterruptedException e) {
-					// ignore
+			while (totalWritten != total) {
+				int out = track.write(samples, 0, samples.length);
+				boolean sleep = false;
+				
+				//Log.v(LOGVP, String.format("Written %d short out of %d", out, samples.length));
+				
+				if (out == AudioTrack.ERROR_BAD_VALUE) {
+					Log.v(LOGVP, String.format("Got BAD VALUE"));
+					// It means somehow the audiotrack is not playing anymore, let's just stop
+					break;
+				} else if (out < 0) {
+					Log.v(LOGVP, String.format("Got strange %d", out));
+					break;
 				}
-				continue;
+				else
+				{
+					totalWritten += out;
+					
+					if (out != samples.length) {
+						sleep = true;
+						
+					    short[] sf = new short[samples.length - out];
+					    System.arraycopy(samples, out, sf, 0, samples.length - out);
+					    
+					    Log.v(LOGVP, String.format("Shoud be equal %d %d", total - totalWritten, samples.length - out));
+					    
+					    samples = sf;
+					}	
+				}
+				
+				if (sleep) {
+					Log.v(LOGVP, String.format("we're going too fast - throttling"));
+					try {
+						sleep(calcFrames*1000/HZ/2);
+					} catch (InterruptedException e) {
+						// ignore
+					}
+				}
 			}
 		}
 	}
@@ -140,21 +162,21 @@ public class VoicesPlayer extends Thread {
 		for (int j=0; j<freqs.length; j++) { //freqs.length
 			float frequency = voicetoPitch(j);
 			
-			float inc1 = TwoPi * (frequency+freqs[j]) / HZ;
-			float inc2 = TwoPi * (frequency) / HZ;
-			float angle1 = anglesL[j];
-			float angle2 = anglesR[j];
+			int inc1 = (int) (TwoPi * (frequency+freqs[j]) / HZ);
+			int inc2 = (int) (TwoPi * (frequency) / HZ);
+			int angle1 = anglesL[j];
+			int angle2 = anglesR[j];
 			
 			for(int i = 0; i < samples.length; i+=2)
 			{
-				ws[i] += sinT.sinFast(angle1) * vols[j]; 
-				ws[i+1] += sinT.sinFast(angle2) * vols[j];
+				ws[i] += sinT.sinFastInt(angle1) * vols[j]; 
+				ws[i+1] += sinT.sinFastInt(angle2) * vols[j];
 				angle1 += inc1;
 				angle2 += inc2;
 			}
 
-			anglesL[j] = ((angle1*720/TwoPi) % 720) * TwoPi / 720;
-			anglesR[j] = ((angle2*720/TwoPi) % 720) * TwoPi / 720;
+			anglesL[j] = angle1 % ISCALE;
+			anglesR[j] = angle2 % ISCALE;
 		}
 		
 

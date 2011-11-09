@@ -38,7 +38,7 @@ public class Aurora implements Visualization {
 	/**
 	 * Beat frequency in Hz
 	 */
-	private double period;
+	private float period;
 	private Bitmap background;
 	private Paint pTag;
 	
@@ -52,10 +52,10 @@ public class Aurora implements Visualization {
 			float totalTime) {
 		// window [-2.0, 1.0, -1.5, 1.5]
 		
-		double dperiod = period * 2 * 10;
+		float dperiod = period * 2 * 10;
 	
-		double ratio = (now % dperiod) / dperiod;
-		double trans;
+		float ratio = (now % dperiod) / dperiod;
+		float trans;
 		
 		c.drawBitmap(background, 0, 0, null);
 		

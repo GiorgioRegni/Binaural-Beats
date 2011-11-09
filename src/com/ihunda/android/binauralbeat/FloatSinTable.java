@@ -1,9 +1,7 @@
 package com.ihunda.android.binauralbeat;
 
 /**
- * A fast but low precison (error ~ 1x10^-6) floating sinTable.
- * feel free to do anything with this class.
- * Alessandro Borges 2004
+ * Fast smaller precision sin
  */
 
 public class FloatSinTable
@@ -57,5 +55,15 @@ if (a == 0.0d) return 0.0d;
 		int index = (int)(a/step);
 		index = index % size;
 		return table[index];
+	}
+	
+	/**
+	 * calculates fast sin, but with low precision.
+	 * @param a angle already converted to integer
+	 * @return sin of angle a
+	 */
+	final public float sinFastInt(int a)
+	{
+		return table[a % size];
 	}
 }

@@ -30,10 +30,10 @@ import android.graphics.Color;
 import android.graphics.Paint;
 
 import com.ihunda.android.binauralbeat.BBeat;
+import com.ihunda.android.binauralbeat.CanvasVisualization;
 import com.ihunda.android.binauralbeat.R;
-import com.ihunda.android.binauralbeat.Visualization;
 
-public class Morphine implements Visualization {
+public class Morphine implements CanvasVisualization {
 
 	private static final int COLOR_LED = Color.argb(150, 120, 255, 30);
 	

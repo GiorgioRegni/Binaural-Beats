@@ -23,7 +23,7 @@
 
 	</LinearLayout>
 
-	<com.ihunda.android.binauralbeat.VizualizationView android:id="@+id/VisualizationView" android:layout_width="fill_parent"
+	<FrameLayout android:id="@+id/VisualizationView" android:layout_width="fill_parent"
 		android:layout_height="fill_parent" android:layout_weight="4"/>
 	
 	

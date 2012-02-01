@@ -27,9 +27,9 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 
-import com.ihunda.android.binauralbeat.Visualization;
+import com.ihunda.android.binauralbeat.CanvasVisualization;
 
-public class Leds implements Visualization {
+public class Leds implements CanvasVisualization {
 
 	private static final int COLOR_LED = Color.rgb(200, 30, 30);
 	private static final int COLOR_BG = Color.rgb(0, 0, 0);

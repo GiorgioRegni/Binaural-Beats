@@ -31,6 +31,7 @@ public class Program {
 	protected String description;
 	protected ArrayList<Period> seq;
 	private String author = "@GiorgioRegni";
+	boolean useGL = false;
 	
 	public Program(String name) {
 		this.name = name;
@@ -74,6 +75,14 @@ public class Program {
 	
 	public String getAuthor() {
 		return author;
+	}
+	
+	public void setGL() {
+		useGL = true;
+	}
+	
+	public boolean doesUseGL() {
+		return useGL;
 	}
 	
 }

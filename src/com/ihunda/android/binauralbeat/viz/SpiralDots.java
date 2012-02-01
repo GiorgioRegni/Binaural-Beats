@@ -27,9 +27,9 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 
-import com.ihunda.android.binauralbeat.Visualization;
+import com.ihunda.android.binauralbeat.CanvasVisualization;
 
-public class SpiralDots implements Visualization {
+public class SpiralDots implements CanvasVisualization {
 
 	private static final int COLOR_1 = Color.rgb(0x99, 0xee, 0x99);
 	private static final int COLOR_2_R = 0x99;
@@ -42,31 +42,33 @@ public class SpiralDots implements Visualization {
 	 * Beat frequency in Hz
 	 */
 	float freq;
-	double period;
+	float period;
 	Paint pLed;
+	float Twopi;
 	
 	public SpiralDots() {
 		pLed = new Paint();
 		pLed.setStyle(Paint.Style.FILL);
+		Twopi = (float) (2 * Math.PI);
 	}
 	
 	public void redraw(Canvas c, int width, int height, float now,
 			float totalTime) {
 		int r = (Math.min(width, height) - DOT_RADIUS) / 2;
-		double ratio;
-		double phase;
-		double dperiod = 8 * period;
+		float ratio;
+		float phase;
+		float dperiod = 8 * period;
 		
 		ratio = (now % dperiod) / dperiod;
-		phase = - ratio * 2 * Math.PI;
+		phase = - ratio * Twopi;
 		c.drawColor(COLOR_BG);
 		
 		pLed.setColor(COLOR_1);
 		
-		double inc = 0.20;
-		for (double i=0; i<1; i+=inc) {
-			float x = width/2 + (int) (Math.cos(phase + 2*Math.PI*i*4)*r*i);
-			float y = height/2 + (int) (Math.sin(phase + 2*Math.PI*i*4)*r*i);
+		float inc = 0.20f;
+		for (float i=0; i<1; i+=inc) {
+			float x = width/2 + (int) (Math.cos(phase + Twopi*4)*r*i);
+			float y = height/2 + (int) (Math.sin(phase + Twopi*i*4)*r*i);
 			
 			pLed.setColor(Color.rgb((int) (COLOR_2_R *(0.1+i)), (int) (COLOR_2_G *(0.1+i)), (int) (COLOR_2_B *(0.1+i))));
 			c.drawCircle(x,

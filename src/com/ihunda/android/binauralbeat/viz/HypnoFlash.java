@@ -32,10 +32,10 @@ import android.graphics.Color;
 import android.graphics.Paint;
 
 import com.ihunda.android.binauralbeat.BBeat;
+import com.ihunda.android.binauralbeat.CanvasVisualization;
 import com.ihunda.android.binauralbeat.R;
-import com.ihunda.android.binauralbeat.Visualization;
 
-public class HypnoFlash implements Visualization {
+public class HypnoFlash implements CanvasVisualization {
 
 	private static final int COLOR_FLASH1 = Color.argb(100, 255, 255, 255);
 	private static final int COLOR_FLASH2 = Color.argb(150, 255, 255, 255);

@@ -26,13 +26,12 @@ package com.ihunda.android.binauralbeat;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.util.AttributeSet;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceHolder.Callback;
 import android.view.SurfaceView;
 
-public class VizualizationView extends SurfaceView implements Callback {
+public class CanvasVizualizationView extends SurfaceView implements Callback, VizualisationView {
 	
 	protected static final long DRAW_REFRESH_INTERVAL_NS = 1000 * 1000 * 1000 / 16; // # time between refreshes
 	protected static final long DRAW_REFRESH_INTERVAL_MIN_NS = 1000 * 1000 * 1000 / 20; // # time between refreshes
@@ -40,7 +39,7 @@ public class VizualizationView extends SurfaceView implements Callback {
 	private SurfaceHolder mSurfaceHolder;
 	private int width;
 	private int height;
-	private Visualization v;
+	private CanvasVisualization v;
 	private boolean running;
 	
 	protected float pos;
@@ -48,8 +47,8 @@ public class VizualizationView extends SurfaceView implements Callback {
 	
 	private Thread vThread;
 	
-	public VizualizationView(Context context, AttributeSet attrs) {
-		super(context, attrs);
+	public CanvasVizualizationView(Context context) {
+		super(context);
 		// register our interest in hearing about changes to our surface
         mSurfaceHolder  = getHolder();
         mSurfaceHolder.addCallback(this);
@@ -97,7 +96,7 @@ public class VizualizationView extends SurfaceView implements Callback {
 		if (v == null)
 			return;
 		
-		this.v = v;
+		this.v = (CanvasVisualization) v;
 		this.pos = 0;
 		this.length = length;
 				
@@ -193,13 +192,12 @@ public class VizualizationView extends SurfaceView implements Callback {
 				i++;
 				
 				long elapsed = System.nanoTime() - now;
-				while(elapsed < DRAW_REFRESH_INTERVAL_NS) {
+				if(elapsed < DRAW_REFRESH_INTERVAL_NS) {
 					try {
 						Thread.sleep((DRAW_REFRESH_INTERVAL_NS - elapsed) / 1000 / 1000, 0);
 					} catch (InterruptedException e) {
 
 					}
-					elapsed = System.nanoTime() - now;
 				}
 			}
 			

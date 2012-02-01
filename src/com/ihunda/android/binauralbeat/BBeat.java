@@ -53,6 +53,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.FrameLayout;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -78,7 +79,8 @@ public class BBeat extends Activity {
 	
 	private LinearLayout mPresetView;
 	private LinearLayout mInProgram;
-	private VizualizationView mVizV;
+	private View mVizV;
+	private FrameLayout mVizHolder;
 	private TextView mStatus;
 	private ListView mPresetList;
 	private ToggleButton mPlayPause;
@@ -127,6 +129,8 @@ public class BBeat extends Activity {
 	private static final float BG_VOLUME_RATIO = 0.4f;
 	
 	private VoicesPlayer vp;
+
+	boolean glMode = false;
 	
 	
 	/* 
@@ -250,7 +254,8 @@ public class BBeat extends Activity {
         
         mInProgram = (LinearLayout) findViewById(R.id.inProgramLayout);
         mPresetView = (LinearLayout) findViewById(R.id.presetLayout);
-        mVizV = (VizualizationView) findViewById(R.id.VisualizationView);
+
+        mVizHolder = (FrameLayout) findViewById(R.id.VisualizationView);
         mStatus = (TextView) findViewById(R.id.Status);
         
         // Set a static pointer to this instance so that vizualisation can access it
@@ -325,8 +330,10 @@ public class BBeat extends Activity {
     	lv_preset_arr.add(getString(R.string.program_highest_mental_activity));
     	lv_preset_arr.add(getString(R.string.program_unity));
     	lv_preset_arr.add(getString(R.string.program_morphine));
+    	lv_preset_arr.add(getString(R.string.program_lsd));
     	lv_preset_arr.add(getString(R.string.program_learning));
     	lv_preset_arr.add(getString(R.string.program_creativity));
+    	lv_preset_arr.add(getString(R.string.program_astral_01_relax));
     	lv_preset_arr.add(getString(R.string.program_schumann));
     	lv_preset_arr.add(getString(R.string.getting_involved));
     }
@@ -340,10 +347,13 @@ public class BBeat extends Activity {
 		case INPROGRAM:
 	    	if (mWl.isHeld())
 	    		mWl.release();
-	    	
+
+			mVizHolder.removeAllViews();
+			mVizV = null;
+
 			runGoneAnimationOnView(mInProgram);
 			_cancel_all_notifications();
-			
+						
 			/* Reinit all sounds */
 			initSounds();
 			break;
@@ -359,7 +369,7 @@ public class BBeat extends Activity {
 		case SETUP:
 			runComeBackAnimationOnView(mPresetView);
 			mPresetList.invalidate();
-			mVizV.setVisibility(View.GONE);
+			mVizHolder.setVisibility(View.GONE);
 			break;
 		case INPROGRAM:
 			// Acquire power management lock
@@ -367,7 +377,15 @@ public class BBeat extends Activity {
 			
 			_start_notification(programFSM.getProgram().getName());
 			runComeBackAnimationOnView(mInProgram);
-			mVizV.setVisibility(View.VISIBLE);
+			mVizHolder.setVisibility(View.VISIBLE);
+
+			glMode = programFSM.pR.doesUseGL();
+			if (glMode)
+				mVizV = new GLVizualizationView(getBaseContext());
+			else
+				mVizV = new CanvasVizualizationView(getBaseContext());
+			mVizHolder.addView(mVizV);
+			
 			mPlayPause.setChecked(true);
 			pause_time = -1;
 			break;
@@ -575,6 +593,10 @@ public class BBeat extends Activity {
 			p = DefaultProgramsBuilder.LEARNING(new Program(name));
 		else if (name.equals(getString(R.string.program_creativity)))
 			p = DefaultProgramsBuilder.CREATIVITY(new Program(name));
+		else if (name.equals(getString(R.string.program_astral_01_relax)))
+			p = DefaultProgramsBuilder.ASTRAL_01_RELAX(new Program(name));
+		else if (name.equals(getString(R.string.program_lsd)))
+			p = DefaultProgramsBuilder.LSD(new Program(name));
 		else
 			p = DefaultProgramsBuilder.SCHUMANN_RESONANCE(new Program(name));
 		
@@ -762,8 +784,8 @@ public class BBeat extends Activity {
 		}
 		
 		private void startPeriod(Period p) {
-			mVizV.startVisualization(p.getV(), p.getLength());
-			mVizV.setFrequency(p.getVoices().get(0).freqStart);
+			((VizualisationView) mVizV).startVisualization(p.getV(), p.getLength());
+			((VizualisationView) mVizV).setFrequency(p.getVoices().get(0).freqStart);
 			playVoices(p.voices);
 			playBackgroundSample(p.background, p.getBackgroundvol());
 			
@@ -775,8 +797,8 @@ public class BBeat extends Activity {
 			
 			float freq = skewVoices(p.voices, pos, p.length, oldDelta != delta);
 
-			mVizV.setFrequency(freq);
-			mVizV.setProgress(pos);
+			((VizualisationView) mVizV).setFrequency(freq);
+			((VizualisationView) mVizV).setProgress(pos);
 			
 			if (oldDelta != delta) {
 				oldDelta = delta;
@@ -795,7 +817,7 @@ public class BBeat extends Activity {
 		private void endPeriod() {
 			stopAllVoices();
 			stopBackgroundSample();
-			mVizV.stopVisualization();
+			((VizualisationView) mVizV).stopVisualization();
 		}
 		
 		public void catchUpAfterPause(long delta) {

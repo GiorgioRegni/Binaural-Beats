@@ -188,6 +188,43 @@ public class DefaultProgramsBuilder {
 		return p;
 	}
 
+	public static Program ASTRAL_01_RELAX(Program p) {
+		p.setDescription("From the book Mastering Astral Projection, Week 1: Relaxation. " +
+				"Use a low to medium sound level, sit in a quiet place, and listen to the preset with eyes closed." +
+				" A hard-backed chair without neck support is recommended to prevent falling asleep.");
 
+		p.setAuthor("@GiorgioRegni");
+
+		p.addPeriod(new Period(600, SoundLoop.WHITE_NOISE, 0.4f, null).
+				addVoice(new BinauralBeatVoice(15f,	10f, 0.65f)).
+				addVoice(new BinauralBeatVoice(15f,	10f, 0.65f)).
+				addVoice(new BinauralBeatVoice(15f,	10f, 0.65f)).
+				setV(new Starfield())
+		).
+		addPeriod(new Period(60*80, SoundLoop.WHITE_NOISE, 0.4f, null).
+				addVoice(new BinauralBeatVoice(10f, 10f, 0.60f)).
+				addVoice(new BinauralBeatVoice(10f, 10f, 0.60f)).
+				addVoice(new BinauralBeatVoice(10f, 10f, 0.60f)).
+				addVoice(new BinauralBeatVoice(4.5f, 2.5f, 0.60f)).
+				setV(new Starfield())
+		);
+
+		return p;
+	}
+	
+	public static Program LSD(Program p) {
+		p.setDescription("...");
+
+		p.setAuthor("@GiorgioRegni");
+		p.setGL();
+		
+		p.addPeriod(new Period(600, SoundLoop.WHITE_NOISE, 0.4f, null).
+				addVoice(new BinauralBeatVoice(15f,	10f, 0.65f)).
+				addVoice(new BinauralBeatVoice(15f,	10f, 0.65f)).
+				addVoice(new BinauralBeatVoice(15f,	10f, 0.65f)).
+				setV(new Plasma()));
+
+		return p;
+	}
 
 }

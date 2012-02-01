@@ -37,6 +37,8 @@ public class Period {
 	
 	Visualization v;
 	
+	boolean strechable;
+	
 	public Period(int length, SoundLoop background,
 			float backgroundvol, Visualization v) {
 		super();
@@ -44,6 +46,7 @@ public class Period {
 		this.background = background;
 		this.setBackgroundvol(backgroundvol);
 		this.v = v;
+		this.strechable = false;
 	}
 
 	public int getLength() {
@@ -91,6 +94,15 @@ public class Period {
 		if (voices == null)
 			voices = new ArrayList<BinauralBeatVoice>();
 		voices.add(v);
+		return this;
+	}
+
+	public boolean isStrechable() {
+		return strechable;
+	}
+
+	public Period setStrechable(boolean strechable) {
+		this.strechable = strechable;
 		return this;
 	}
 	

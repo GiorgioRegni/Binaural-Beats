@@ -73,9 +73,9 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 
-import com.ihunda.android.binauralbeat.Visualization;
+import com.ihunda.android.binauralbeat.CanvasVisualization;
 
-public class HypnoticSpiral implements Visualization {
+public class HypnoticSpiral implements CanvasVisualization {
 	
 	
 	private static final int NUM_PRECALC_BITMAPS = 45;

@@ -23,17 +23,17 @@ package com.ihunda.android.binauralbeat.viz;
  *   BBT project home is at https://github.com/GiorgioRegni/Binaural-Beats
  */
 
-import com.ihunda.android.binauralbeat.BBeat;
-import com.ihunda.android.binauralbeat.R;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 
-import com.ihunda.android.binauralbeat.Visualization;
+import com.ihunda.android.binauralbeat.BBeat;
+import com.ihunda.android.binauralbeat.CanvasVisualization;
+import com.ihunda.android.binauralbeat.R;
 
-public class Aurora implements Visualization {	
+public class Aurora implements CanvasVisualization {	
 	
 	/**
 	 * Beat frequency in Hz

@@ -29,9 +29,9 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 
-import com.ihunda.android.binauralbeat.Visualization;
+import com.ihunda.android.binauralbeat.CanvasVisualization;
 
-public class Flash implements Visualization {
+public class Flash implements CanvasVisualization {
 
 	private static final int COLOR_FLASH1 = Color.rgb(30, 30, 200);
 	private static final int COLOR_FLASH2 = Color.rgb(150, 150, 240);

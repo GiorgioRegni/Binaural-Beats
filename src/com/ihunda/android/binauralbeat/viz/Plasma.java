@@ -200,7 +200,7 @@ public class Plasma implements GLVisualization {
 		
 	    float dperiod = period * 2;
 	    float ratio = (now % dperiod) / dperiod;
-		int img[] = new int[textureHeight*textureWidth];
+		//int img[] = new int[textureHeight*textureWidth];
 	    
 	    int x,y,col,pos;
 		 

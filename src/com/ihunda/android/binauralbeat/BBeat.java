@@ -330,10 +330,13 @@ public class BBeat extends Activity {
     	lv_preset_arr.add(getString(R.string.program_highest_mental_activity));
     	lv_preset_arr.add(getString(R.string.program_unity));
     	lv_preset_arr.add(getString(R.string.program_morphine));
+    	lv_preset_arr.add(getString(R.string.program_sleep_induction));
     	lv_preset_arr.add(getString(R.string.program_lsd));
     	lv_preset_arr.add(getString(R.string.program_learning));
     	lv_preset_arr.add(getString(R.string.program_creativity));
     	lv_preset_arr.add(getString(R.string.program_astral_01_relax));
+    	lv_preset_arr.add(getString(R.string.program_lucid_dreams));
+    	lv_preset_arr.add(getString(R.string.program_shamanic_rhythm));
     	lv_preset_arr.add(getString(R.string.program_schumann));
     	lv_preset_arr.add(getString(R.string.getting_involved));
     }
@@ -597,6 +600,12 @@ public class BBeat extends Activity {
 			p = DefaultProgramsBuilder.ASTRAL_01_RELAX(new Program(name));
 		else if (name.equals(getString(R.string.program_lsd)))
 			p = DefaultProgramsBuilder.LSD(new Program(name));
+		else if (name.equals(getString(R.string.program_sleep_induction)))
+			p = DefaultProgramsBuilder.SLEEP_INDUCTION(new Program(name));
+		else if (name.equals(getString(R.string.program_shamanic_rhythm)))
+			p = DefaultProgramsBuilder.SHAMANIC_RHYTHM(new Program(name));
+		else if (name.equals(getString(R.string.program_lucid_dreams)))
+			p = DefaultProgramsBuilder.LUCID_DREAMS(new Program(name));
 		else
 			p = DefaultProgramsBuilder.SCHUMANN_RESONANCE(new Program(name));
 		

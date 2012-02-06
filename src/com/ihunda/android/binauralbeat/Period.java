@@ -101,8 +101,8 @@ public class Period {
 		return strechable;
 	}
 
-	public Period setStrechable(boolean strechable) {
-		this.strechable = strechable;
+	public Period setStrechable() {
+		this.strechable = true;
 		return this;
 	}
 	

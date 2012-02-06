@@ -213,16 +213,131 @@ public class DefaultProgramsBuilder {
 	}
 	
 	public static Program LSD(Program p) {
-		p.setDescription("...");
+		p.setDescription("Lysergic acid diethylamide, abbreviated LSD , " +
+				"also known as acid, is a semisynthetic psychedelic drug...");
 
 		p.setAuthor("@GiorgioRegni");
 		p.setGL();
 		
-		p.addPeriod(new Period(600, SoundLoop.WHITE_NOISE, 0.4f, null).
+		p.addPeriod(new Period(600, SoundLoop.WHITE_NOISE, 0.2f, null).
 				addVoice(new BinauralBeatVoice(15f,	10f, 0.65f)).
 				addVoice(new BinauralBeatVoice(15f,	10f, 0.65f)).
 				addVoice(new BinauralBeatVoice(15f,	10f, 0.65f)).
 				setV(new Plasma()));
+
+		return p;
+	}
+	
+	public static Program SLEEP_INDUCTION(Program p) {
+        p.setDescription("Insomnia relief for use at bed time" +
+                        " 6 minute drop into delta then 54 minutes of relaxing delta ");
+        p.setAuthor("@thegreenman");
+
+        p.addPeriod(new Period(360, SoundLoop.UNITY, 0.7f, null).
+                        addVoice(new BinauralBeatVoice(9.7f, 3.4f, 0.6f)).
+          setV(new Aurora())
+        ).addPeriod(new Period(1620, SoundLoop.UNITY, 0.7f, null).
+                        addVoice(new BinauralBeatVoice(3.4f, 2.4f, 0.6f)).
+          setV(new Aurora())
+        ).addPeriod(new Period(1620, SoundLoop.UNITY, 0.7f, null).
+                        addVoice(new BinauralBeatVoice(2.4f, 3.4f, 0.6f)).
+          setV(new Aurora())
+        );
+        return p;
+	}
+	
+	public static Program LUCID_DREAMS(Program p) {
+		
+		Morphine m = new Morphine();
+        p.setDescription("Stimulates lucid dreaming. Play while sleeping" +
+                        " 5hz base frequency with 8 hz spikes.");
+        p.setAuthor("@thegreenman");
+
+        p.addPeriod(new Period(60, SoundLoop.NONE, 0.7f, null).
+                        addVoice(new BinauralBeatVoice(10f, 8f, 0.6f)).
+          setV(m)
+        ).addPeriod(new Period(60, SoundLoop.NONE, 0.7f, null).
+                        addVoice(new BinauralBeatVoice(8f, 8f, 0.6f)).
+          setV(m)
+        ).addPeriod(new Period(60, SoundLoop.NONE, 0.7f, null).
+                        addVoice(new BinauralBeatVoice(8f, 6f, 0.6f)).
+                        setV(m)
+        ).addPeriod(new Period(60, SoundLoop.NONE, 0.7f, null).
+                        addVoice(new BinauralBeatVoice(6f, 6f, 0.6f)).
+                        setV(m)
+        ).addPeriod(new Period(120, SoundLoop.NONE, 0.7f, null).
+                        addVoice(new BinauralBeatVoice(6f, 5f, 0.6f)).
+                        setV(m)
+        ).addPeriod(new Period(360, SoundLoop.NONE, 0.7f, null).
+                        addVoice(new BinauralBeatVoice(5f, 5f, 0.6f)).
+                        setV(m)
+        ).addPeriod(new Period(10, SoundLoop.NONE, 0.7f, null).
+                        addVoice(new BinauralBeatVoice(5f, 8f, 0.6f)).
+                        setV(m)
+        ).addPeriod(new Period(10, SoundLoop.NONE, 0.7f, null).
+                        addVoice(new BinauralBeatVoice(8f, 5f, 0.6f)).
+                        setV(m)
+        ).addPeriod(new Period(180, SoundLoop.NONE, 0.7f, null).
+                        addVoice(new BinauralBeatVoice(5f, 5f, 0.6f)).
+                        setV(m)
+        ).addPeriod(new Period(10, SoundLoop.NONE, 0.7f, null).
+                        addVoice(new BinauralBeatVoice(5f, 8f, 0.6f)).
+                        setV(m)
+        ).addPeriod(new Period(10, SoundLoop.NONE, 0.7f, null).
+                        addVoice(new BinauralBeatVoice(8f, 5f, 0.6f)).
+                        setV(m)
+        ).addPeriod(new Period(90, SoundLoop.NONE, 0.7f, null).
+                        addVoice(new BinauralBeatVoice(5f, 5f, 0.6f)).
+                        setV(m)
+        ).addPeriod(new Period(10, SoundLoop.NONE, 0.7f, null).
+                        addVoice(new BinauralBeatVoice(5f, 8f, 0.6f)).
+                        setV(m)
+        ).addPeriod(new Period(10, SoundLoop.NONE, 0.7f, null).
+                        addVoice(new BinauralBeatVoice(8f, 5f, 0.6f)).
+                        setV(m)
+        ).addPeriod(new Period(240, SoundLoop.NONE, 0.7f, null).
+                        addVoice(new BinauralBeatVoice(5f, 5f, 0.6f)).
+                        setV(m)
+        ).addPeriod(new Period(10, SoundLoop.NONE, 0.7f, null).
+                        addVoice(new BinauralBeatVoice(5f, 8f, 0.6f)).
+                        setV(m)
+        ).addPeriod(new Period(10, SoundLoop.NONE, 0.7f, null).
+                        addVoice(new BinauralBeatVoice(8f, 5f, 0.6f)).
+                        setV(m)
+        ).addPeriod(new Period(480, SoundLoop.NONE, 0.7f, null).
+                        addVoice(new BinauralBeatVoice(5f, 5f, 0.6f)).
+                        setV(m)
+        ).addPeriod(new Period(10, SoundLoop.NONE, 0.7f, null).
+                        addVoice(new BinauralBeatVoice(5f, 8f, 0.6f)).
+                        setV(m)
+        ).addPeriod(new Period(10, SoundLoop.NONE, 0.7f, null).
+                        addVoice(new BinauralBeatVoice(8f, 5f, 0.6f)).
+                        setV(m)
+        ).addPeriod(new Period(360, SoundLoop.NONE, 0.7f, null).
+                        addVoice(new BinauralBeatVoice(5f, 5f, 0.6f)).
+                        setV(m)
+        ).addPeriod(new Period(480, SoundLoop.NONE, 0.7f, null).
+                        addVoice(new BinauralBeatVoice(5f, 12f, 0.6f)).
+                        setV(m)
+        );
+        return p;
+	}
+	
+	public static Program SHAMANIC_RHYTHM(Program p) {
+		p.setDescription("Shamanic Drum Rhythm" +
+				"Begin at 9hz then glide down to 4.5hz for 50 minutes and back up at the end.");
+                p.setAuthor("@thegreenman");
+
+		p.addPeriod(new Period(300, SoundLoop.WHITE_NOISE, 0.7f, null).
+				addVoice(new BinauralBeatVoice(9f, 4.5f, 0.6f)).
+				setV(new HypnoFlash())
+		).addPeriod(new Period(3000, SoundLoop.WHITE_NOISE, 0.7f, null).
+				addVoice(new BinauralBeatVoice(4.5f, 4.5f, 0.6f)).
+				setV(new HypnoFlash())
+		).addPeriod(new Period(300, SoundLoop.WHITE_NOISE, 0.7f, null).
+				addVoice(new BinauralBeatVoice(4.5f, 9f, 0.6f)).
+				setV(new HypnoFlash())
+		);
 
 		return p;
 	}

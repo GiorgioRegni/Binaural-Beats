@@ -46,7 +46,6 @@ package com.ihunda.android.binauralbeat;
  *   BBT project home is at https://github.com/GiorgioRegni/Binaural-Beats
  */
 
-import android.graphics.Canvas;
 
 public interface Visualization {
 

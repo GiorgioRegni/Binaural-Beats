@@ -229,19 +229,22 @@ public class DefaultProgramsBuilder {
 	}
 	
 	public static Program SLEEP_INDUCTION(Program p) {
+		
+		Visualization v = new None();
+		
         p.setDescription("Insomnia relief for use at bed time" +
                         " 6 minute drop into delta then 54 minutes of relaxing delta ");
         p.setAuthor("@thegreenman");
 
         p.addPeriod(new Period(360, SoundLoop.UNITY, 0.7f, null).
                         addVoice(new BinauralBeatVoice(9.7f, 3.4f, 0.6f)).
-          setV(new Aurora())
+          setV(v)
         ).addPeriod(new Period(1620, SoundLoop.UNITY, 0.7f, null).
                         addVoice(new BinauralBeatVoice(3.4f, 2.4f, 0.6f)).
-          setV(new Aurora())
+          setV(v)
         ).addPeriod(new Period(1620, SoundLoop.UNITY, 0.7f, null).
                         addVoice(new BinauralBeatVoice(2.4f, 3.4f, 0.6f)).
-          setV(new Aurora())
+          setV(v)
         );
         return p;
 	}
@@ -324,19 +327,21 @@ public class DefaultProgramsBuilder {
 	}
 	
 	public static Program SHAMANIC_RHYTHM(Program p) {
+		Visualization v = new None();
+		
 		p.setDescription("Shamanic Drum Rhythm" +
 				"Begin at 9hz then glide down to 4.5hz for 50 minutes and back up at the end.");
                 p.setAuthor("@thegreenman");
 
 		p.addPeriod(new Period(300, SoundLoop.WHITE_NOISE, 0.7f, null).
 				addVoice(new BinauralBeatVoice(9f, 4.5f, 0.6f)).
-				setV(new HypnoFlash())
+				setV(v)
 		).addPeriod(new Period(3000, SoundLoop.WHITE_NOISE, 0.7f, null).
 				addVoice(new BinauralBeatVoice(4.5f, 4.5f, 0.6f)).
-				setV(new HypnoFlash())
+				setV(v)
 		).addPeriod(new Period(300, SoundLoop.WHITE_NOISE, 0.7f, null).
 				addVoice(new BinauralBeatVoice(4.5f, 9f, 0.6f)).
-				setV(new HypnoFlash())
+				setV(v)
 		);
 
 		return p;

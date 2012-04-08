@@ -1,0 +1,69 @@
+<?xml version="1.0"?>
+<!-- See http://gnaural.sourceforge.net -->
+<schedule>
+<gnauralfile_version>1.20101006</gnauralfile_version>
+<gnaural_version>1.0.20110606</gnaural_version>
+<date>Mon Aug  8 08:12:51 2011
+</date>
+<title>Power Nap</title>
+<schedule_description>Around 20 min. of rest to make it through the day</schedule_description>
+<author>Gnaural</author>
+<totaltime>1200</totaltime>
+<voicecount>3</voicecount>
+<totalentrycount>14</totalentrycount>
+<loops>1</loops>
+<overallvolume_left>1</overallvolume_left>
+<overallvolume_right>1</overallvolume_right>
+<stereoswap>0</stereoswap>
+<graphview>1</graphview>
+<voice>
+<description>164 to 110</description>
+<id>0</id>
+<type>0</type>
+<voice_state>0</voice_state>
+<voice_hide>0</voice_hide>
+<voice_mute>0</voice_mute>
+<voice_mono>0</voice_mono>
+<entrycount>12</entrycount>
+<entries>
+<entry parent="0" duration="13.1737" volume_left="0.515339" volume_right="0.515339" beatfreq="10.991" basefreq="164" state="0"/>
+<entry parent="0" duration="16.7665" volume_left="0.520837" volume_right="0.520837" beatfreq="8.80596" basefreq="163.349" state="0"/>
+<entry parent="0" duration="28.9967" volume_left="0.527834" volume_right="0.527834" beatfreq="6.99479" basefreq="162.52" state="0"/>
+<entry parent="0" duration="38.0691" volume_left="0.539935" volume_right="0.539935" beatfreq="5.22245" basefreq="161.04" state="0"/>
+<entry parent="0" duration="50.2994" volume_left="0.555823" volume_right="0.555823" beatfreq="4.39666" basefreq="159.204" state="0"/>
+<entry parent="0" duration="67.9243" volume_left="0.576815" volume_right="0.576815" beatfreq="4.1511" basefreq="156.717" state="0"/>
+<entry parent="0" duration="877.027" volume_left="0.605162" volume_right="0.605162" beatfreq="4" basefreq="153.359" state="0"/>
+<entry parent="0" duration="36.7922" volume_left="0.971179" volume_right="0.971179" beatfreq="4" basefreq="110" state="0"/>
+<entry parent="0" duration="32.2669" volume_left="0.986534" volume_right="0.986534" beatfreq="4.15692" basefreq="129.11" state="0"/>
+<entry parent="0" duration="19.8113" volume_left="1" volume_right="1" beatfreq="5.05209" basefreq="145.87" state="0"/>
+<entry parent="0" duration="15.0943" volume_left="0.73053" volume_right="0.73053" beatfreq="6.83576" basefreq="156.16" state="0"/>
+<entry parent="0" duration="3.7786" volume_left="0.515339" volume_right="0.515339" beatfreq="9.81165" basefreq="164" state="0"/>
+</entries>
+</voice>
+<voice>
+<description>Stalactites</description>
+<id>1</id>
+<type>5</type>
+<voice_state>0</voice_state>
+<voice_hide>0</voice_hide>
+<voice_mute>0</voice_mute>
+<voice_mono>0</voice_mono>
+<entrycount>1</entrycount>
+<entries>
+<entry parent="1" duration="1200" volume_left="0.5" volume_right="0.5" beatfreq="2" basefreq="1.42917e-05" state="0"/>
+</entries>
+</voice>
+<voice>
+<description>Cavern stream</description>
+<id>2</id>
+<type>6</type>
+<voice_state>1</voice_state>
+<voice_hide>0</voice_hide>
+<voice_mute>0</voice_mute>
+<voice_mono>0</voice_mono>
+<entrycount>1</entrycount>
+<entries>
+<entry parent="2" duration="1200" volume_left="0.173754" volume_right="0.173754" beatfreq="8" basefreq="0.1" state="1"/>
+</entries>
+</voice>
+</schedule>

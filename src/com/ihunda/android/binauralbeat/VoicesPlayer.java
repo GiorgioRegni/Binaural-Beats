@@ -15,6 +15,7 @@ public class VoicesPlayer extends Thread {
 	AudioTrack track;
 	static int HZ = 8192;
 	float freqs[];
+	float pitchs[];
 	float vols[];
 	int anglesL[];
 	int anglesR[];
@@ -56,6 +57,10 @@ public class VoicesPlayer extends Thread {
 			freqs = new float[voices.size()];
 			for (int i =0; i<freqs.length; i++) {
 				freqs[i] = voices.get(i).freqStart;
+			}
+			pitchs = new float[voices.size()];
+			for (int i =0; i<pitchs.length; i++) {
+				pitchs[i] = voices.get(i).pitch;
 			}
 			vols = new float[voices.size()];
 			for (int i =0; i<freqs.length; i++) {
@@ -172,10 +177,15 @@ public class VoicesPlayer extends Thread {
 		float ws[] = new float[samples.length];
 
 		for (int j=0; j<freqs.length; j++) { //freqs.length
-			float frequency = voicetoPitch(j);
+			float base_freq;
 			
-			int inc1 = (int) (TwoPi * (frequency+freqs[j]) / HZ);
-			int inc2 = (int) (TwoPi * (frequency) / HZ);
+			if (BinauralBeatVoice.DEFAULT == pitchs[j])
+				base_freq = voicetoPitch(j);
+			else
+				base_freq = pitchs[j];
+			
+			int inc1 = (int) (TwoPi * (base_freq+freqs[j]) / HZ);
+			int inc2 = (int) (TwoPi * (base_freq) / HZ);
 			int angle1 = anglesL[j];
 			int angle2 = anglesR[j];
 			

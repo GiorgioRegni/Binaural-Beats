@@ -23,7 +23,26 @@ package com.ihunda.android.binauralbeat;
  *   BBT project home is at https://github.com/GiorgioRegni/Binaural-Beats
  */
 
+import java.io.IOException;
+import java.io.StringReader;
 import java.util.ArrayList;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+
+import com.ihunda.android.binauralbeat.viz.None;
 
 public class Program {
 
@@ -85,4 +104,58 @@ public class Program {
 		return useGL;
 	}
 	
+	public static Program fromGnauralFactory(String data) {
+		Program p = null;
+		Visualization v =  new None();
+		
+		try {
+			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+			DocumentBuilder db;
+
+			db = dbf.newDocumentBuilder();
+
+			Document doc = db.parse(new InputSource(new StringReader(data)));
+			
+			XPath xpath = XPathFactory.newInstance().newXPath();
+			String title = (String) xpath.evaluate("/schedule/title/text()", doc, XPathConstants.STRING);
+			String descr = (String) xpath.evaluate("/schedule/schedule_description/text()", doc, XPathConstants.STRING);
+			
+			p = new Program(title);
+			p.setDescription(descr);
+			
+			NodeList NVoices = (NodeList) xpath.evaluate("/schedule/voice[1]/entries/entry", doc, XPathConstants.NODESET);
+			for (int i = 0; i<NVoices.getLength(); i++) {
+				Node n = NVoices.item(i);
+				NamedNodeMap a = n.getAttributes();
+				
+				int len = new Float(a.getNamedItem("duration").getTextContent()).intValue();
+				float vol = (new Float(a.getNamedItem("volume_left").getTextContent()) +
+						new Float(a.getNamedItem("volume_right").getTextContent()))/1.5f;
+				if (vol > 1f)
+					vol = 1f;
+				float beatfreq = new Float(a.getNamedItem("beatfreq").getTextContent());
+				float basefreq = new Float(a.getNamedItem("basefreq").getTextContent());
+				
+				p.addPeriod(new Period(len, SoundLoop.WHITE_NOISE, 0.1f, null).
+						addVoice(new BinauralBeatVoice(beatfreq, beatfreq, vol, basefreq)).
+						setV(v)
+				);
+			}
+		
+		} catch (ParserConfigurationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SAXException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (XPathExpressionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return p;
+	}
 }

@@ -23,6 +23,10 @@ package com.ihunda.android.binauralbeat;
  *   BBT project home is at https://github.com/GiorgioRegni/Binaural-Beats
  */
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Vector;
 
@@ -53,8 +57,8 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
-import android.widget.FrameLayout;
 import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SeekBar;
@@ -338,6 +342,7 @@ public class BBeat extends Activity {
     	lv_preset_arr.add(getString(R.string.program_highest_mental_activity));
     	lv_preset_arr.add(getString(R.string.program_unity));
     	lv_preset_arr.add(getString(R.string.program_morphine));
+    	lv_preset_arr.add(getString(R.string.program_powernap));
     	lv_preset_arr.add(getString(R.string.program_sleep_induction));
     	lv_preset_arr.add(getString(R.string.program_lsd));
     	lv_preset_arr.add(getString(R.string.program_learning));
@@ -623,8 +628,12 @@ public class BBeat extends Activity {
 			p = DefaultProgramsBuilder.SMR(new Program(name));
 		else if (name.equals(getString(R.string.program_lucid_dreams)))
 			p = DefaultProgramsBuilder.LUCID_DREAMS(new Program(name));
-		else
+		else if (name.equals(getString(R.string.program_schumann)))
 			p = DefaultProgramsBuilder.SCHUMANN_RESONANCE(new Program(name));
+		else 
+		{
+	    	p = Program.fromGnauralFactory(readRawTextFile(R.raw.powernap));
+		}
 		
 		_tmp_program_holder = p;
 		
@@ -1012,4 +1021,24 @@ public class BBeat extends Activity {
 	public static BBeat getInstance() {
 		return instance;
 	}
+	
+	public  String readRawTextFile(int resId)
+    {
+         InputStream inputStream = this.getResources().openRawResource(resId);
+
+            InputStreamReader inputreader = new InputStreamReader(inputStream);
+            BufferedReader buffreader = new BufferedReader(inputreader);
+             String line;
+             StringBuilder text = new StringBuilder();
+
+             try {
+               while (( line = buffreader.readLine()) != null) {
+                   text.append(line);
+                   text.append('\n');
+                 }
+           } catch (IOException e) {
+               return null;
+           }
+             return text.toString();
+    }
 }

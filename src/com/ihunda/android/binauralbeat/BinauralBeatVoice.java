@@ -24,7 +24,7 @@ package com.ihunda.android.binauralbeat;
  */
 
 public class BinauralBeatVoice {
-	private static final float A440 = 440f;
+	public static final float DEFAULT = -1f;
 
 	/**
 	 * Beat frequency in Hz
@@ -55,6 +55,6 @@ public class BinauralBeatVoice {
 		this.freqStart = freqStart;
 		this.freqEnd = freqEnd;
 		this.volume = volume;
-		this.pitch = A440;
+		this.pitch = DEFAULT;
 	}	
 }

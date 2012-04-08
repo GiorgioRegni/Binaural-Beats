@@ -58,5 +58,6 @@
     <string name="program_sleep_induction">Sleep induction</string>
     <string name="program_shamanic_rhythm">Shamanic rhythm</string>
     <string name="program_lucid_dreams">Lucid dreams</string>
+    <string name="program_powernap">Power Nap</string>
     <string name="program_smr">Insomnia Relief</string>
 </resources>

@@ -17,14 +17,16 @@
 			android:layout_width="fill_parent" android:layout_height="wrap_content"
 			android:gravity="center" android:layout_weight="4"></TextView>
 
-		<Button android:text="@string/source" android:id="@+id/MenuSourceCode"
+		<Button android:text="@string/forum" android:id="@+id/MenuForum"
 			android:layout_width="65dip" android:layout_height="wrap_content"
 			android:layout_weight="0"></Button>
 
 	</LinearLayout>
 
 	<ListView android:id="@+id/presetListView" android:layout_width="fill_parent"
-		android:layout_height="fill_parent" android:layout_weight="4" />
+		android:layout_height="fill_parent" android:layout_weight="4"
+		
+		 />
 
 	<LinearLayout android:layout_width="wrap_content"
 	android:layout_gravity="center"

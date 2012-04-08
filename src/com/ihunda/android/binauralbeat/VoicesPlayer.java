@@ -28,6 +28,8 @@ public class VoicesPlayer extends Thread {
 	//short[] fakeS;
 	
 	boolean playing = false;
+	
+	boolean want_shutdown;
 
 	public VoicesPlayer()
 	{
@@ -43,6 +45,8 @@ public class VoicesPlayer extends Thread {
 		bufFrames = audiobuf;
 		sinT = new FloatSinTable(ISCALE);
 		TwoPi = ISCALE;
+		
+		want_shutdown = false;
 		
 		Log.e(LOGVP, String.format("minsize %d bufsize %d ", minSize, audiobuf));
 	}
@@ -87,18 +91,22 @@ public class VoicesPlayer extends Thread {
 		track.stop();
 	}
 
+	public void shutdown() {
+		want_shutdown = true;
+	}
+	
 	@Override
 	public synchronized void run() {
 		
 		android.os.Process.setThreadPriority(android.os.Process.THREAD_PRIORITY_AUDIO);
 		
-		while(true)
+		while(!want_shutdown)
 		{
 			// Sleep if no voice loaded
 			if (!playing) {
 				try {
 					sleep(500);
-					Log.v(LOGVP, "Sleeping");
+					//Log.v(LOGVP, "Sleeping");
 				} catch (InterruptedException e) {
 					// ignore
 				}
@@ -135,7 +143,7 @@ public class VoicesPlayer extends Thread {
 					    short[] sf = new short[samples.length - out];
 					    System.arraycopy(samples, out, sf, 0, samples.length - out);
 					    
-					    Log.v(LOGVP, String.format("Shoud be equal %d %d", total - totalWritten, samples.length - out));
+					    //Log.v(LOGVP, String.format("Shoud be equal %d %d", total - totalWritten, samples.length - out));
 					    
 					    samples = sf;
 					}	
@@ -151,6 +159,10 @@ public class VoicesPlayer extends Thread {
 				}
 			}
 		}
+		
+		track.release();
+		
+		Log.v(LOGVP, String.format("Graceful shutdown"));
 	}
 
 	private short[] fillSamples() {

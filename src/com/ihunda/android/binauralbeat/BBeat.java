@@ -113,6 +113,7 @@ public class BBeat extends Activity {
 	private static final String SOURCE_CODE_URL = "http://bit.ly/BBeats";
 	private static final String BLOG_URL = "http://bit.ly/BBeatsBlog";
 	private static final String HELP_URL = "http://bit.ly/BBeatsHelp";
+	private static final String FORUM_URL = "http://bit.ly/BBTForum";
 	private static final String FACEBOOK_URL = "http://www.facebook.com/pages/Binaural-Beat-Therapy/121737064536801";
 	private static final String CONTACT_EMAIL = "binaural-beats@ihunda.com";
 	private static final String LOGBBEAT = "BBT-MAIN";
@@ -165,10 +166,10 @@ public class BBeat extends Activity {
         mWl = mPm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK, "BBTherapy");
         
         /* Setup all buttons */
-        Button b = (Button) findViewById(R.id.MenuSourceCode);
+        Button b = (Button) findViewById(R.id.MenuForum);
         b.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				gotoSourceCode();
+				gotoForum();
 			}
 		});
         
@@ -294,11 +295,18 @@ public class BBeat extends Activity {
 		
         playingStreams = new Vector<StreamVoice>(MAX_STREAMS);
         playingBackground = -1;
-        
+    }
+    
+    void startVoicePlayer() {
         if (vp == null) {
         	vp =  new VoicesPlayer();
         	vp.start();
         }
+    }
+    
+    void stopVoicePlayer() {
+		vp.shutdown();
+		vp = null;
     }
     
 	@Override
@@ -337,6 +345,7 @@ public class BBeat extends Activity {
     	lv_preset_arr.add(getString(R.string.program_astral_01_relax));
     	lv_preset_arr.add(getString(R.string.program_lucid_dreams));
     	lv_preset_arr.add(getString(R.string.program_shamanic_rhythm));
+    	lv_preset_arr.add(getString(R.string.program_smr));
     	lv_preset_arr.add(getString(R.string.program_schumann));
     	lv_preset_arr.add(getString(R.string.getting_involved));
     }
@@ -357,6 +366,8 @@ public class BBeat extends Activity {
 			runGoneAnimationOnView(mInProgram);
 			_cancel_all_notifications();
 						
+			stopVoicePlayer();
+			
 			/* Reinit all sounds */
 			initSounds();
 			break;
@@ -375,6 +386,9 @@ public class BBeat extends Activity {
 			mVizHolder.setVisibility(View.GONE);
 			break;
 		case INPROGRAM:
+			// Start voice player thread
+			startVoicePlayer();
+			
 			// Acquire power management lock
 			mWl.acquire();
 			
@@ -548,7 +562,8 @@ public class BBeat extends Activity {
 		for (StreamVoice v: playingStreams)
 			mSoundPool.stop(v.streamID);
 		playingStreams.clear();
-		vp.stopVoices();
+		if (vp != null)
+			vp.stopVoices();
 	}
 	
     private void _start_notification(String programName) {
@@ -604,6 +619,8 @@ public class BBeat extends Activity {
 			p = DefaultProgramsBuilder.SLEEP_INDUCTION(new Program(name));
 		else if (name.equals(getString(R.string.program_shamanic_rhythm)))
 			p = DefaultProgramsBuilder.SHAMANIC_RHYTHM(new Program(name));
+		else if (name.equals(getString(R.string.program_smr)))
+			p = DefaultProgramsBuilder.SMR(new Program(name));
 		else if (name.equals(getString(R.string.program_lucid_dreams)))
 			p = DefaultProgramsBuilder.LUCID_DREAMS(new Program(name));
 		else
@@ -944,8 +961,13 @@ public class BBeat extends Activity {
     	gotoURL(BLOG_URL);
     }
     
-    private void gotoSourceCode() {
+    @SuppressWarnings("unused")
+	private void gotoSourceCode() {
     	gotoURL(SOURCE_CODE_URL);
+    }
+    
+    private void gotoForum() {
+    	gotoURL(FORUM_URL);
     }
     
     private void gotoFacebook() {

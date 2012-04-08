@@ -23,7 +23,16 @@ package com.ihunda.android.binauralbeat;
  *   BBT project home is at https://github.com/GiorgioRegni/Binaural-Beats
  */
 
-import com.ihunda.android.binauralbeat.viz.*;
+import com.ihunda.android.binauralbeat.viz.Aurora;
+import com.ihunda.android.binauralbeat.viz.Black;
+import com.ihunda.android.binauralbeat.viz.Flash;
+import com.ihunda.android.binauralbeat.viz.HypnoFlash;
+import com.ihunda.android.binauralbeat.viz.Image;
+import com.ihunda.android.binauralbeat.viz.Leds;
+import com.ihunda.android.binauralbeat.viz.Morphine;
+import com.ihunda.android.binauralbeat.viz.None;
+import com.ihunda.android.binauralbeat.viz.Plasma;
+import com.ihunda.android.binauralbeat.viz.Starfield;
 
 public class DefaultProgramsBuilder {
 
@@ -165,6 +174,8 @@ public class DefaultProgramsBuilder {
 	}
 
 	public static Program SCHUMANN_RESONANCE(Program p) {
+		Visualization v = new Image(R.drawable.warp);
+		
 		p.setDescription("A meditation to put your mind in balance with the Earth." +
 				" Glide down to Schumann Resonance, low frequency portion of the Earth's electromagnetic field," +
 				" resonate for 10 minutes then" +
@@ -174,15 +185,15 @@ public class DefaultProgramsBuilder {
 
 		p.addPeriod(new Period(300, SoundLoop.WHITE_NOISE, 0.4f, null).
 				addVoice(new BinauralBeatVoice(12f,	7.83f, 0.6f)).
-				setV(new Aurora())
+				setV(v)
 		).
 		addPeriod(new Period(600, SoundLoop.WHITE_NOISE, 0.4f, null).
 				addVoice(new BinauralBeatVoice(7.83f, 7.83f, 0.65f)).
-				setV(new Aurora())
+				setV(v)
 		).
 		addPeriod(new Period(300, SoundLoop.WHITE_NOISE, 0.4f, null).
 				addVoice(new BinauralBeatVoice(7.83f, 12f, 0.6f)).
-				setV(new Aurora())
+				setV(v)
 		);
 
 		return p;
@@ -251,7 +262,7 @@ public class DefaultProgramsBuilder {
 	
 	public static Program LUCID_DREAMS(Program p) {
 		
-		Morphine m = new Morphine();
+		Visualization m = new Black();
         p.setDescription("Stimulates lucid dreaming. Play while sleeping" +
                         " 5hz base frequency with 8 hz spikes.");
         p.setAuthor("@thegreenman");
@@ -346,5 +357,47 @@ public class DefaultProgramsBuilder {
 
 		return p;
 	}
+	
+	public static Program SMR(Program p) {
+		
+		CanvasVisualization m = new Image(R.drawable.egg);
+		
+		p.setDescription("Insomnia relief through stimulating Sensory Motor Rhythm. Not for use at bed time" +
+		" 61 minutes of crossing frequencies from 8 to 12 hz.");
+		p.setAuthor("@thegreenman);");
+	
+		p.addPeriod(new Period(333, SoundLoop.NONE, 0.7f, null).
+				addVoice(new BinauralBeatVoice(8f, 8f, 0.6f)).
+				addVoice(new BinauralBeatVoice(12f, 12f, 0.5f)).
+				setV(m)
+		).addPeriod(new Period(333, SoundLoop.NONE, 0.7f, null).
+				addVoice(new BinauralBeatVoice(8f, 10f, 0.5f)).
+				addVoice(new BinauralBeatVoice(12f, 10f, 0.6f)).
+				setV(m)
+		).addPeriod(new Period(333, SoundLoop.NONE, 0.7f, null).
+				addVoice(new BinauralBeatVoice(10f, 12f, 0.6f)).
+				addVoice(new BinauralBeatVoice(10f, 8f, 0.5f)).
+				setV(m)
+		).addPeriod(new Period(333, SoundLoop.NONE, 0.7f, null).
+				addVoice(new BinauralBeatVoice(12f, 12f, 0.5f)).
+				addVoice(new BinauralBeatVoice(8f, 8f, 0.6f)).
+				setV(m)
+		).addPeriod(new Period(333, SoundLoop.NONE, 0.7f, null).
+				addVoice(new BinauralBeatVoice(12f, 10f, 0.6f)).
+				addVoice(new BinauralBeatVoice(8f, 10f, 0.5f)).
+				setV(m)
+		).addPeriod(new Period(333, SoundLoop.NONE, 0.7f, null).
+				addVoice(new BinauralBeatVoice(10f, 8f, 0.5f)).
+				addVoice(new BinauralBeatVoice(10f, 12f, 0.6f)).
+				setV(m)
+		).addPeriod(new Period(333, SoundLoop.NONE, 0.7f, null).
+				addVoice(new BinauralBeatVoice(8f, 10f, 0.6f)).
+				addVoice(new BinauralBeatVoice(12f, 10f, 0.5f)).
+				setV(m)
+		);
+		
+		return p;
+	}
+				
 
 }

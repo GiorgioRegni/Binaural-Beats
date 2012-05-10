@@ -12,13 +12,14 @@ import android.util.Log;
 public class VoicesPlayer extends Thread {
 
 	private static final String LOGVP = "VoiceP";
+	private static final int MAX_VOICES = 20;
 	AudioTrack track;
 	static int HZ = 8192;
 	float freqs[];
 	float pitchs[];
 	float vols[];
-	int anglesL[];
-	int anglesR[];
+	int anglesL[] = new int[MAX_VOICES];
+	int anglesR[] = new int[MAX_VOICES];
 	int calcFrames;
 	int bufFrames;
 	private FloatSinTable sinT;
@@ -31,6 +32,8 @@ public class VoicesPlayer extends Thread {
 	boolean playing = false;
 	
 	boolean want_shutdown;
+	private float fade;
+	private float volume;
 
 	public VoicesPlayer()
 	{
@@ -50,6 +53,9 @@ public class VoicesPlayer extends Thread {
 		want_shutdown = false;
 		
 		Log.e(LOGVP, String.format("minsize %d bufsize %d ", minSize, audiobuf));
+		setPriority(Thread.MAX_PRIORITY);
+		
+		volume = 1f;
 	}
 	
 	public void playVoices(ArrayList<BinauralBeatVoice> voices) {
@@ -66,6 +72,7 @@ public class VoicesPlayer extends Thread {
 			for (int i =0; i<freqs.length; i++) {
 				vols[i] = voices.get(i).volume;
 			}
+			/*
 			anglesL = new int[voices.size()];
 			for (int i =0; i<anglesL.length; i++) {
 				anglesL[i] = 0;
@@ -73,13 +80,15 @@ public class VoicesPlayer extends Thread {
 			anglesR = new int[voices.size()];
 			for (int i =0; i<anglesR.length; i++) {
 				anglesR[i] = 0;
-			}
+			}*/
 		}
 		
 		//fakeS = fillSamples();
+		fade = 1f;
 		
 		playing = true;
-		track.play();
+		if (track.getPlayState() != AudioTrack.PLAYSTATE_PLAYING)
+			track.play();
 	}
 	
 	public void setFreqs(float freqs[]) {
@@ -88,16 +97,26 @@ public class VoicesPlayer extends Thread {
 	}
 	
 	public void setVolume(float vol) {
-		track.setStereoVolume(vol, vol);
+		track.setStereoVolume(vol*fade, vol*fade);
+		volume = vol;
 	}
 	
 	public void stopVoices() {
 		playing = false;
 		track.stop();
+		
+		anglesL = new int[MAX_VOICES];
+		anglesR = new int[MAX_VOICES];
 	}
 
 	public void shutdown() {
 		want_shutdown = true;
+	}
+	
+	public void setFade(float f) {
+		fade = f;
+		setVolume(volume);
+		//Log.v(LOGVP, String.format("Fade %f", fade));
 	}
 	
 	@Override
@@ -173,22 +192,24 @@ public class VoicesPlayer extends Thread {
 	private short[] fillSamples() {
 		assert(freqs != null);
 		
+		
+		
 		short samples[] = new short[calcFrames*2];
 		float ws[] = new float[samples.length];
-
+		
 		for (int j=0; j<freqs.length; j++) { //freqs.length
 			float base_freq;
-			
+
 			if (BinauralBeatVoice.DEFAULT == pitchs[j])
 				base_freq = voicetoPitch(j);
 			else
 				base_freq = pitchs[j];
-			
+
 			int inc1 = (int) (TwoPi * (base_freq+freqs[j]) / HZ);
 			int inc2 = (int) (TwoPi * (base_freq) / HZ);
 			int angle1 = anglesL[j];
 			int angle2 = anglesR[j];
-			
+
 			for(int i = 0; i < samples.length; i+=2)
 			{
 				ws[i] += sinT.sinFastInt(angle1) * vols[j]; 
@@ -200,14 +221,14 @@ public class VoicesPlayer extends Thread {
 			anglesL[j] = angle1 % ISCALE;
 			anglesR[j] = angle2 % ISCALE;
 		}
-		
+
 
 		for(int i = 0; i < samples.length; i+=2)
 		{
-			samples[i] += (short) (ws[i]/freqs.length*Short.MAX_VALUE);
-			samples[i+1] += (short) (ws[i+1]/freqs.length*Short.MAX_VALUE);
+			samples[i] = (short) (ws[i]*Short.MAX_VALUE/freqs.length);
+			samples[i+1] = (short) (ws[i+1]*Short.MAX_VALUE/freqs.length);
 		}
-		
+
 		return samples;
 	}
 	

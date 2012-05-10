@@ -119,9 +119,13 @@ public class Program {
 			XPath xpath = XPathFactory.newInstance().newXPath();
 			String title = (String) xpath.evaluate("/schedule/title/text()", doc, XPathConstants.STRING);
 			String descr = (String) xpath.evaluate("/schedule/schedule_description/text()", doc, XPathConstants.STRING);
+			String author = (String) xpath.evaluate("/schedule/author/text()", doc, XPathConstants.STRING);
 			
 			p = new Program(title);
 			p.setDescription(descr);
+			p.setAuthor(author);
+			
+			Period oldPeriod = null;
 			
 			NodeList NVoices = (NodeList) xpath.evaluate("/schedule/voice[1]/entries/entry", doc, XPathConstants.NODESET);
 			for (int i = 0; i<NVoices.getLength(); i++) {
@@ -130,16 +134,23 @@ public class Program {
 				
 				int len = new Float(a.getNamedItem("duration").getTextContent()).intValue();
 				float vol = (new Float(a.getNamedItem("volume_left").getTextContent()) +
-						new Float(a.getNamedItem("volume_right").getTextContent()))/1.5f;
+						new Float(a.getNamedItem("volume_right").getTextContent()))*1.5f;
 				if (vol > 1f)
 					vol = 1f;
 				float beatfreq = new Float(a.getNamedItem("beatfreq").getTextContent());
 				float basefreq = new Float(a.getNamedItem("basefreq").getTextContent());
 				
-				p.addPeriod(new Period(len, SoundLoop.WHITE_NOISE, 0.1f, null).
-						addVoice(new BinauralBeatVoice(beatfreq, beatfreq, vol, basefreq)).
-						setV(v)
-				);
+				BinauralBeatVoice voice = new BinauralBeatVoice(beatfreq, beatfreq, vol, basefreq);
+				Period period = new Period(len, SoundLoop.WHITE_NOISE, 0.1f, null).
+				addVoice(voice).
+				setV(v);
+				
+				if (oldPeriod != null)
+					oldPeriod.getVoices().get(0).freqEnd = voice.freqStart;
+				
+				p.addPeriod(period);
+				
+				oldPeriod = period;
 			}
 		
 		} catch (ParserConfigurationException e) {

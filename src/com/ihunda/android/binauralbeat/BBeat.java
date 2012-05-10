@@ -30,6 +30,9 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Vector;
 
+import com.ihunda.android.binauralbeat.viz.Black;
+import com.ihunda.android.binauralbeat.viz.GLBlack;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -39,6 +42,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.net.Uri;
@@ -47,6 +51,9 @@ import android.os.Handler;
 import android.os.PowerManager;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.animation.Animation;
@@ -62,6 +69,7 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SeekBar;
+import android.widget.Toast;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 import android.widget.ToggleButton;
@@ -133,9 +141,17 @@ public class BBeat extends Activity {
 
 	private static final float BG_VOLUME_RATIO = 0.4f;
 	
+
+	private static final float FADE_INOUT_PERIOD = 2f;
+	private static final float FADE_MIN = 0.7f;
+
+	private static final String PREFS_NAME = "BBT";
+	private static final String PREFS_VIZ = "VIZ";
+	
 	private VoicesPlayer vp;
 
 	boolean glMode = false;
+	boolean vizEnabled = true;
 	
 	
 	/* 
@@ -185,11 +201,11 @@ public class BBeat extends Activity {
 			}
 		});
         
-        b = (Button) findViewById(R.id.MenuBack);
+        b = (Button) findViewById(R.id.Menu);
         b.setOnClickListener(new OnClickListener() {
 			
 			public void onClick(View v) {
-				showDialog(DIALOG_CONFIRM_RESET);
+				openOptionsMenu();
 			}
 		});
         
@@ -281,10 +297,26 @@ public class BBeat extends Activity {
         
         showDialog(DIALOG_WELCOME);
         
+        _load_config();
+        
         initSounds();
         
         state = appState.NONE;
         goToState(appState.SETUP);
+    }
+    
+    /*
+     * Takes the current setup and saves it to preference for next start
+     */
+    private void _save_config() {
+        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putBoolean(PREFS_VIZ, vizEnabled);
+    }
+    
+    private void _load_config() {
+    	SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+    	vizEnabled = settings.getBoolean(PREFS_VIZ, true);
     }
     
     void initSounds() {
@@ -335,6 +367,35 @@ public class BBeat extends Activity {
 
 	        return super.onKeyDown(keyCode, event);
 	    }
+	 
+	 public boolean onCreateOptionsMenu(Menu menu) {
+		    MenuInflater inflater = getMenuInflater();
+		    inflater.inflate(R.menu.inprogram, menu);
+		    
+		    return true;
+		}
+		
+		@Override public boolean onPrepareOptionsMenu(Menu menu) {
+			if (state != appState.INPROGRAM)
+				return false;
+			
+			return true;
+		}
+	    	
+		
+		/* Handles item selections */
+		public boolean onOptionsItemSelected(MenuItem item) {
+			switch (item.getItemId()) {
+				case R.id.stop: {
+					showDialog(DIALOG_CONFIRM_RESET);
+					return true;
+				}
+				case R.id.togglegraphics:
+					setGraphicsEnabled(!vizEnabled);
+					break;
+			}
+			return false;
+		}
     
     private void setupProgramList() {
     	lv_preset_arr = new ArrayList<String>();
@@ -344,6 +405,7 @@ public class BBeat extends Activity {
     	lv_preset_arr.add(getString(R.string.program_morphine));
     	lv_preset_arr.add(getString(R.string.program_powernap));
     	lv_preset_arr.add(getString(R.string.program_sleep_induction));
+    	lv_preset_arr.add(getString(R.string.program_airplanetravelaid));
     	lv_preset_arr.add(getString(R.string.program_lsd));
     	lv_preset_arr.add(getString(R.string.program_learning));
     	lv_preset_arr.add(getString(R.string.program_creativity));
@@ -395,7 +457,8 @@ public class BBeat extends Activity {
 			startVoicePlayer();
 			
 			// Acquire power management lock
-			mWl.acquire();
+			if (vizEnabled)
+				mWl.acquire();
 			
 			_start_notification(programFSM.getProgram().getName());
 			runComeBackAnimationOnView(mInProgram);
@@ -435,6 +498,45 @@ public class BBeat extends Activity {
     			muteAll();
     		}
     	}
+    }
+    
+    private void setGraphicsEnabled(boolean on) {
+    	if (state == appState.INPROGRAM) {
+    		if (vizEnabled && on == false) {
+    			// Disable Viz
+    			Period p = programFSM.getCurrentPeriod();
+    			Visualization v;
+    			
+    			if (((Object) mVizV).getClass() == GLVizualizationView.class)
+    				v = new GLBlack();
+    			else
+    				v = new Black();
+    			
+    			((VizualisationView) mVizV).stopVisualization();
+    			((VizualisationView) mVizV).startVisualization(v, p.getLength());
+    			((VizualisationView) mVizV).setFrequency(p.getVoices().get(0).freqStart);
+    			vizEnabled = false;
+    			
+    			if (mWl.isHeld())
+    	    		mWl.release();
+    			
+    			ToastText(R.string.graphics_off);
+    		} else
+    		if (!vizEnabled && on == true) {
+    			// Enable viz
+    			Period p = programFSM.getCurrentPeriod();
+    			((VizualisationView) mVizV).stopVisualization();
+    			((VizualisationView) mVizV).startVisualization(p.getV(), p.getLength());
+    			((VizualisationView) mVizV).setFrequency(p.getVoices().get(0).freqStart);
+    			vizEnabled = true;
+    			
+    			if (mWl.isHeld() == false)
+    				mWl.acquire();
+    			
+    			ToastText(R.string.graphics_on);
+    		}
+    	}
+    	_save_config();
     }
 
 	@Override
@@ -531,6 +633,9 @@ public class BBeat extends Activity {
 		
 		case DIALOG_PROGRAM_PREVIEW: {
 			Program p = _tmp_program_holder;
+			if (p == null)
+				return null;
+			
 			int length = p.getLength();
 			
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -630,9 +735,11 @@ public class BBeat extends Activity {
 			p = DefaultProgramsBuilder.LUCID_DREAMS(new Program(name));
 		else if (name.equals(getString(R.string.program_schumann)))
 			p = DefaultProgramsBuilder.SCHUMANN_RESONANCE(new Program(name));
-		else 
+		else if (name.equals(getString(R.string.program_powernap)))
+			p = Program.fromGnauralFactory(readRawTextFile(R.raw.powernap));
+		else
 		{
-	    	p = Program.fromGnauralFactory(readRawTextFile(R.raw.powernap));
+	    	p = Program.fromGnauralFactory(readRawTextFile(R.raw.airplanetravelaid));
 		}
 		
 		_tmp_program_holder = p;
@@ -681,25 +788,30 @@ public class BBeat extends Activity {
 	}
 	
 	/**
-	 * Loop through all playing voices and lower volume to 0 but do not stop
+	 * Loop through all playing voices and set regular volume back
 	 */
 	void resetAllVolumes() {
-		for (StreamVoice v: playingStreams) {
-			if (v.streamID == playingBackground)
-				mSoundPool.setVolume(v.streamID, v.leftVol * mSoundBGVolume, v.rightVol * mSoundBGVolume);
-			else
-				mSoundPool.setVolume(v.streamID, v.leftVol * mSoundBeatVolume, v.rightVol * mSoundBeatVolume);
-		}
-		vp.setVolume(mSoundBeatVolume);
+		if (playingStreams != null &&
+				mSoundPool != null)
+			for (StreamVoice v: playingStreams) {
+				if (v.streamID == playingBackground)
+					mSoundPool.setVolume(v.streamID, v.leftVol * mSoundBGVolume, v.rightVol * mSoundBGVolume);
+				else
+					mSoundPool.setVolume(v.streamID, v.leftVol * mSoundBeatVolume, v.rightVol * mSoundBeatVolume);
+			}
+		if (vp != null)
+			vp.setVolume(mSoundBeatVolume);
 	}
 	
 	/**
 	 * Loop through all playing voices and lower volume to 0 but do not stop
 	 */
 	void muteAll() {
-		for (StreamVoice v: playingStreams) {
-			mSoundPool.setVolume(v.streamID, 0, 0);
-		}
+		if (playingStreams != null &&
+				mSoundPool != null)
+			for (StreamVoice v: playingStreams) {
+				mSoundPool.setVolume(v.streamID, 0, 0);
+			}
 		vp.setVolume(0);
 	}
 	
@@ -768,6 +880,17 @@ public class BBeat extends Activity {
 			i++;
 		}
 		if (doskew) {
+			if (pos < FADE_INOUT_PERIOD)
+				vp.setFade(FADE_MIN + pos/FADE_INOUT_PERIOD*(1-FADE_MIN));
+			else if (length - pos < FADE_INOUT_PERIOD) {
+				float fade = FADE_MIN + (length-pos)/FADE_INOUT_PERIOD*(1-FADE_MIN);
+				if (fade < FADE_MIN)
+					fade = FADE_MIN;
+				vp.setFade(fade);
+			}
+			else
+				vp.setFade(1f);
+			
 			vp.setFreqs(freqs);
 		}	
 		
@@ -813,15 +936,30 @@ public class BBeat extends Activity {
 			h.postDelayed(this, TIMER_FSM_DELAY);
 		}
 		
+		public Period getCurrentPeriod() {
+			Period p = null;
+			
+			if (pR != null)
+				p = pR.seq.get(c);
+			
+			return p;
+		}
+		
 		public void stopProgram() {
+			stopAllVoices();
 			endPeriod();
 			h.removeCallbacks(this);
 		}
 		
 		private void startPeriod(Period p) {
-			((VizualisationView) mVizV).startVisualization(p.getV(), p.getLength());
+			if (vizEnabled)
+				((VizualisationView) mVizV).startVisualization(p.getV(), p.getLength());
+			else
+				((VizualisationView) mVizV).startVisualization(new Black(), p.getLength());
+			
 			((VizualisationView) mVizV).setFrequency(p.getVoices().get(0).freqStart);
 			playVoices(p.voices);
+			vp.setFade(FADE_MIN);
 			playBackgroundSample(p.background, p.getBackgroundvol());
 			
 			Log.v(LOGBBEAT, String.format("New Period - duration %d", p.length));
@@ -831,7 +969,7 @@ public class BBeat extends Activity {
 			long delta = (now - startTime) / 20; // Do not refresh too often
 			
 			float freq = skewVoices(p.voices, pos, p.length, oldDelta != delta);
-
+			
 			((VizualisationView) mVizV).setFrequency(freq);
 			((VizualisationView) mVizV).setProgress(pos);
 			
@@ -850,7 +988,7 @@ public class BBeat extends Activity {
 		}
 		
 		private void endPeriod() {
-			stopAllVoices();
+			//stopAllVoices();
 			stopBackgroundSample();
 			((VizualisationView) mVizV).stopVisualization();
 		}
@@ -984,6 +1122,9 @@ public class BBeat extends Activity {
     }
     
     private void gotoHelp() {
+    	/*Intent i = new Intent(this, Comments.class);
+    	i.putExtra("ID", "yoyoma");
+    	startActivity(i);*/
     	gotoURL(HELP_URL);
     }
     
@@ -1041,4 +1182,10 @@ public class BBeat extends Activity {
            }
              return text.toString();
     }
+	
+	private void ToastText(int id) {
+		Toast.makeText(this, getString(id), Toast.LENGTH_SHORT).show();
+	}
+	
+	
 }

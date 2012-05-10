@@ -9,7 +9,7 @@
 		android:gravity="center_vertical">
 
 
-		<Button android:text="@string/back" android:id="@+id/MenuBack"
+		<Button android:text="@string/menu" android:id="@+id/Menu"
 			android:layout_width="65dip" android:layout_height="wrap_content"
 			android:layout_weight="0"></Button>
 

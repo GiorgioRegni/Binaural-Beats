@@ -1,0 +1,76 @@
+<?xml version="1.0"?>
+<!-- See http://gnaural.sourceforge.net -->
+<schedule>
+<gnauralfile_version>1.20101006</gnauralfile_version>
+<gnaural_version>1.0.20101115</gnaural_version>
+<date>Fri Oct  8 14:06:23 2010
+</date>
+<title>Meditation schedule for airplane travel</title>
+<schedule_description>Designed to make time go faster on flights. Constant declining base frequency.</schedule_description>
+<author>Gnaural</author>
+<totaltime>4410</totaltime>
+<voicecount>1</voicecount>
+<totalentrycount>45</totalentrycount>
+<loops>1</loops>
+<overallvolume_left>1</overallvolume_left>
+<overallvolume_right>1</overallvolume_right>
+<stereoswap>0</stereoswap>
+<graphview>1</graphview>
+<voice>
+<description>Meditative, spiking occasionally to maintain wakefulness</description>
+<id>0</id>
+<type>0</type>
+<voice_state>1</voice_state>
+<voice_hide>0</voice_hide>
+<voice_mute>0</voice_mute>
+<voice_mono>0</voice_mono>
+<entrycount>45</entrycount>
+<entries>
+<entry parent="0" duration="9" volume_left="0.85" volume_right="0.85" beatfreq="0" basefreq="280" state="1"/>
+<entry parent="0" duration="45" volume_left="0.85" volume_right="0.85" beatfreq="12" basefreq="279.71" state="1"/>
+<entry parent="0" duration="60" volume_left="0.85" volume_right="0.85" beatfreq="8" basefreq="278.26" state="1"/>
+<entry parent="0" duration="60" volume_left="0.85" volume_right="0.85" beatfreq="6" basefreq="276.328" state="1"/>
+<entry parent="0" duration="120" volume_left="0.85" volume_right="0.85" beatfreq="5" basefreq="274.395" state="1"/>
+<entry parent="0" duration="180" volume_left="0.85" volume_right="0.85" beatfreq="4.3" basefreq="270.529" state="1"/>
+<entry parent="0" duration="180" volume_left="0.85" volume_right="0.85" beatfreq="4" basefreq="264.731" state="1"/>
+<entry parent="0" duration="6" volume_left="0.85" volume_right="0.85" beatfreq="3.9" basefreq="258.932" state="1"/>
+<entry parent="0" duration="6" volume_left="0.85" volume_right="0.85" beatfreq="7" basefreq="258.739" state="1"/>
+<entry parent="0" duration="360" volume_left="0.85" volume_right="0.85" beatfreq="3.9" basefreq="258.546" state="1"/>
+<entry parent="0" duration="6" volume_left="0.85" volume_right="0.85" beatfreq="4.2" basefreq="246.949" state="1"/>
+<entry parent="0" duration="6" volume_left="0.85" volume_right="0.85" beatfreq="7" basefreq="246.756" state="1"/>
+<entry parent="0" duration="180" volume_left="0.85" volume_right="0.85" beatfreq="3.9" basefreq="246.562" state="1"/>
+<entry parent="0" duration="180" volume_left="0.85" volume_right="0.85" beatfreq="4" basefreq="240.764" state="1"/>
+<entry parent="0" duration="6" volume_left="0.85" volume_right="0.85" beatfreq="3.9" basefreq="234.965" state="1"/>
+<entry parent="0" duration="6" volume_left="0.85" volume_right="0.85" beatfreq="7" basefreq="234.772" state="1"/>
+<entry parent="0" duration="340" volume_left="0.85" volume_right="0.85" beatfreq="3.9" basefreq="234.579" state="1"/>
+<entry parent="0" duration="6" volume_left="0.85" volume_right="0.85" beatfreq="4.2" basefreq="223.626" state="1"/>
+<entry parent="0" duration="6" volume_left="0.85" volume_right="0.85" beatfreq="7" basefreq="223.433" state="1"/>
+<entry parent="0" duration="180" volume_left="0.85" volume_right="0.85" beatfreq="4" basefreq="223.24" state="1"/>
+<entry parent="0" duration="180" volume_left="0.85" volume_right="0.85" beatfreq="4.2" basefreq="217.441" state="1"/>
+<entry parent="0" duration="6" volume_left="0.85" volume_right="0.85" beatfreq="3.8" basefreq="211.643" state="1"/>
+<entry parent="0" duration="6" volume_left="0.85" volume_right="0.85" beatfreq="7" basefreq="211.45" state="1"/>
+<entry parent="0" duration="400" volume_left="0.85" volume_right="0.85" beatfreq="3.9" basefreq="211.256" state="1"/>
+<entry parent="0" duration="6" volume_left="0.85" volume_right="0.85" beatfreq="4.2" basefreq="198.371" state="1"/>
+<entry parent="0" duration="6" volume_left="0.85" volume_right="0.85" beatfreq="7" basefreq="198.178" state="1"/>
+<entry parent="0" duration="180" volume_left="0.85" volume_right="0.85" beatfreq="4.2" basefreq="197.984" state="1"/>
+<entry parent="0" duration="180" volume_left="0.85" volume_right="0.85" beatfreq="3.9" basefreq="192.186" state="1"/>
+<entry parent="0" duration="6" volume_left="0.85" volume_right="0.85" beatfreq="4" basefreq="186.387" state="1"/>
+<entry parent="0" duration="6" volume_left="0.85" volume_right="0.85" beatfreq="7" basefreq="186.194" state="1"/>
+<entry parent="0" duration="300" volume_left="0.85" volume_right="0.85" beatfreq="4" basefreq="186.001" state="1"/>
+<entry parent="0" duration="6" volume_left="0.85" volume_right="0.85" beatfreq="3.8" basefreq="176.337" state="1"/>
+<entry parent="0" duration="6" volume_left="0.85" volume_right="0.85" beatfreq="7" basefreq="176.144" state="1"/>
+<entry parent="0" duration="180" volume_left="0.85" volume_right="0.85" beatfreq="3.9" basefreq="175.95" state="1"/>
+<entry parent="0" duration="180" volume_left="0.85" volume_right="0.85" beatfreq="4.1" basefreq="170.152" state="1"/>
+<entry parent="0" duration="6" volume_left="0.85" volume_right="0.85" beatfreq="3.9" basefreq="164.353" state="1"/>
+<entry parent="0" duration="6" volume_left="0.85" volume_right="0.85" beatfreq="7" basefreq="164.16" state="1"/>
+<entry parent="0" duration="360" volume_left="0.85" volume_right="0.85" beatfreq="3.9" basefreq="163.967" state="1"/>
+<entry parent="0" duration="6" volume_left="0.85" volume_right="0.85" beatfreq="4.1" basefreq="152.37" state="1"/>
+<entry parent="0" duration="6" volume_left="0.85" volume_right="0.85" beatfreq="7" basefreq="152.177" state="1"/>
+<entry parent="0" duration="180" volume_left="0.85" volume_right="0.85" beatfreq="3.9" basefreq="151.983" state="1"/>
+<entry parent="0" duration="180" volume_left="0.85" volume_right="0.85" beatfreq="3.6" basefreq="146.185" state="1"/>
+<entry parent="0" duration="6" volume_left="0.85" volume_right="0.85" beatfreq="4" basefreq="140.387" state="1"/>
+<entry parent="0" duration="6" volume_left="0.85" volume_right="0.85" beatfreq="7" basefreq="140.193" state="1"/>
+<entry parent="0" duration="64" volume_left="0.85" volume_right="0.85" beatfreq="4.3" basefreq="140" state="1"/>
+</entries>
+</voice>
+</schedule>

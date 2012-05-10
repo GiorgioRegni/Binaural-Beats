@@ -49,12 +49,10 @@ public class None implements CanvasVisualization {
 	public void redraw(Canvas c, int width, int height, float now,
 			float totalTime) {
 		
-		if (last == 0 || now > last + 10)
+		if (last++ % 50 == 0 || now < 1)
 		{
 			c.drawBitmap(background, 0, 0, null);
-			//Log.w("ABC", String.format("%f", now));
-			
-			last = now;;
+			//Log.w("ABC", String.format("%f", now))
 		}	
 	}
 

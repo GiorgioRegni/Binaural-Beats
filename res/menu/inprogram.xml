@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+  xmlns:android="http://schemas.android.com/apk/res/android">
+<item android:id="@+id/stop" android:title="@string/stop_program" 
+    android:icon="@drawable/icon_quit" android:orderInCategory="1"></item>
+<item android:id="@+id/togglegraphics" android:title="@string/toggle_graphics" 
+    android:icon="@drawable/icon_graphics" android:orderInCategory="1"></item>
+</menu>

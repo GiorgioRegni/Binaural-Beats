@@ -26,6 +26,7 @@ package com.ihunda.android.binauralbeat;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -48,13 +49,12 @@ public class Program {
 
 	protected String name;
 	protected String description;
-	protected ArrayList<Period> seq;
+	protected final ArrayList<Period> seq = new ArrayList<Period>();
 	private String author = "@GiorgioRegni";
 	boolean useGL = false;
 	
 	public Program(String name) {
 		this.name = name;
-		seq = new ArrayList<Period>();
 	}
 	
 	public String getName() {
@@ -78,6 +78,10 @@ public class Program {
 		return this;
 	}
 	
+	protected Iterator<Period> getPeriodsIterator() {
+		return seq.iterator();
+	}
+
 	public int getLength() {
 		int len = 0;
 		

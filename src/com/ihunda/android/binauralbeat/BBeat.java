@@ -28,6 +28,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Vector;
 
 import com.ihunda.android.binauralbeat.viz.Black;
@@ -909,7 +910,8 @@ public class BBeat extends Activity {
 		private static final long TIMER_FSM_DELAY = 1000 / 20;
 		
 		private Program pR; 
-		private int c; // current Period
+		private Iterator<Period> periodsIterator;
+		private Period currentPeriod;
 		private long cT; // current Period start time
 		private long startTime;
 		private long programLength;
@@ -937,12 +939,7 @@ public class BBeat extends Activity {
 		}
 		
 		public Period getCurrentPeriod() {
-			Period p = null;
-			
-			if (pR != null)
-				p = pR.seq.get(c);
-			
-			return p;
+			return currentPeriod;
 		}
 		
 		public void stopProgram() {
@@ -1003,36 +1000,34 @@ public class BBeat extends Activity {
 			switch(s) {
 			case START:
 				s = eState.RUNNING;
-				c = 0;
+				periodsIterator = pR.getPeriodsIterator();
 				cT = now;
-				startPeriod(pR.seq.get(c));
+				nextPeriod();
 			break;
 			
 			case RUNNING:
 				if (isPaused())
 					break;
 				
-				Period p = pR.seq.get(c);
 				float pos = (now - cT) / 1000f;
 				
-				if (pos > p.length) {
+				if (pos > currentPeriod.length) {
 					endPeriod();
 					
 					// Current period is over
-					if (++c >= pR.seq.size()) {
+					if (!periodsIterator.hasNext()) {
 						// Finished
 						s = eState.END;
 					} else {
 						// this is a new period
 						cT = now;
-						p = pR.seq.get(c);
-						startPeriod(p);
+						nextPeriod();
 					}
 				} else {
 					/**
 					 * In the middle of current period, adjust each beat voice
 					 */
-					inPeriod(now, p, pos);
+					inPeriod(now, currentPeriod, pos);
 				}
 				break;
 				
@@ -1042,6 +1037,11 @@ public class BBeat extends Activity {
 			}
 			
 			h.postDelayed(this, TIMER_FSM_DELAY);
+		}
+
+		private void nextPeriod() {
+			currentPeriod = periodsIterator.next();
+			startPeriod(currentPeriod);
 		}
 
 		public Program getProgram() {

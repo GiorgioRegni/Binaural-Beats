@@ -43,7 +43,6 @@ public class BinauralBeatVoice {
 	float pitch;
 
 	public BinauralBeatVoice(float freqStart, float freqEnd, float volume, float pitch) {
-		super();
 		this.freqStart = freqStart;
 		this.freqEnd = freqEnd;
 		this.volume = volume;
@@ -51,10 +50,6 @@ public class BinauralBeatVoice {
 	}
 
 	public BinauralBeatVoice(float freqStart, float freqEnd, float volume) {
-		super();
-		this.freqStart = freqStart;
-		this.freqEnd = freqEnd;
-		this.volume = volume;
-		this.pitch = DEFAULT;
+		this(freqStart, freqEnd, volume, DEFAULT);
 	}	
 }

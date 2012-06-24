@@ -29,10 +29,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Vector;
-
-import com.ihunda.android.binauralbeat.viz.Black;
-import com.ihunda.android.binauralbeat.viz.GLBlack;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -70,10 +68,13 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SeekBar;
-import android.widget.Toast;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ToggleButton;
+
+import com.ihunda.android.binauralbeat.viz.Black;
+import com.ihunda.android.binauralbeat.viz.GLBlack;
 
 public class BBeat extends Activity {
 	
@@ -97,7 +98,6 @@ public class BBeat extends Activity {
 	private TextView mStatus;
 	private ListView mPresetList;
 	private ToggleButton mPlayPause;
-	private ArrayList<String> lv_preset_arr;
 	
 	private appState state;
 	
@@ -283,16 +283,18 @@ public class BBeat extends Activity {
         // Set a static pointer to this instance so that vizualisation can access it
         setInstance(this);
         
-        setupProgramList();
         
         mPresetList = (ListView) findViewById(R.id.presetListView);
-        mPresetList.setAdapter(new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1, lv_preset_arr));
+        final List<String> programs = new ArrayList<String>(DefaultProgramsBuilder.getProgramMethods(this).keySet());
+        programs.add(getString(R.string.getting_involved));
+
+		mPresetList.setAdapter(new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1, programs));
         mPresetList.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
 					long arg3) {
-				selectProgram(lv_preset_arr.get(arg2));
+				selectProgram(programs.get(arg2));
 			}
 		});
         
@@ -397,26 +399,6 @@ public class BBeat extends Activity {
 			}
 			return false;
 		}
-    
-    private void setupProgramList() {
-    	lv_preset_arr = new ArrayList<String>();
-    	lv_preset_arr.add(getString(R.string.program_self_hypnosis));
-    	lv_preset_arr.add(getString(R.string.program_highest_mental_activity));
-    	lv_preset_arr.add(getString(R.string.program_unity));
-    	lv_preset_arr.add(getString(R.string.program_morphine));
-    	lv_preset_arr.add(getString(R.string.program_powernap));
-    	lv_preset_arr.add(getString(R.string.program_sleep_induction));
-    	lv_preset_arr.add(getString(R.string.program_airplanetravelaid));
-    	lv_preset_arr.add(getString(R.string.program_lsd));
-    	lv_preset_arr.add(getString(R.string.program_learning));
-    	lv_preset_arr.add(getString(R.string.program_creativity));
-    	lv_preset_arr.add(getString(R.string.program_astral_01_relax));
-    	lv_preset_arr.add(getString(R.string.program_lucid_dreams));
-    	lv_preset_arr.add(getString(R.string.program_shamanic_rhythm));
-    	lv_preset_arr.add(getString(R.string.program_smr));
-    	lv_preset_arr.add(getString(R.string.program_schumann));
-    	lv_preset_arr.add(getString(R.string.getting_involved));
-    }
 
 	private void goToState(appState newState) {
 		switch(state) {
@@ -701,7 +683,6 @@ public class BBeat extends Activity {
 		if (programFSM != null)
 			programFSM.stopProgram();
 		
-		Program p;
 		
 		if (name.equals(getString(R.string.getting_involved)))
 		{
@@ -709,40 +690,8 @@ public class BBeat extends Activity {
 			showDialog(DIALOG_GETTING_INVOLVED);
 			return;
 		}
-		
-		if (name.equals(getString(R.string.program_self_hypnosis)))
-			p = DefaultProgramsBuilder.SELF_HYPNOSIS(new Program(name));
-		else if (name.equals(getString(R.string.program_highest_mental_activity)))
-			p = DefaultProgramsBuilder.AWAKE(new Program(name));
-		else if (name.equals(getString(R.string.program_unity)))
-			p = DefaultProgramsBuilder.UNITY(new Program(name));
-		else if (name.equals(getString(R.string.program_morphine)))
-			p = DefaultProgramsBuilder.MORPHINE(new Program(name));
-		else if (name.equals(getString(R.string.program_learning)))
-			p = DefaultProgramsBuilder.LEARNING(new Program(name));
-		else if (name.equals(getString(R.string.program_creativity)))
-			p = DefaultProgramsBuilder.CREATIVITY(new Program(name));
-		else if (name.equals(getString(R.string.program_astral_01_relax)))
-			p = DefaultProgramsBuilder.ASTRAL_01_RELAX(new Program(name));
-		else if (name.equals(getString(R.string.program_lsd)))
-			p = DefaultProgramsBuilder.LSD(new Program(name));
-		else if (name.equals(getString(R.string.program_sleep_induction)))
-			p = DefaultProgramsBuilder.SLEEP_INDUCTION(new Program(name));
-		else if (name.equals(getString(R.string.program_shamanic_rhythm)))
-			p = DefaultProgramsBuilder.SHAMANIC_RHYTHM(new Program(name));
-		else if (name.equals(getString(R.string.program_smr)))
-			p = DefaultProgramsBuilder.SMR(new Program(name));
-		else if (name.equals(getString(R.string.program_lucid_dreams)))
-			p = DefaultProgramsBuilder.LUCID_DREAMS(new Program(name));
-		else if (name.equals(getString(R.string.program_schumann)))
-			p = DefaultProgramsBuilder.SCHUMANN_RESONANCE(new Program(name));
-		else if (name.equals(getString(R.string.program_powernap)))
-			p = Program.fromGnauralFactory(readRawTextFile(R.raw.powernap));
-		else
-		{
-	    	p = Program.fromGnauralFactory(readRawTextFile(R.raw.airplanetravelaid));
-		}
-		
+
+		Program p = DefaultProgramsBuilder.getProgram(name, this);
 		_tmp_program_holder = p;
 		
 		showDialog(DIALOG_PROGRAM_PREVIEW);

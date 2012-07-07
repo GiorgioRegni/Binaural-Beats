@@ -46,7 +46,7 @@ import org.xml.sax.SAXException;
 import com.ihunda.android.binauralbeat.viz.None;
 
 public class Program {
-
+	
 	protected String name;
 	protected String description;
 	protected final ArrayList<Period> seq = new ArrayList<Period>();
@@ -90,6 +90,10 @@ public class Program {
 		}
 		
 		return len;
+	}
+	
+	public int getNumPeriods() {
+		return seq.size();
 	}
 
 	public void setAuthor(String name) {

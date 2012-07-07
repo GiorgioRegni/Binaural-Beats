@@ -29,7 +29,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
+import java.util.Map;
 import java.util.Vector;
 
 import android.app.Activity;
@@ -50,6 +50,7 @@ import android.os.Handler;
 import android.os.PowerManager;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -58,15 +59,14 @@ import android.view.View.OnClickListener;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationUtils;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.ExpandableListView;
+import android.widget.ExpandableListView.OnChildClickListener;
+import android.widget.ExpandableListView.OnGroupClickListener;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
@@ -75,6 +75,9 @@ import android.widget.ToggleButton;
 
 import com.ihunda.android.binauralbeat.viz.Black;
 import com.ihunda.android.binauralbeat.viz.GLBlack;
+import com.jjoe64.graphview.GraphView.GraphViewData;
+import com.jjoe64.graphview.GraphView.GraphViewSeries;
+import com.jjoe64.graphview.LineGraphView;
 
 public class BBeat extends Activity {
 	
@@ -88,6 +91,7 @@ public class BBeat extends Activity {
 	public static final float W_ALPHA_FREQ = 10.00f;
 	public static final float W_BETA_FREQ = 20.00f;
 	public static final float W_GAMMA_FREQ = 60.00f;
+	public static final float W_MAX_BEAT = 80.00f;
 	
 	private static final long ANIM_TIME_MS = 600;
 	
@@ -96,7 +100,7 @@ public class BBeat extends Activity {
 	private View mVizV;
 	private FrameLayout mVizHolder;
 	private TextView mStatus;
-	private ListView mPresetList;
+	private ExpandableListView mPresetList;
 	private ToggleButton mPlayPause;
 	
 	private appState state;
@@ -154,6 +158,10 @@ public class BBeat extends Activity {
 	boolean glMode = false;
 	boolean vizEnabled = true;
 	
+	private LinearLayout mGraphVoicesLayout;
+	
+	 Map<String,ProgramMeta> programs;
+	 ArrayList<CategoryGroup> groups;
 	
 	/* 
 	 * Not sure this is the best way to do it but it seems to work
@@ -224,6 +232,8 @@ public class BBeat extends Activity {
         	}
         });
         
+        mGraphVoicesLayout = (LinearLayout) findViewById(R.id.graphVoices);
+        
         pause_time = -1;
         mPlayPause = (ToggleButton) findViewById((R.id.MenuPause));
         mPlayPause.setOnCheckedChangeListener(new OnCheckedChangeListener() {
@@ -283,7 +293,7 @@ public class BBeat extends Activity {
         // Set a static pointer to this instance so that vizualisation can access it
         setInstance(this);
         
-        
+        /*
         mPresetList = (ListView) findViewById(R.id.presetListView);
         final List<String> programs = new ArrayList<String>(DefaultProgramsBuilder.getProgramMethods(this).keySet());
         programs.add(getString(R.string.getting_involved));
@@ -297,7 +307,87 @@ public class BBeat extends Activity {
 				selectProgram(programs.get(arg2));
 			}
 		});
+        */
+        mPresetList = (ExpandableListView) findViewById(R.id.presetListView);
+        //final List<String> programs = new ArrayList<String>(DefaultProgramsBuilder.getProgramMethods(this).keySet());
         
+        programs = DefaultProgramsBuilder.getProgramMethods(this);
+		groups = new ArrayList<CategoryGroup>();
+
+		for (String pname: programs.keySet()) {
+
+			ProgramMeta pm = programs.get(pname);
+			String catname = pm.getCat().toString();
+			CategoryGroup g = null;
+			
+			/* Check if I already have a group with that name */
+			for (CategoryGroup g2: groups) {
+				if (g2.getName().equals(catname)) {
+					g = g2;
+				}
+			}
+			if (g == null) {
+				g = new CategoryGroup(catname);
+				
+				try {
+					g.setNiceName(getString(R.string.class.getField("group_"+catname.toLowerCase()).getInt(null)));
+				} catch (Exception e) {
+					// pass
+				}
+				
+				groups.add(g);
+			}
+
+			g.add(pm);
+		}
+
+		ProgramListAdapter adapter = new ProgramListAdapter(this, groups);
+		  
+	/*	programs.add(getString(R.string.getting_involved));
+mPresetList.setAdapter(new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1, programs));
+       */
+		
+		mPresetList.setOnGroupClickListener(new OnGroupClickListener() {
+			
+			@Override
+			public boolean onGroupClick(ExpandableListView parent, View v,
+					int groupPosition, long id) {
+				// TODO Auto-generated method stub
+				return false;
+			}
+		});
+		
+		mPresetList.setOnChildClickListener(new OnChildClickListener() {
+			
+			@Override
+			public boolean onChildClick(ExpandableListView parent, View v,
+					int groupPosition, int childPosition, long id) {
+				selectProgram(groups.get(groupPosition).getObjets().get(childPosition));
+				return true;
+			}
+		});
+		
+		LayoutInflater inflater = getLayoutInflater();
+		View headerView =  inflater.inflate(R.layout.presetlist_getting_involved, null);
+	    mPresetList.addHeaderView(headerView);
+	    
+	    headerView.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				showDialog(DIALOG_GETTING_INVOLVED);
+			}
+		});
+	
+		mPresetList.setGroupIndicator(getResources().getDrawable(android.R.id.empty));
+		mPresetList.setAdapter(adapter);
+		
+		// Expand all
+        for (int groupPosition =0; groupPosition < adapter.getGroupCount(); groupPosition++)
+        	if (mPresetList.isGroupExpanded(groupPosition) == false) {
+        		mPresetList.expandGroup(groupPosition);
+        	}
+
         showDialog(DIALOG_WELCOME);
         
         _load_config();
@@ -679,19 +769,11 @@ public class BBeat extends Activity {
     	mNotificationManager.cancelAll();
     }
 	
-	private void selectProgram(String name) {
+	private void selectProgram(ProgramMeta pm) {
 		if (programFSM != null)
 			programFSM.stopProgram();
-		
-		
-		if (name.equals(getString(R.string.getting_involved)))
-		{
-			// Special hook to show getting involved dialog
-			showDialog(DIALOG_GETTING_INVOLVED);
-			return;
-		}
 
-		Program p = DefaultProgramsBuilder.getProgram(name, this);
+		Program p = DefaultProgramsBuilder.getProgram(pm, this);
 		_tmp_program_holder = p;
 		
 		showDialog(DIALOG_PROGRAM_PREVIEW);
@@ -857,6 +939,10 @@ public class BBeat extends Activity {
 	class RunProgram implements Runnable {
 
 		private static final long TIMER_FSM_DELAY = 1000 / 20;
+
+		private static final int GRAPH_VOICE_VIEW_PAST = 60;
+		private static final int GRAPH_VOICE_SPAN = 600;
+		private static final int GRAPH_VOICE_UPDATE = 5;
 		
 		private Program pR; 
 		private Iterator<Period> periodsIterator;
@@ -866,9 +952,13 @@ public class BBeat extends Activity {
 		private long programLength;
 		private String sProgramLength;
 		private String formatString;
+		private String format_INFO_TIMING_MIN_SEC;
 		private long oldDelta; // Utilized to reduce the amount of redraw for the program legend
 		private eState s;
 		private Handler h;
+		LineGraphView graphView;
+		
+		private long _last_graph_update;
 		
 		public RunProgram(Program pR, Handler h) {
 			this.pR = pR;
@@ -879,8 +969,10 @@ public class BBeat extends Activity {
 					formatTimeNumberwithLeadingZero((int) programLength/60),
 					formatTimeNumberwithLeadingZero((int) programLength%60));
 			formatString = getString(R.string.info_timing);
+			format_INFO_TIMING_MIN_SEC = getString(R.string.time_format_min_sec);
 			startTime = System.currentTimeMillis();
 			oldDelta = -1;
+			_last_graph_update = 0;
 			
 			s = eState.START;
 			
@@ -912,7 +1004,7 @@ public class BBeat extends Activity {
 		}
 
 		private void inPeriod(long now, Period p, float pos) {
-			long delta = (now - startTime) / 20; // Do not refresh too often
+			long delta = (now - startTime) / 50; // Do not refresh too often
 			
 			float freq = skewVoices(p.voices, pos, p.length, oldDelta != delta);
 			
@@ -921,7 +1013,7 @@ public class BBeat extends Activity {
 			
 			if (oldDelta != delta) {
 				oldDelta = delta;
-				delta = delta/50; // Down to seconds
+				delta = delta/20; // Down to seconds
 				mStatus.setText(String.format(formatString, 
 						freq,
 						formatTimeNumberwithLeadingZero((int) delta/60),
@@ -930,8 +1022,11 @@ public class BBeat extends Activity {
 				+
 				sProgramLength
 				);
+				
+				updatePeriodGraph((now - startTime) / 1000);
 			}
 		}
+
 		
 		private void endPeriod() {
 			//stopAllVoices();
@@ -951,6 +1046,7 @@ public class BBeat extends Activity {
 				s = eState.RUNNING;
 				periodsIterator = pR.getPeriodsIterator();
 				cT = now;
+				drawPeriodGraph();
 				nextPeriod();
 			break;
 			
@@ -995,6 +1091,80 @@ public class BBeat extends Activity {
 
 		public Program getProgram() {
 			return pR;
+		}
+		
+		private void updatePeriodGraph(long now) {
+			// update viewport
+			
+			if (now >= _last_graph_update + GRAPH_VOICE_UPDATE ) {
+				int viewstart = 0;
+				_last_graph_update = now;
+
+				if (GRAPH_VOICE_SPAN < programLength)
+					viewstart = (int) Math.max(0, now-GRAPH_VOICE_VIEW_PAST);
+				int viewsize   = GRAPH_VOICE_SPAN;
+
+				if (graphView != null) {
+					graphView.setDrawBackground(true);
+					graphView.setDrawBackgroundLimit(now);
+					graphView.setViewPort(viewstart, viewsize); 
+				}
+			}
+		}
+		
+		private void drawPeriodGraph() {
+			
+			Iterator<Period> iP = pR.getPeriodsIterator();
+			int numPeriods = pR.getNumPeriods();
+			GraphViewData data[] = new GraphViewData[numPeriods*2];
+			
+			int i = 0;
+			int cursor = 0;
+			double maxFreq = 0;
+			
+			while (iP.hasNext()) {
+				Period cP = iP.next();
+					
+				data[i++] = new GraphViewData(cursor+0.01, cP.getMainBeatStart());
+				cursor += cP.getLength();
+				data[i++] = new GraphViewData(cursor, cP.getMainBeatEnd());
+				
+				maxFreq = Math.max(maxFreq, cP.getMainBeatStart());
+				maxFreq = Math.max(maxFreq, cP.getMainBeatEnd());
+			}
+
+			GraphViewSeries voiceSeries = new GraphViewSeries(data);
+
+			graphView = new LineGraphView(
+					BBeat.this // context
+					, "Beat frequency" // heading
+			) {  
+				@Override  
+				protected String formatLabel(double value, boolean isValueX) {  
+					if (isValueX) {  
+						return String.format(format_INFO_TIMING_MIN_SEC,
+						formatTimeNumberwithLeadingZero((int) value/60),
+						formatTimeNumberwithLeadingZero((int) value%60));
+					} else { 
+						return String.format("%.1f toto", value); 
+					}
+				}  };
+				graphView.addSeries(voiceSeries); // data
+
+				int viewstart = 0;
+				int viewsize   = (int) Math.min(programLength, GRAPH_VOICE_SPAN);
+				  
+				graphView.setManualYAxisBounds(((int) Math.ceil(maxFreq)), 0);
+				
+				graphView.setViewPort(viewstart, viewsize);  
+				graphView.setScrollable(true);  
+				// optional - activate scaling / zooming  
+				//graphView.setScalable(true); 
+				
+				graphView.setDrawBackground(false);
+				
+				mGraphVoicesLayout.removeAllViews();
+				mGraphVoicesLayout.addView(graphView);
 		}
 	}
 

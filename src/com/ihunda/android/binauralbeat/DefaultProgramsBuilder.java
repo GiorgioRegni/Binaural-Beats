@@ -27,18 +27,15 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import android.content.Context;
-import android.util.Log;
 
+import com.ihunda.android.binauralbeat.ProgramMeta.Category;
 import com.ihunda.android.binauralbeat.viz.Aurora;
 import com.ihunda.android.binauralbeat.viz.Black;
 import com.ihunda.android.binauralbeat.viz.Flash;
@@ -51,12 +48,30 @@ import com.ihunda.android.binauralbeat.viz.Plasma;
 import com.ihunda.android.binauralbeat.viz.Starfield;
 
 public class DefaultProgramsBuilder {
-	private static Map<String,Method> names = null;
+	
+	
+	/*
+	Meditation/Relaxation
+	Presets aimed at inducing a meditative and/or relaxed state of mind.
+	Sleep/Dreams
+	Presets related to sleeping. This includes sleep induction, sleep reduction, dream manipulation, etc.
+	Treatment/Healing
+	Presets aimed at treating a certain physical or mental condition, and/or healing the body/soul in one way or another.
+	Hypnosis/Subliminal
+	Presets meant for hypnosis, or to make the mind open for suggestions (also known as subliminal programming).
+	Focus/Alertness
+	Presets aimed at focusing the mind, and/or increase alertness.
+	Stimulation/Chakras
+	Presets aimed at stimulating certain parts of the body/soul. This includes presets related to different chakras.
+	Out-of-body experiences
+	*/
+	
+	private static Map<String,ProgramMeta> names = null;
 
-	public static Map<String,Method> getProgramMethods(Context context) {
+	public static Map<String,ProgramMeta> getProgramMethods(Context context) {
 		if (names != null)
 			return names;
-		names = new HashMap<String,Method>();
+		names = new HashMap<String,ProgramMeta>();
 		/*
 		 * Returns the public static methods of a class or interface, including
 		 * those declared in super classes and interfaces.
@@ -64,9 +79,14 @@ public class DefaultProgramsBuilder {
 
     	Class<R.string> resourceStrings = R.string.class;
 		for (Method method : DefaultProgramsBuilder.class.getMethods()) {
-			if (Modifier.isStatic(method.getModifiers()) && method.getReturnType().isAssignableFrom(Program.class) && method.getName().matches("[A-Z_]+")) {
+			if (Modifier.isStatic(method.getModifiers()) && method.getReturnType().isAssignableFrom(Program.class) && method.getName().matches("[A-Z0-9_]+")) {
 				try {
-					names.put(context.getString(resourceStrings.getField("program_"+method.getName().toLowerCase()).getInt(null)), method);
+					Category cat = getMatchingCategory(method.getName());
+					String string_res = "program_"+method.getName().toLowerCase().substring(cat.toString().length()+1);
+					String nice_name = context.getString(resourceStrings.getField(string_res).getInt(null));
+					ProgramMeta meta = new ProgramMeta(method, nice_name, cat);
+					
+					names.put(nice_name, meta);
 				} catch (IllegalArgumentException e) {
 					throw new RuntimeException(e);
 				} catch (IllegalAccessException e) {
@@ -80,9 +100,9 @@ public class DefaultProgramsBuilder {
 		return names;
 	}
 
-	public static Program getProgram(String name, Context context) {
+	public static Program getProgram(ProgramMeta pm, Context context) {
 		try {
-			return (Program) DefaultProgramsBuilder.getProgramMethods(context).get(name).invoke(null, new Program(name));
+			return (Program) pm.getMethod().invoke(null, new Program(pm.getName()));
 		} catch (IllegalArgumentException e) {
 			throw new RuntimeException(e);
 		} catch (IllegalAccessException e) {
@@ -91,8 +111,12 @@ public class DefaultProgramsBuilder {
 			throw new RuntimeException(e);
 		}
 	}
+	
+	/*
+	 * First word of a program name is used as a category from ProgramMeta.java
+	 */
 
-	public static Program SELF_HYPNOSIS(Program p) {
+	public static Program HYPNOSIS_SELF_HYPNOSIS(Program p) {
 		p.setDescription("Short meditation preset to unite your conscious and subconsious mind. " +
 		"Glide down to theta waves, plateau for 10 minutes then slowly come back up to awake state.");
 		p.setAuthor("@GiorgioRegni");
@@ -113,7 +137,7 @@ public class DefaultProgramsBuilder {
 		return p;
 	}
 
-	public static Program HIGHEST_MENTAL_ACTIVITY(Program p) {
+	public static Program STIMULATION_HIGHEST_MENTAL_ACTIVITY(Program p) {
 		p.setDescription("A quick cafeine boost, this preset shorly reaches Gamma waves, provides "
 				+ "higher mental activity, including perception, problem solving, and consciousness.");
 		p.setAuthor("@GiorgioRegni");
@@ -134,7 +158,7 @@ public class DefaultProgramsBuilder {
 		return p;
 	}
 
-	public static Program UNITY(Program p) {
+	public static Program MEDITATION_UNITY(Program p) {
 
 		p.setDescription("Wander in deep relaxing delta waves and let your mind explore freely and without bounds." 
 				+" May induce dreamless sleep and loss of body awareness.");
@@ -150,7 +174,7 @@ public class DefaultProgramsBuilder {
 		return p;
 	}
 
-	public static Program MORPHINE(Program p) {
+	public static Program HEALING_MORPHINE(Program p) {
 
 		p.setDescription("A relaxing, southing mix of beats that slowly but surely appease any pain point."
 				+ " The brain runs the body as you will discover with this preset.");
@@ -169,7 +193,7 @@ public class DefaultProgramsBuilder {
 		return p;
 	}
 
-	public static Program LEARNING(Program p) {
+	public static Program LEARNING_LEARNING(Program p) {
 
 		p.setDescription("Enhanced learning, ability to concentrate and think clearly increased significantly, reduce unwillingness to work. Students can't get enough of this program.");
 		p.setAuthor("@GiorgioRegni");
@@ -189,7 +213,7 @@ public class DefaultProgramsBuilder {
 		return p;
 	}
 
-	public static Program CREATIVITY(Program p) {
+	public static Program STIMULATION_CREATIVITY(Program p) {
 		p.setDescription("Meditation to assist in Creative Thinking. " +
 		"Begin at 10hz then varying from 8 to 6 hz with a glide back to 8hz at the end.");
 		p.setAuthor("@thegreenman");
@@ -229,7 +253,7 @@ public class DefaultProgramsBuilder {
 		return p;
 	}
 
-	public static Program SCHUMANN_RESONANCE(Program p) {
+	public static Program MEDITATION_SCHUMANN_RESONANCE(Program p) {
 		Visualization v = new Image(R.drawable.warp);
 		
 		p.setDescription("A meditation to put your mind in balance with the Earth." +
@@ -255,7 +279,7 @@ public class DefaultProgramsBuilder {
 		return p;
 	}
 
-	public static Program ASTRAL_01_RELAX(Program p) {
+	public static Program OOBE_ASTRAL_01_RELAX(Program p) {
 		p.setDescription("From the book Mastering Astral Projection, Week 1: Relaxation. " +
 				"Use a low to medium sound level, sit in a quiet place, and listen to the preset with eyes closed." +
 				" A hard-backed chair without neck support is recommended to prevent falling asleep.");
@@ -279,7 +303,7 @@ public class DefaultProgramsBuilder {
 		return p;
 	}
 	
-	public static Program LSD(Program p) {
+	public static Program STIMULATION_LSD(Program p) {
 		p.setDescription("Lysergic acid diethylamide, abbreviated LSD , " +
 				"also known as acid, is a semisynthetic psychedelic drug...");
 
@@ -295,7 +319,7 @@ public class DefaultProgramsBuilder {
 		return p;
 	}
 	
-	public static Program SLEEP_INDUCTION(Program p) {
+	public static Program SLEEP_SLEEP_INDUCTION(Program p) {
 		
 		Visualization v = new None();
 		
@@ -316,7 +340,7 @@ public class DefaultProgramsBuilder {
         return p;
 	}
 	
-	public static Program LUCID_DREAMS(Program p) {
+	public static Program OOBE_LUCID_DREAMS(Program p) {
 		
 		Visualization m = new Black();
         p.setDescription("Stimulates lucid dreaming. Play while sleeping" +
@@ -393,7 +417,7 @@ public class DefaultProgramsBuilder {
         return p;
 	}
 	
-	public static Program SHAMANIC_RHYTHM(Program p) {
+	public static Program MEDITATION_SHAMANIC_RHYTHM(Program p) {
 		Visualization v = new None();
 		
 		p.setDescription("Shamanic Drum Rhythm" +
@@ -414,7 +438,7 @@ public class DefaultProgramsBuilder {
 		return p;
 	}
 	
-	public static Program SMR(Program p) {
+	public static Program SLEEP_SMR(Program p) {
 		
 		CanvasVisualization m = new Image(R.drawable.egg);
 		
@@ -455,14 +479,14 @@ public class DefaultProgramsBuilder {
 		return p;
 	}
 	
-	public static Program POWERNAP(Program p) {
+	public static Program SLEEP_POWERNAP(Program p) {
 		Program p2 = Program.fromGnauralFactory(readRawTextFile(R.raw.powernap));
 		p2.name = p.name;		
 		return p2;
 	}
 	
 	
-	public static Program AIRPLANETRAVELAID(Program p) {
+	public static Program SLEEP_AIRPLANETRAVELAID(Program p) {
 		Program p2 = Program.fromGnauralFactory(readRawTextFile(R.raw.airplanetravelaid));
 		p2.name = p.name;		
 		return p2;
@@ -487,4 +511,20 @@ public class DefaultProgramsBuilder {
            }
              return text.toString();
     }
+	
+	private static boolean nameMatchCategory(String name, Category cat) {
+		if (name.startsWith(cat.toString()+"_") == true)
+			return true;
+		else
+			return false;
+	}
+	
+	private static Category getMatchingCategory(String name) {
+		for (Category i: Category.values()) {
+			if (nameMatchCategory(name, i))
+				return i;
+		}
+		
+		throw new RuntimeException(String.format("Missing category in program %s", name));
+	}
 }

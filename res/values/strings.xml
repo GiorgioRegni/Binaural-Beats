@@ -43,6 +43,7 @@
     
     <string name="info_timing" formatted="false">Main Beat %.2fHz - %s:%s/</string>
     <string name="time_format" formatted="false">%s:%s</string>
+    <string name="time_format_min_sec" formatted="false">%sm%s</string>
     
     <string name="comments_title">Comments</string>
     <string name="menu">Menu</string>
@@ -51,21 +52,24 @@
     <string name="graphics_on">Graphics on</string>
     <string name="graphics_off">Graphics off, screen will turn off automatically</string>
     
+    <string name="group_oobe">Out of body experience</string>
+    
+    
     <string name="program_self_hypnosis">Self Hypnosis</string>
     <string name="program_highest_mental_activity">Highest mental activity</string>
     <string name="program_unity">Unity</string>
     <string name="program_morphine">Morphine pain killer</string>
-    <string name="program_hgh">Human Growth Hormone</string>
     <string name="program_learning">Study and learning</string>
     <string name="program_creativity">Creativity</string>
     <string name="program_schumann_resonance">Schumann Resonance</string>
-    <string name="program_oobe">Out Of Body Experience</string>
-    <string name="program_lsd">LSD Drug</string>
     <string name="program_astral_01_relax">Astral projection - Relaxation</string>
+    <string name="program_lsd">LSD Drug</string>
     <string name="program_sleep_induction">Sleep induction</string>
-    <string name="program_shamanic_rhythm">Shamanic rhythm</string>
     <string name="program_lucid_dreams">Lucid dreams</string>
+    <string name="program_shamanic_rhythm">Shamanic rhythm</string>
+    <string name="program_smr">Insomnia Relief</string>
     <string name="program_powernap">Power Nap</string>
     <string name="program_airplanetravelaid">Airplane travel aid</string>
-    <string name="program_smr">Insomnia Relief</string>
+    <string name="program_oobe">Out Of Body Experience</string>
+    <string name="program_hgh">Human Growth Hormone</string>
 </resources>

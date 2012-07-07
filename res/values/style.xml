@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <style name="textTimer" parent="@android:style/TextAppearance">
+    <item name="android:textSize">56sp</item>
+    <item name="android:textColor">#FFF</item>
+    <item name="android:textStyle">bold</item>
+  </style>
+   <style name="textValue" parent="@android:style/TextAppearance">
+    <item name="android:textSize">40sp</item>
+    <item name="android:textColor">#FFF</item>
+    <item name="android:textStyle">bold</item>
+  </style>
+  <style name="textCaption" parent="@android:style/TextAppearance">
+    <item name="android:textSize">20sp</item>
+    <item name="android:textColor">#FFF</item>
+    <item name="android:textStyle">bold</item>
+  </style>
+    <style name="textSmallItalic" parent="@android:style/TextAppearance">
+    <item name="android:textSize">10sp</item>
+    <item name="android:textColor">#FFF</item>
+    <item name="android:textStyle">italic</item>
+  </style>
+</resources>
+

@@ -106,4 +106,10 @@ public class Period {
 		return this;
 	}
 	
+	public float getMainBeatStart() {
+		return voices.get(0).freqStart;
+	}
+	public float getMainBeatEnd() {
+		return voices.get(0).freqEnd;
+	}
 }

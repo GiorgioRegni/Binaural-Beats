@@ -141,6 +141,7 @@ public class BBeat extends Activity {
 	private static final int DIALOG_GETTING_INVOLVED = 3;
 	private static final int DIALOG_JOIN_COMMUNITY = 4;
 	private static final int DIALOG_PROGRAM_PREVIEW = 5;
+	private static final int DIALOG_DONATE= 6;
 
 	private static final float DEFAULT_VOLUME = 0.6f;
 
@@ -225,6 +226,13 @@ public class BBeat extends Activity {
         	}
         });
         
+        b = (Button) findViewById((R.id.donateButton));
+        b.setOnClickListener(new OnClickListener() {
+        	public void onClick(View v) {
+        		showDialog(DIALOG_DONATE);
+        	}
+        });
+        
         TextView t = (TextView) findViewById((R.id.jointhecommunityText));
         t.setOnClickListener(new OnClickListener() {
         	public void onClick(View v) {
@@ -292,22 +300,7 @@ public class BBeat extends Activity {
         
         // Set a static pointer to this instance so that vizualisation can access it
         setInstance(this);
-        
-        /*
-        mPresetList = (ListView) findViewById(R.id.presetListView);
-        final List<String> programs = new ArrayList<String>(DefaultProgramsBuilder.getProgramMethods(this).keySet());
-        programs.add(getString(R.string.getting_involved));
 
-		mPresetList.setAdapter(new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1, programs));
-        mPresetList.setOnItemClickListener(new OnItemClickListener() {
-
-			@Override
-			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
-					long arg3) {
-				selectProgram(programs.get(arg2));
-			}
-		});
-        */
         mPresetList = (ExpandableListView) findViewById(R.id.presetListView);
         //final List<String> programs = new ArrayList<String>(DefaultProgramsBuilder.getProgramMethods(this).keySet());
         
@@ -342,11 +335,7 @@ public class BBeat extends Activity {
 		}
 
 		ProgramListAdapter adapter = new ProgramListAdapter(this, groups);
-		  
-	/*	programs.add(getString(R.string.getting_involved));
-mPresetList.setAdapter(new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1, programs));
-       */
-		
+	
 		mPresetList.setOnGroupClickListener(new OnGroupClickListener() {
 			
 			@Override
@@ -379,7 +368,7 @@ mPresetList.setAdapter(new ArrayAdapter<String>(this,android.R.layout.simple_lis
 			}
 		});
 	
-		mPresetList.setGroupIndicator(getResources().getDrawable(android.R.id.empty));
+		mPresetList.setGroupIndicator(getResources().getDrawable(R.drawable.empty));
 		mPresetList.setAdapter(adapter);
 		
 		// Expand all
@@ -681,6 +670,11 @@ mPresetList.setAdapter(new ArrayAdapter<String>(this,android.R.layout.simple_lis
 	    	           public void onClick(DialogInterface dialog, int id) {
 	    	                gotoMarket();
 	    	           }
+	    	       }).setNeutralButton(R.string.donate, new DialogInterface.OnClickListener() {
+	    	           public void onClick(DialogInterface dialog, int id) {
+	    	        	   dialog.cancel();
+	    	        	   showDialog(DIALOG_DONATE);
+	    	           }
 	    	       });
 	    	AlertDialog alert = builder.create();
 	    	return alert;
@@ -733,6 +727,24 @@ mPresetList.setAdapter(new ArrayAdapter<String>(this,android.R.layout.simple_lis
 	    	       });
 	    	AlertDialog alert = builder.create();
 	    	return alert;
+		}
+		
+		case DIALOG_DONATE: {
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			builder.setMessage(R.string.donate_text)
+			.setCancelable(true)
+			.setPositiveButton(R.string.donate, new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int id) {
+					donatePayPalOnClick();
+				}
+			}).setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+ 	           public void onClick(DialogInterface dialog, int id) {
+	        	   removeDialog(DIALOG_DONATE);
+	           }
+	       });
+
+			AlertDialog alert = builder.create();
+			return alert;
 		}
 		
 		}
@@ -992,9 +1004,15 @@ mPresetList.setAdapter(new ArrayAdapter<String>(this,android.R.layout.simple_lis
 		private void startPeriod(Period p) {
 			if (vizEnabled)
 				((VizualisationView) mVizV).startVisualization(p.getV(), p.getLength());
-			else
-				((VizualisationView) mVizV).startVisualization(new Black(), p.getLength());
-			
+			else {
+				Visualization v;
+				if (((Object) mVizV).getClass() == GLVizualizationView.class)
+    				v = new GLBlack();
+    			else
+    				v = new Black();
+				((VizualisationView) mVizV).startVisualization(v, p.getLength());
+			}
+				
 			((VizualisationView) mVizV).setFrequency(p.getVoices().get(0).freqStart);
 			playVoices(p.voices);
 			vp.setFade(FADE_MIN);
@@ -1146,7 +1164,7 @@ mPresetList.setAdapter(new ArrayAdapter<String>(this,android.R.layout.simple_lis
 						formatTimeNumberwithLeadingZero((int) value/60),
 						formatTimeNumberwithLeadingZero((int) value%60));
 					} else { 
-						return String.format("%.1f toto", value); 
+						return String.format("%.2f", value); 
 					}
 				}  };
 				graphView.addSeries(voiceSeries); // data
@@ -1306,5 +1324,50 @@ mPresetList.setAdapter(new ArrayAdapter<String>(this,android.R.layout.simple_lis
 		Toast.makeText(this, getString(id), Toast.LENGTH_SHORT).show();
 	}
 	
+	public class DonationsConfiguration {
+
+	    public static final String TAG = "Donations";
+
+	    public static final boolean DEBUG = false;
+
+	    /** PayPal */
+
+	    public static final String PAYPAL_USER = "giorgio.paypal@ihunda.com";
+	    public static final String PAYPAL_ITEM_NAME = "Binaural Beats Therapy Donation";
+	    public static final String PAYPAL_CURRENCY_CODE = "EUR";
+
+	}
+	
+    /**
+     * Donate button with PayPal by opening browser with defined URL
+     * For possible parameters see:
+     * https://cms.paypal.com/us/cgi-bin/?cmd=_render-content&content_ID=developer/e_howto_html_Appx_websitestandard_htmlvariables
+     * 
+     * @param view
+     */
+    public void donatePayPalOnClick() {
+        Uri.Builder uriBuilder = new Uri.Builder();
+        uriBuilder.scheme("https").authority("www.paypal.com").path("cgi-bin/webscr");
+        uriBuilder.appendQueryParameter("cmd", "_donations");
+        uriBuilder.appendQueryParameter("business", DonationsConfiguration.PAYPAL_USER);
+        uriBuilder.appendQueryParameter("lc", "US");
+        uriBuilder.appendQueryParameter("item_name", DonationsConfiguration.PAYPAL_ITEM_NAME);
+        uriBuilder.appendQueryParameter("no_note", "0");
+        uriBuilder.appendQueryParameter("cn", "Message to Developer");
+        uriBuilder.appendQueryParameter("no_shipping", "1");
+        uriBuilder.appendQueryParameter("currency_code",
+                DonationsConfiguration.PAYPAL_CURRENCY_CODE);
+        // uriBuilder.appendQueryParameter("bn", "PP-DonationsBF:btn_donate_LG.gif:NonHosted");
+        Uri payPalUri = uriBuilder.build();
+
+        if (DonationsConfiguration.DEBUG) {
+            Log.d(DonationsConfiguration.TAG,
+                    "Opening the browser with the url: " + payPalUri.toString());
+        }
+
+        // Start your favorite browser
+        Intent viewIntent = new Intent(Intent.ACTION_VIEW, payPalUri);
+        startActivity(viewIntent);
+    }
 	
 }

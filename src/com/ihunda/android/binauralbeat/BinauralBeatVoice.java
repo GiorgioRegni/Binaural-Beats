@@ -41,15 +41,26 @@ public class BinauralBeatVoice {
 	 * 440 = default
 	 */
 	float pitch;
+	boolean isochronic;
 
 	public BinauralBeatVoice(float freqStart, float freqEnd, float volume, float pitch) {
 		this.freqStart = freqStart;
 		this.freqEnd = freqEnd;
 		this.volume = volume;
 		this.pitch = pitch;
+		this.isochronic = false;
 	}
 
 	public BinauralBeatVoice(float freqStart, float freqEnd, float volume) {
 		this(freqStart, freqEnd, volume, DEFAULT);
 	}	
+
+	public BinauralBeatVoice setIsochronic(boolean yesno) {
+		isochronic = yesno;
+		return this;
+	}
+	
+	public boolean isIsochronic() {
+		return isochronic;
+	}
 }

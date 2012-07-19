@@ -96,6 +96,43 @@ public class Period {
 		voices.add(v);
 		return this;
 	}
+	
+	public Period addHarmonicBox(float freq, float pitch, float volume) {
+		/*
+		 * From the forum
+		 * http://www.binaural-beats.ihunda.com/forum/viewtopic.php?f=4&t=6
+		 * Step 1) Add voice 1, assign pitch and beat as above
+
+		Step 2) Add voice 2
+		Step 3) For voice 2 pitch, multiply beat by 2 and subtract from
+		pitch. So pitch - (beat * 2) or 500 - (15 * 2) = 470
+		Step 4) For voice 2 beat, multiply the voice 1 beat (15) by -1, which
+		would make it -15
+
+		And that's it! You got yourself a harmonic box X
+
+		The pitches are now as follows:
+
+		V1: 507.5 | 492.5
+		V2: 462.5 | 477.5
+
+		507.5 - 492.5 = 15
+		462.5 - 477.5 = -15
+		492.5 - 477.5 = 15 [monaural]
+		507.5 - 477.5 = 30 [crossover freq]
+		492.5 - 462.5 = 30 [crossover freq]
+		507.5 - 462.5 = 45 [monaural]
+		 */
+		
+		BinauralBeatVoice v1 = new BinauralBeatVoice(freq, freq, volume, pitch);
+		BinauralBeatVoice v2 = new BinauralBeatVoice(-freq, -freq, volume, pitch - freq*2);
+
+		addVoice(v1);
+		addVoice(v2);
+		
+		return this;
+	}
+	
 
 	public boolean isStrechable() {
 		return strechable;

@@ -34,6 +34,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.ihunda.android.binauralbeat.ProgramMeta.Category;
 import com.ihunda.android.binauralbeat.viz.Aurora;
@@ -66,6 +67,7 @@ public class DefaultProgramsBuilder {
 	Out-of-body experiences
 	*/
 	
+	private static final String TAG = null;
 	private static Map<String,ProgramMeta> names = null;
 
 	public static Map<String,ProgramMeta> getProgramMethods(Context context) {
@@ -82,8 +84,15 @@ public class DefaultProgramsBuilder {
 			if (Modifier.isStatic(method.getModifiers()) && method.getReturnType().isAssignableFrom(Program.class) && method.getName().matches("[A-Z0-9_]+")) {
 				try {
 					Category cat = getMatchingCategory(method.getName());
-					String string_res = "program_"+method.getName().toLowerCase().substring(cat.toString().length()+1);
-					String nice_name = context.getString(resourceStrings.getField(string_res).getInt(null));
+					String parsedMethod = method.getName().toLowerCase().substring(cat.toString().length()+1);
+					String string_res = "program_"+parsedMethod;
+					String nice_name;
+					try {
+						nice_name = context.getString(resourceStrings.getField(string_res).getInt(null));
+					} catch (NoSuchFieldException e) {
+						Log.w(TAG, String.format("Missing string for %s", parsedMethod));
+						nice_name = WordUtils.capitalize(parsedMethod);
+					}
 					ProgramMeta meta = new ProgramMeta(method, nice_name, cat);
 					
 					names.put(nice_name, meta);
@@ -91,9 +100,7 @@ public class DefaultProgramsBuilder {
 					throw new RuntimeException(e);
 				} catch (IllegalAccessException e) {
 					throw new RuntimeException(e);
-				} catch (NoSuchFieldException e) {
-					throw new RuntimeException(e);
-				}
+				} 
 			}
 		}
 

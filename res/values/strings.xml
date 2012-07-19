@@ -25,6 +25,13 @@
     <string name="contact">Contact</string>
     <string name="blog">Blog</string>
     <string name="rate_on_market">Rate on market</string>
+    <string name="donate">Donate</string>
+    <string name="donate_text">This application is free and will stay free. Developing Binaural Beat Therapy, 
+        researching and staying up to date on binaural beats and mind science takes time and a lot of efforts.
+        Donating will help me spend more time on Binaural Beat Therapy and continue delivering updates and answering requests!
+        
+        Thanks for your help!
+        Giorgio Regni</string>
     
     <string name="voices">Voices</string>
     <string name="background">Background</string>

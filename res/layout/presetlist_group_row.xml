@@ -5,7 +5,7 @@
     android:layout_height="45dip"
     android:gravity="center_vertical|right"
     android:paddingLeft="5dip"
-    android:paddingRight="5dip"
+    android:paddingRight="10dip"
     android:text=""
     android:background="#333333"
     android:textAppearance="?android:attr/textAppearanceLarge" />

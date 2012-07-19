@@ -31,7 +31,7 @@ abstract public class GraphView extends LinearLayout {
 	static final private class GraphViewConfig {
 		static final float BORDER = 20;
 		static final float VERTICAL_LABEL_WIDTH = 100;
-		static final float HORIZONTAL_LABEL_HEIGHT = 40;
+		static final float HORIZONTAL_LABEL_HEIGHT = 15;
 	}
 
 	boolean userMovedViewport = false;

@@ -20,6 +20,7 @@ public class VoicesPlayer extends Thread {
 	float vols[];
 	int anglesL[] = new int[MAX_VOICES];
 	int anglesR[] = new int[MAX_VOICES];
+	int anglesISO[] = new int[MAX_VOICES];
 	int calcFrames;
 	int bufFrames;
 	private FloatSinTable sinT;
@@ -107,6 +108,7 @@ public class VoicesPlayer extends Thread {
 		
 		anglesL = new int[MAX_VOICES];
 		anglesR = new int[MAX_VOICES];
+		anglesISO = new int[MAX_VOICES];
 	}
 
 	public void shutdown() {
@@ -139,7 +141,8 @@ public class VoicesPlayer extends Thread {
 			
 			
 			//long start = System.currentTimeMillis();
-			short[] samples = fillSamples();
+			//TODO change back to fillSamples
+			short[] samples = fillSamplesIsoChronic();
 			int totalWritten = 0;
 			int total = samples.length;
 			
@@ -187,6 +190,61 @@ public class VoicesPlayer extends Thread {
 		track.release();
 		
 		Log.v(LOGVP, String.format("Graceful shutdown"));
+	}
+	
+	private short[] fillSamplesIsoChronic() {
+		assert(freqs != null);
+				
+		short samples[] = new short[calcFrames*2];
+		float ws[] = new float[samples.length];
+		
+		for (int j=0; j<freqs.length; j++) { //freqs.length
+			float base_freq;
+
+			if (BinauralBeatVoice.DEFAULT == pitchs[j])
+				base_freq = voicetoPitch(j);
+			else
+				base_freq = pitchs[j];
+
+			float cur_freq = base_freq+freqs[j];
+			
+			int inc1 = (int) (TwoPi * (cur_freq) / HZ);
+			int inc2 = (int) (TwoPi * (base_freq) / HZ);
+			int inciso = (int) (TwoPi * (freqs[j]) / HZ);
+			int angle1 = anglesL[j];
+			int angle2 = anglesR[j];
+			int angleiso = anglesISO[j];
+
+			for(int i = 0; i < samples.length; i+=2)
+			{
+				if (angleiso > ISCALE/2) {
+					ws[i] += 0;
+					ws[i+1] += 0;
+				}
+				else
+				{
+					ws[i] += sinT.sinFastInt(angle1) * vols[j]; 
+					ws[i+1] += sinT.sinFastInt(angle2) * vols[j];
+				}
+				angle1 += inc1;
+				angle2 += inc2;
+				angleiso += inciso;
+				angleiso = angleiso % ISCALE;
+			}
+
+			anglesL[j] = angle1 % ISCALE;
+			anglesR[j] = angle2 % ISCALE;
+			anglesISO[j] = angleiso % ISCALE;
+		}
+
+
+		for(int i = 0; i < samples.length; i+=2)
+		{
+			samples[i] = (short) (ws[i]*Short.MAX_VALUE/freqs.length);
+			samples[i+1] = (short) (ws[i+1]*Short.MAX_VALUE/freqs.length);
+		}
+
+		return samples;
 	}
 
 	private short[] fillSamples() {

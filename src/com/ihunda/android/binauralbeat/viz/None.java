@@ -37,7 +37,7 @@ public class None implements CanvasVisualization {
 	 * Beat frequency in Hz
 	 */
 	//private float period;
-	float last = 0;
+	int last = 0;
 	private Bitmap background;
 	
 	public None() {

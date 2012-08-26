@@ -36,7 +36,7 @@ public class Image implements CanvasVisualization {
 	 * Beat frequency in Hz
 	 */
 	//private float period;
-	float last = 0;
+	int last = 0;
 	private Bitmap background;
 	
 	public Image(int id) {
@@ -48,12 +48,10 @@ public class Image implements CanvasVisualization {
 	public void redraw(Canvas c, int width, int height, float now,
 			float totalTime) {
 		
-		if (last == 0 || now > last + 10)
+		if (last++ % 50 == 0 || now < 1)
 		{
 			c.drawBitmap(background, 0, 0, null);
 			//Log.w("ABC", String.format("%f", now));
-			
-			last = now;;
 		}	
 	}
 

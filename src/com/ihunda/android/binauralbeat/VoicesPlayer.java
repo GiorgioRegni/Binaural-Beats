@@ -141,8 +141,8 @@ public class VoicesPlayer extends Thread {
 			
 			
 			//long start = System.currentTimeMillis();
-			//TODO change back to fillSamples
-			short[] samples = fillSamplesIsoChronic();
+			
+			short[] samples = fillSamples();
 			int totalWritten = 0;
 			int total = samples.length;
 			

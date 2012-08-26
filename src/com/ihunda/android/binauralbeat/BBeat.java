@@ -134,6 +134,7 @@ public class BBeat extends Activity {
 	private static final String FACEBOOK_URL = "http://www.facebook.com/pages/Binaural-Beat-Therapy/121737064536801";
 	private static final String CONTACT_EMAIL = "binaural-beats@ihunda.com";
 	private static final String LOGBBEAT = "BBT-MAIN";
+	private static final int NUM_START_BEFORE_DONATE = 10;
 	
 	/* All dialogs declaration go here */
 	private static final int DIALOG_WELCOME = 1;
@@ -153,6 +154,7 @@ public class BBeat extends Activity {
 
 	private static final String PREFS_NAME = "BBT";
 	private static final String PREFS_VIZ = "VIZ";
+	private static final String PREFS_NUM_STARTS = "NUM_STARTS";
 	
 	private VoicesPlayer vp;
 
@@ -163,6 +165,8 @@ public class BBeat extends Activity {
 	
 	 Map<String,ProgramMeta> programs;
 	 ArrayList<CategoryGroup> groups;
+
+	private long numStarts;
 	
 	/* 
 	 * Not sure this is the best way to do it but it seems to work
@@ -341,7 +345,7 @@ public class BBeat extends Activity {
 			@Override
 			public boolean onGroupClick(ExpandableListView parent, View v,
 					int groupPosition, long id) {
-				// TODO Auto-generated method stub
+				/* Do nothing for now */
 				return false;
 			}
 		});
@@ -394,11 +398,14 @@ public class BBeat extends Activity {
         SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
         SharedPreferences.Editor editor = settings.edit();
         editor.putBoolean(PREFS_VIZ, vizEnabled);
+        editor.putLong(PREFS_NUM_STARTS, numStarts);
+        editor.commit();
     }
     
     private void _load_config() {
     	SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
     	vizEnabled = settings.getBoolean(PREFS_VIZ, true);
+    	numStarts = settings.getLong(PREFS_NUM_STARTS, 0);
     }
     
     void initSounds() {
@@ -486,6 +493,7 @@ public class BBeat extends Activity {
 			mPresetView.setVisibility(View.GONE);
 			break;
 		case INPROGRAM:
+					
 	    	if (mWl.isHeld())
 	    		mWl.release();
 
@@ -499,6 +507,11 @@ public class BBeat extends Activity {
 			
 			/* Reinit all sounds */
 			initSounds();
+			
+			/* Check if its time to show a donate dialog */
+			if (numStarts % NUM_START_BEFORE_DONATE == NUM_START_BEFORE_DONATE-1)
+				showDialog(DIALOG_DONATE);
+			
 			break;
 		case SETUP:
 			runGoneAnimationOnView(mPresetView);
@@ -515,6 +528,12 @@ public class BBeat extends Activity {
 			mVizHolder.setVisibility(View.GONE);
 			break;
 		case INPROGRAM:
+			
+			// Track number of usage
+			numStarts++;
+			_save_config();
+	
+			
 			// Start voice player thread
 			startVoicePlayer();
 			
@@ -539,14 +558,21 @@ public class BBeat extends Activity {
 		}
 	}
 	
-    private boolean isPaused() {
+	public boolean isInProgram() {
+		if (state == appState.INPROGRAM)
+			return true;
+		
+		return false;
+	}
+	
+    public boolean isPaused() {
     	if (pause_time > 0)
     		return true;
     	else
     		return false;
     }
     
-    private void pauseOrResume() {
+    public void pauseOrResume() {
     	if (state == appState.INPROGRAM) {
     		if (pause_time > 0) {
     			long delta = System.currentTimeMillis() - pause_time;
@@ -1370,4 +1396,5 @@ public class BBeat extends Activity {
         startActivity(viewIntent);
     }
 	
+    
 }

@@ -37,7 +37,7 @@ public class Black implements CanvasVisualization {
 	 */
 	float freq;
 	float period;
-	float last = 0;
+	int last = 0;
 	
 	public Black() {
 		last = 0;
@@ -46,10 +46,9 @@ public class Black implements CanvasVisualization {
 	
 	public void redraw(Canvas c, int width, int height, float now,
 			float totalTime) {
-		if (last == 0 || now > last + 10)
+		if (last++ % 50 == 0 || now < 1)
 		{
 			c.drawColor(COLOR_BG);
-			last = now;
 		}	
 	}
 

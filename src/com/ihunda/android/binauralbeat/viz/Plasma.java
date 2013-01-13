@@ -220,13 +220,13 @@ public class Plasma implements GLVisualization {
 				pixelBuffer.put((byte) (pixel & 0xff));
 				
 				pos++;
-				t3 -= 1; // on incrémente les "pointeurs" de ligne.
+				t3 -= 1; // on incrÃ©mente les "pointeurs" de ligne.
 				t4 += 4; // ceci fait bouger la courbe du plasma sur l'axe horizontal
 			}
-			t1 -= 4; // on incrémente les "pointeurs" de colonne.
+			t1 -= 4; // on incrÃ©mente les "pointeurs" de colonne.
 			t2 += 2; // ceci fait bouger la courbe du plasma sur l'axe vertical
 		}
-		p1 += 1; // on incrémente les positions des différents pointeurs
+		p1 += 1; // on incrÃ©mente les positions des diffÃ©rents pointeurs
 		p2 += 4; // pour faire bouger le plasma sur les 2 axes1
 		p3 += 1;
 		p4 -= (int) Math.ceil((8*ratio));	

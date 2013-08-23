@@ -499,7 +499,7 @@ public class DefaultProgramsBuilder {
 		return p2;
 	}
 	
-	public static Program Induction2LucidDreams(Program p) {
+	public static Program OOBE_LUCID_DREAMS_2(Program p) {
 		Visualization v = new Aurora();
 		
         p.setDescription("Sleep Induction and Lucid Dreams2" +
@@ -611,7 +611,7 @@ public class DefaultProgramsBuilder {
         return p;
 }
 	
-	public static Program ADD_ADHD_help(Program p) {
+	public static Program STIMULATION_ADHD(Program p) {
 		Visualization v = new HypnoFlash();
 		
 		p.setDescription("Aid for Attention Deficit Disorder." + "30m. alternating between 12 and 20 hz.");

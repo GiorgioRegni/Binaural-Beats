@@ -499,6 +499,153 @@ public class DefaultProgramsBuilder {
 		return p2;
 	}
 	
+	public static Program Induction2LucidDreams(Program p) {
+		Visualization v = new Aurora();
+		
+        p.setDescription("Sleep Induction and Lucid Dreams2" +
+                        "Sleep Induction into a longer lucid dreaming program");
+        p.setAuthor("@thegreenman");
+
+        p.addPeriod(new Period(600, SoundLoop.UNITY, 0.7f, null).
+                        addVoice(new BinauralBeatVoice(9.7f, 3.4f, 0.6f)).
+          addVoice(new BinauralBeatVoice(9.5f, 3f, 0.55f)).
+                        addVoice(new BinauralBeatVoice(9.3f, 2.4f, 0.5f)).
+          setV(v)
+        );
+        
+        p.addPeriod(new Period(5400, SoundLoop.UNITY, 0.7f, null).
+                        addVoice(new BinauralBeatVoice(3.4f, 2.4f, 0.6f)).
+          addVoice(new BinauralBeatVoice(3f, 3f, 0.55f)).
+                        addVoice(new BinauralBeatVoice(2.4f, 3.4f, 0.5f)).
+          setV(v)
+        );
+
+        p.addPeriod(new Period(120, SoundLoop.NONE, 0.7f, null).
+                        addVoice(new BinauralBeatVoice(10f, 8f, 0.6f)).
+          setV(v)
+        );
+        p.addPeriod(new Period(120, SoundLoop.NONE, 0.7f, null).
+                        addVoice(new BinauralBeatVoice(8f, 8f, 0.6f)).
+          setV(v)
+        );
+        p.addPeriod(new Period(120, SoundLoop.NONE, 0.7f, null).
+                        addVoice(new BinauralBeatVoice(8f, 6f, 0.6f)).
+                        setV(v)
+        );
+        p.addPeriod(new Period(240, SoundLoop.NONE, 0.7f, null).
+                        addVoice(new BinauralBeatVoice(6f, 6f, 0.6f)).
+                        setV(v)
+        );
+        p.addPeriod(new Period(240, SoundLoop.NONE, 0.7f, null).
+                        addVoice(new BinauralBeatVoice(6f, 5f, 0.6f)).
+                        setV(v)
+        );
+        p.addPeriod(new Period(420, SoundLoop.NONE, 0.7f, null).
+                        addVoice(new BinauralBeatVoice(5f, 5f, 0.6f)).
+                        setV(v)
+        );
+        p.addPeriod(new Period(20, SoundLoop.NONE, 0.7f, null).
+                        addVoice(new BinauralBeatVoice(5f, 8f, 0.6f)).
+                        setV(v)
+        );
+        p.addPeriod(new Period(20, SoundLoop.UNITY, 0.7f, null).
+                        addVoice(new BinauralBeatVoice(8f, 5f, 0.6f)).
+                        setV(v)
+        );
+        p.addPeriod(new Period(360, SoundLoop.NONE, 0.7f, null).
+                        addVoice(new BinauralBeatVoice(5f, 5f, 0.6f)).
+                        setV(v)
+        );
+        p.addPeriod(new Period(20, SoundLoop.NONE, 0.7f, null).
+                        addVoice(new BinauralBeatVoice(5f, 8f, 0.6f)).
+                        setV(v)
+        );
+        p.addPeriod(new Period(20, SoundLoop.UNITY, 0.3f, null).
+                        addVoice(new BinauralBeatVoice(8f, 5f, 0.6f)).
+                        setV(v)
+        );
+        p.addPeriod(new Period(180, SoundLoop.NONE, 0.7f, null).
+                        addVoice(new BinauralBeatVoice(5f, 5f, 0.6f)).
+                        setV(v)
+        );
+        p.addPeriod(new Period(20, SoundLoop.NONE, 0.3f, null).
+                        addVoice(new BinauralBeatVoice(5f, 8f, 0.6f)).
+                        setV(v)
+        );
+        p.addPeriod(new Period(20, SoundLoop.NONE, 0.7f, null).
+                        addVoice(new BinauralBeatVoice(8f, 5f, 0.6f)).
+                        setV(v)
+        );
+         p.addPeriod(new Period(900, SoundLoop.NONE, 0.7f, null).
+                        addVoice(new BinauralBeatVoice(5f, 5f, 0.6f)).
+                        setV(v)
+        );
+        p.addPeriod(new Period(20, SoundLoop.NONE, 0.7f, null).
+                        addVoice(new BinauralBeatVoice(5f, 8f, 0.6f)).
+                        setV(v)
+        );
+        p.addPeriod(new Period(20, SoundLoop.UNITY, 0.3f, null).
+                        addVoice(new BinauralBeatVoice(8f, 5f, 0.6f)).
+                        setV(v)
+        );
+         p.addPeriod(new Period(900, SoundLoop.NONE, 0.7f, null).
+                        addVoice(new BinauralBeatVoice(5f, 5f, 0.6f)).
+                        setV(v)
+        );
+        p.addPeriod(new Period(20, SoundLoop.NONE, 0.7f, null).
+                        addVoice(new BinauralBeatVoice(5f, 8f, 0.6f)).
+                        setV(v)
+        );
+        p.addPeriod(new Period(20, SoundLoop.UNITY, 0.3f, null).
+                        addVoice(new BinauralBeatVoice(8f, 5f, 0.6f)).
+                        setV(v)
+        );
+         p.addPeriod(new Period(360, SoundLoop.NONE, 0.7f, null).
+                        addVoice(new BinauralBeatVoice(5f, 5f, 0.6f)).
+                        setV(v)
+        );
+         p.addPeriod(new Period(360, SoundLoop.UNITY, 0.1f, null).
+                        addVoice(new BinauralBeatVoice(5f, 12f, 0.7f)).
+                        setV(v)
+        );
+        return p;
+}
+	
+	public static Program ADD_ADHD_help(Program p) {
+		Visualization v = new HypnoFlash();
+		
+		p.setDescription("Aid for Attention Deficit Disorder." + "30m. alternating between 12 and 20 hz.");
+		p.setAuthor("@thegreenman");
+
+		p.addPeriod(new Period(300, SoundLoop.WHITE_NOISE, 0.7f, null).
+				addVoice(new BinauralBeatVoice(60f, 12f, 0.6f)).
+				setV(v)
+		);
+		p.addPeriod(new Period(300, SoundLoop.WHITE_NOISE, 0.7f, null).
+				addVoice(new BinauralBeatVoice(20f, 20f, 0.6f)).
+				setV(v)
+		);
+		p.addPeriod(new Period(300, SoundLoop.WHITE_NOISE, 0.7f, null).
+				addVoice(new BinauralBeatVoice(12f, 12f, 0.6f)).
+				setV(v)
+		);
+		p.addPeriod(new Period(300, SoundLoop.WHITE_NOISE, 0.7f, null).
+				addVoice(new BinauralBeatVoice(20f, 20f, 0.6f)).
+				setV(v)
+		);
+		p.addPeriod(new Period(300, SoundLoop.WHITE_NOISE, 0.7f, null).
+				addVoice(new BinauralBeatVoice(12f, 12f, 0.6f)).
+				setV(v)
+		);
+		p.addPeriod(new Period(300, SoundLoop.WHITE_NOISE, 0.7f, null).
+				addVoice(new BinauralBeatVoice(20f, 20f, 0.6f)).
+				setV(v)
+		);
+
+		return p;
+	}
+
+	
 	public static String readRawTextFile(int resId)
     {
          InputStream inputStream = BBeat.getInstance().getResources().openRawResource(resId);

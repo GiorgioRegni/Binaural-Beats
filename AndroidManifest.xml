@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
       package="com.ihunda.android.binauralbeat"
-      android:versionCode="40"
+      android:versionCode="41"
       android:versionName="2.1"
       android:installLocation="auto">
       

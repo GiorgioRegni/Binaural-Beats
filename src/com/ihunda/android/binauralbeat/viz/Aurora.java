@@ -28,6 +28,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Rect;
 
 import com.ihunda.android.binauralbeat.BBeat;
 import com.ihunda.android.binauralbeat.CanvasVisualization;
@@ -41,11 +42,16 @@ public class Aurora implements CanvasVisualization {
 	private float period;
 	private Bitmap background;
 	private Paint pTag;
+	private Rect srcR;
+	private Rect dstR;
 	
 	public Aurora() {
 		background = BitmapFactory.decodeResource(BBeat.getInstance().getResources(), R.drawable.aurora);
 		pTag = new Paint();
 		pTag.setStyle(Paint.Style.FILL);
+		
+		srcR = new Rect(0,0,background.getWidth(),background.getHeight());
+		dstR = new Rect(0,0,0,0);
 	}
 	
 	public void redraw(Canvas c, int width, int height, float now,
@@ -57,7 +63,9 @@ public class Aurora implements CanvasVisualization {
 		float ratio = (now % dperiod) / dperiod;
 		float trans;
 		
-		c.drawBitmap(background, 0, 0, null);
+		dstR.right = width;
+		dstR.bottom = height;
+		c.drawBitmap(background, srcR, dstR, null);
 		
 		if (ratio > 0.5)
 			trans = (1-ratio) * 50;

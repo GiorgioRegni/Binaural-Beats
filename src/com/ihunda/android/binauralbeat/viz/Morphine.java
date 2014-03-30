@@ -28,6 +28,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Rect;
 
 import com.ihunda.android.binauralbeat.BBeat;
 import com.ihunda.android.binauralbeat.CanvasVisualization;
@@ -43,6 +44,8 @@ public class Morphine implements CanvasVisualization {
 	private float period;
 	private Paint pLed;
 	private Bitmap background;
+	private Rect srcR;
+	private Rect dstR;
 	
 	public Morphine() {
 		pLed = new Paint();
@@ -50,6 +53,9 @@ public class Morphine implements CanvasVisualization {
 		pLed.setColor(COLOR_LED);
 		
 		background = BitmapFactory.decodeResource(BBeat.getInstance().getResources(), R.drawable.morphine);
+		
+		srcR = new Rect(0,0,background.getWidth(),background.getHeight());
+		dstR = new Rect(0,0,0,0);
 	}
 	
 	
@@ -61,7 +67,10 @@ public class Morphine implements CanvasVisualization {
 		
 		ratio = (now % dperiod) / dperiod;
 		
-		c.drawBitmap(background, 0, 0, null);
+		dstR.right = width;
+		dstR.bottom = height;
+		c.drawBitmap(background, srcR, dstR, null);
+		
 		if (ratio > 0.5f) {
 			c.drawCircle(width/2, height/2, (int) (ledRadius*(ratio-0.5f)*2f), pLed);
 		}

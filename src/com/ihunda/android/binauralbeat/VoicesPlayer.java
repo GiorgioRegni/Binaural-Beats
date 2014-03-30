@@ -15,14 +15,13 @@ public class VoicesPlayer extends Thread {
 	private static final int MAX_VOICES = 20;
 	AudioTrack track;
 	static int HZ = 8192;
+	private static final int AUDIOBUF_SIZE = HZ/4;
 	float freqs[];
 	float pitchs[];
 	float vols[];
 	int anglesL[] = new int[MAX_VOICES];
 	int anglesR[] = new int[MAX_VOICES];
 	int anglesISO[] = new int[MAX_VOICES];
-	int calcFrames;
-	int bufFrames;
 	private FloatSinTable sinT;
 	long startTime;
 	int TwoPi;
@@ -40,20 +39,17 @@ public class VoicesPlayer extends Thread {
 	{
 		int minSize = AudioTrack.getMinBufferSize(HZ, AudioFormat.CHANNEL_OUT_STEREO, AudioFormat.ENCODING_PCM_16BIT );        
 		
-		int audiobuf = 16384;
-		assert(audiobuf > minSize);
+		assert(AUDIOBUF_SIZE > minSize);
 		
 		track = new AudioTrack( AudioManager.STREAM_MUSIC, HZ, 
 				AudioFormat.CHANNEL_OUT_STEREO, AudioFormat.ENCODING_PCM_16BIT, 
-				audiobuf, AudioTrack.MODE_STREAM);
-		calcFrames = audiobuf/16;
-		bufFrames = audiobuf;
+				AUDIOBUF_SIZE*2, AudioTrack.MODE_STREAM);
 		sinT = new FloatSinTable(ISCALE);
 		TwoPi = ISCALE;
 		
 		want_shutdown = false;
 		
-		Log.e(LOGVP, String.format("minsize %d bufsize %d ", minSize, audiobuf));
+		Log.e(LOGVP, String.format("minsize %d bufsize %d ", minSize, AUDIOBUF_SIZE*2));
 		setPriority(Thread.MAX_PRIORITY);
 		
 		volume = 1f;
@@ -73,15 +69,6 @@ public class VoicesPlayer extends Thread {
 			for (int i =0; i<freqs.length; i++) {
 				vols[i] = voices.get(i).volume;
 			}
-			/*
-			anglesL = new int[voices.size()];
-			for (int i =0; i<anglesL.length; i++) {
-				anglesL[i] = 0;
-			}
-			anglesR = new int[voices.size()];
-			for (int i =0; i<anglesR.length; i++) {
-				anglesR[i] = 0;
-			}*/
 		}
 		
 		//fakeS = fillSamples();
@@ -179,7 +166,7 @@ public class VoicesPlayer extends Thread {
 				if (sleep) {
 					Log.v(LOGVP, String.format("we're going too fast - throttling"));
 					try {
-						sleep(calcFrames*1000/HZ/2);
+						sleep(50);
 					} catch (InterruptedException e) {
 						// ignore
 					}
@@ -195,7 +182,7 @@ public class VoicesPlayer extends Thread {
 	private short[] fillSamplesIsoChronic() {
 		assert(freqs != null);
 				
-		short samples[] = new short[calcFrames*2];
+		short samples[] = new short[AUDIOBUF_SIZE];
 		float ws[] = new float[samples.length];
 		
 		for (int j=0; j<freqs.length; j++) { //freqs.length
@@ -250,9 +237,7 @@ public class VoicesPlayer extends Thread {
 	private short[] fillSamples() {
 		assert(freqs != null);
 		
-		
-		
-		short samples[] = new short[calcFrames*2];
+		short samples[] = new short[AUDIOBUF_SIZE];
 		float ws[] = new float[samples.length];
 		
 		for (int j=0; j<freqs.length; j++) { //freqs.length

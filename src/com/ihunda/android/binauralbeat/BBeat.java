@@ -130,7 +130,7 @@ public class BBeat extends Activity {
 	private static final String SOURCE_CODE_URL = "http://bit.ly/BBeats";
 	private static final String BLOG_URL = "http://bit.ly/BBeatsBlog";
 	private static final String HELP_URL = "http://bit.ly/BBeatsHelp";
-	private static final String FORUM_URL = "http://bit.ly/BBTForum";
+	private static final String FORUM_URL = "https://plus.google.com/u/1/communities/113832254482827107359";
 	private static final String FACEBOOK_URL = "http://www.facebook.com/pages/Binaural-Beat-Therapy/121737064536801";
 	private static final String CONTACT_EMAIL = "binaural-beats@ihunda.com";
 	private static final String LOGBBEAT = "BBT-MAIN";

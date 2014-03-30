@@ -26,6 +26,7 @@ package com.ihunda.android.binauralbeat.viz;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Rect;
 
 import com.ihunda.android.binauralbeat.BBeat;
 import com.ihunda.android.binauralbeat.CanvasVisualization;
@@ -38,10 +39,15 @@ public class Image implements CanvasVisualization {
 	//private float period;
 	int last = 0;
 	private Bitmap background;
+	private Rect srcR;
+	private Rect dstR;
 	
 	public Image(int id) {
 		background = BitmapFactory.decodeResource(BBeat.getInstance().getResources(), id);
 		last = 0;
+		
+		srcR = new Rect(0,0,background.getWidth(),background.getHeight());
+		dstR = new Rect(0,0,0,0);
 	}
 	
 	
@@ -50,7 +56,10 @@ public class Image implements CanvasVisualization {
 		
 		if (last++ % 50 == 0 || now < 1)
 		{
-			c.drawBitmap(background, 0, 0, null);
+			dstR.right = width;
+			dstR.bottom = height;
+			c.drawBitmap(background, srcR, dstR, null);
+			
 			//Log.w("ABC", String.format("%f", now));
 		}	
 	}

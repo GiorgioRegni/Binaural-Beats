@@ -73,10 +73,13 @@
     <string name="program_lsd">LSD Drug</string>
     <string name="program_sleep_induction">Sleep induction</string>
     <string name="program_lucid_dreams">Lucid dreams</string>
+    <string name="program_lucid_dreams_2">Lucid dreams - variant</string>
+    
     <string name="program_shamanic_rhythm">Shamanic rhythm</string>
     <string name="program_smr">Insomnia Relief</string>
     <string name="program_powernap">Power Nap</string>
     <string name="program_airplanetravelaid">Airplane travel aid</string>
     <string name="program_oobe">Out Of Body Experience</string>
     <string name="program_hgh">Human Growth Hormone</string>
+    <string name="program_adhd">ADHD</string>
 </resources>

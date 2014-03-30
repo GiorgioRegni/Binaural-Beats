@@ -30,6 +30,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Rect;
 
 import com.ihunda.android.binauralbeat.BBeat;
 import com.ihunda.android.binauralbeat.CanvasVisualization;
@@ -48,6 +49,8 @@ public class HypnoFlash implements CanvasVisualization {
 	private Paint pFlash2;
 	
 	private Bitmap background;
+	private Rect srcR;
+	private Rect dstR;
 	
 	public HypnoFlash() {
 		pFlash1 = new Paint();
@@ -59,7 +62,9 @@ public class HypnoFlash implements CanvasVisualization {
 		pFlash2.setColor(COLOR_FLASH2);
 		
 		background = BitmapFactory.decodeResource(BBeat.getInstance().getResources(), R.drawable.hypnosisspiral);
-		
+
+		srcR = new Rect(0,0,background.getWidth(),background.getHeight());
+		dstR = new Rect(0,0,0,0);
 	}
 	
 	
@@ -70,8 +75,11 @@ public class HypnoFlash implements CanvasVisualization {
 		
 		ratio = (now % dperiod) / dperiod;
 	
-		if (ratio < 0.8) 
-			c.drawBitmap(background, 0, 0, null);
+		if (ratio < 0.8) {
+			dstR.right = width;
+			dstR.bottom = height;
+			c.drawBitmap(background, srcR, dstR, null);
+		}
 		else {
 			Random r = new Random();
 			if (r.nextBoolean())

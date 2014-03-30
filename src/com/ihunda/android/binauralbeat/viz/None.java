@@ -23,41 +23,11 @@ package com.ihunda.android.binauralbeat.viz;
  *   BBT project home is at https://github.com/GiorgioRegni/Binaural-Beats
  */
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-
-import com.ihunda.android.binauralbeat.BBeat;
-import com.ihunda.android.binauralbeat.CanvasVisualization;
 import com.ihunda.android.binauralbeat.R;
 
-public class None implements CanvasVisualization {
+public class None extends Image {
 
-	/**
-	 * Beat frequency in Hz
-	 */
-	//private float period;
-	int last = 0;
-	private Bitmap background;
-	
 	public None() {
-		background = BitmapFactory.decodeResource(BBeat.getInstance().getResources(), R.drawable.none);
-		last = 0;
+		super(R.drawable.none);
 	}
-	
-	
-	public void redraw(Canvas c, int width, int height, float now,
-			float totalTime) {
-		
-		if (last++ % 50 == 0 || now < 1)
-		{
-			c.drawBitmap(background, 0, 0, null);
-			//Log.w("ABC", String.format("%f", now))
-		}	
-	}
-
-	public void setFrequency(float beat_frequency) {
-		//period = 1f / beat_frequency;
-	}
-
 }

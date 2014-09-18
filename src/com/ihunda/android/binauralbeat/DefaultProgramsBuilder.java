@@ -124,8 +124,9 @@ public class DefaultProgramsBuilder {
 	 */
 
 	public static Program HYPNOSIS_SELF_HYPNOSIS(Program p) {
-		p.setDescription("Short meditation preset to unite your conscious and subconsious mind. " +
-		"Glide down to theta waves, plateau for 10 minutes then slowly come back up to awake state.");
+		p.setDescription("Short meditation preset to unite your conscious and subconscious mind. "
+				+ "It lasts 20mn : Glide down to theta waves, "
+				+ "plateau for 10mn then then slowly come back up to awake state");
 		p.setAuthor("@GiorgioRegni");
 
 		p.addPeriod(new Period(300, SoundLoop.WHITE_NOISE, 0.3f, null).
@@ -145,8 +146,8 @@ public class DefaultProgramsBuilder {
 	}
 
 	public static Program STIMULATION_HIGHEST_MENTAL_ACTIVITY(Program p) {
-		p.setDescription("A quick cafeine boost, this preset shorly reaches Gamma waves, provides "
-				+ "higher mental activity, including perception, problem solving, and consciousness.");
+		p.setDescription("A quick cafeine boost ! This preset shortly reaches Gamma waves, provides higher mental activity, including perception, problem solving, and consciousness. "
+				+ "It can be used whenever needed");
 		p.setAuthor("@GiorgioRegni");
 
 		p.addPeriod(new Period(120, SoundLoop.WHITE_NOISE, 0.3f, null).
@@ -202,7 +203,7 @@ public class DefaultProgramsBuilder {
 
 	public static Program LEARNING_LEARNING(Program p) {
 
-		p.setDescription("Enhanced learning, ability to concentrate and think clearly increased significantly, reduce unwillingness to work. Students can't get enough of this program.");
+		p.setDescription("A 2h preset that enhances learning, increases ability to concentrate and think clearly, reduces unwillingness to work.  Students can't get enough of this program! This one is to be listened while studying. ");
 		p.setAuthor("@GiorgioRegni");
 		p.addPeriod(new Period(120, SoundLoop.NONE, 0.6f, null).
 				addVoice(new BinauralBeatVoice(60f, 14f, 0.60f)).
@@ -221,8 +222,8 @@ public class DefaultProgramsBuilder {
 	}
 
 	public static Program STIMULATION_CREATIVITY(Program p) {
-		p.setDescription("Meditation to assist in Creative Thinking. " +
-		"Begin at 10hz then varying from 8 to 6 hz with a glide back to 8hz at the end.");
+		p.setDescription("It’s a 20mn meditation preset to assist in Creative Thinking "
+				+ "It begins at 10hz then varying from 8 to 6 hz with a glide back to 8hz at the end");
 		p.setAuthor("@thegreenman");
 
 		p.addPeriod(new Period(15, SoundLoop.WHITE_NOISE, 0.4f, null).
@@ -287,9 +288,9 @@ public class DefaultProgramsBuilder {
 	}
 
 	public static Program OOBE_ASTRAL_01_RELAX(Program p) {
-		p.setDescription("From the book Mastering Astral Projection, Week 1: Relaxation. " +
-				"Use a low to medium sound level, sit in a quiet place, and listen to the preset with eyes closed." +
-				" A hard-backed chair without neck support is recommended to prevent falling asleep.");
+		p.setDescription("From the book Mastering Astral Projection, Week 1: Relaxation. "
+				+ "Use a low to medium sound level, sit in a quiet place, and listen to the preset with eyes closed. "
+				+ "A hard-backed chair without neck support is recommended to prevent falling asleep.");
 
 		p.setAuthor("@GiorgioRegni");
 
@@ -311,8 +312,7 @@ public class DefaultProgramsBuilder {
 	}
 	
 	public static Program STIMULATION_LSD(Program p) {
-		p.setDescription("Lysergic acid diethylamide, abbreviated LSD , " +
-				"also known as acid, is a semisynthetic psychedelic drug...");
+		p.setDescription("A preset that simulates Lysergic acid diethylamide, abbreviated LSD, also known as acid, is a semisynthetic psychedelic drug...");
 
 		p.setAuthor("@GiorgioRegni");
 		p.setGL();
@@ -330,8 +330,9 @@ public class DefaultProgramsBuilder {
 		
 		Visualization v = new None();
 		
-        p.setDescription("Insomnia relief for use at bed time" +
-                        " 6 minute drop into delta then 54 minutes of relaxing delta ");
+        p.setDescription("Sleep induction for use about 15 mn before bedtime to help you fall asleep. "
+        		+ "It’s a one hour programm, with 6mn drop into delta waves"
+        		+ " followed by 54 mn of relaxing delta plateau");
         p.setAuthor("@thegreenman");
 
         p.addPeriod(new Period(360, SoundLoop.UNITY, 0.7f, null).
@@ -350,8 +351,8 @@ public class DefaultProgramsBuilder {
 	public static Program OOBE_LUCID_DREAMS(Program p) {
 		
 		Visualization m = new Black();
-        p.setDescription("Stimulates lucid dreaming. Play while sleeping" +
-                        " 5hz base frequency with 8 hz spikes.");
+        p.setDescription("This preset stimulates lucid dreaming. It has to be played while sleeping, it is recommend during a nap, while seated in a chair or sofa to prevent falling fully asleep."
+        		+ " 5hz base frequency with 8 hz spikes");
         p.setAuthor("@thegreenman");
 
         p.addPeriod(new Period(60, SoundLoop.NONE, 0.7f, null).
@@ -449,8 +450,10 @@ public class DefaultProgramsBuilder {
 		
 		CanvasVisualization m = new Image(R.drawable.egg);
 		
-		p.setDescription("Insomnia relief through stimulating Sensory Motor Rhythm. Not for use at bed time" +
-		" 61 minutes of crossing frequencies from 8 to 12 hz.");
+		p.setDescription("Insomnia relief through stimulating Sensory Motor Rythm. "
+				+ "Don’t use it at bedtime, use it only during your insomnia, "
+				+ "for example if you wake up in the middle of the night and can’t go back to sleep "
+				+ "38 mn of crossing frequencies from 8 to 12 Hz");
 		p.setAuthor("@thegreenman);");
 	
 		p.addPeriod(new Period(333, SoundLoop.NONE, 0.7f, null).
@@ -614,7 +617,7 @@ public class DefaultProgramsBuilder {
 	public static Program STIMULATION_ADHD(Program p) {
 		Visualization v = new HypnoFlash();
 		
-		p.setDescription("Aid for Attention Deficit Disorder." + " Alternating between 12 and 20 hz.");
+		p.setDescription("This preset is an aid for Attention Deficit Hyperactivity Disorder. It lasts 30mn and alternates between 12 and 20 hz. It can be used whenever needed");
 		p.setAuthor("@thegreenman");
 
 		p.addPeriod(new Period(300, SoundLoop.WHITE_NOISE, 0.7f, null).

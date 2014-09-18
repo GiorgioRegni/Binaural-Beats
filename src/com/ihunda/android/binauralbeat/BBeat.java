@@ -149,8 +149,8 @@ public class BBeat extends Activity {
 	private static final float BG_VOLUME_RATIO = 0.4f;
 	
 
-	private static final float FADE_INOUT_PERIOD = 2f;
-	private static final float FADE_MIN = 0.7f;
+	private static final float FADE_INOUT_PERIOD = 5f;
+	private static final float FADE_MIN = 0f;
 
 	private static final String PREFS_NAME = "BBT";
 	private static final String PREFS_VIZ = "VIZ";
@@ -430,17 +430,28 @@ public class BBeat extends Activity {
     }
     
     void stopVoicePlayer() {
-		vp.shutdown();
+    	try {
+    		vp.shutdown();
+    	} catch (Exception e) {
+			// ignore
+		}
+    		
 		vp = null;
     }
     
 	@Override
 	protected void onStart() {
+		Log.v(LOGBBEAT, "onStart");
 		super.onStart();
 	}
 	
 	@Override
 	protected void onStop() {
+		Log.v(LOGBBEAT, "onStop");
+		
+		if (!isInProgram())
+			stopVoicePlayer();
+		
 		super.onStop();
 	}
     
@@ -638,12 +649,14 @@ public class BBeat extends Activity {
 
 	@Override
 	protected void onPause() {
+		Log.v(LOGBBEAT, "onPause");
 		super.onPause();
 	}
 
 
 	@Override
 	protected void onResume() {
+		Log.v(LOGBBEAT, "onResume");
 		super.onResume();
 	}
     
@@ -950,12 +963,13 @@ public class BBeat extends Activity {
 			i++;
 		}
 		if (doskew) {
-			if (pos < FADE_INOUT_PERIOD)
-				vp.setFade(FADE_MIN + pos/FADE_INOUT_PERIOD*(1-FADE_MIN));
-			else if (length - pos < FADE_INOUT_PERIOD) {
-				float fade = FADE_MIN + (length-pos)/FADE_INOUT_PERIOD*(1-FADE_MIN);
-				if (fade < FADE_MIN)
-					fade = FADE_MIN;
+			
+			float fade_period = Math.min(FADE_INOUT_PERIOD/2, length/2);
+			
+			if (pos < fade_period)
+				vp.setFade(FADE_MIN + pos/fade_period*(1f-FADE_MIN));
+			else if (length - pos < fade_period) {
+				float fade = FADE_MIN + (length-pos)/fade_period*(1f-FADE_MIN);
 				vp.setFade(fade);
 			}
 			else
@@ -1360,7 +1374,7 @@ public class BBeat extends Activity {
 
 	    public static final String PAYPAL_USER = "giorgio.paypal@ihunda.com";
 	    public static final String PAYPAL_ITEM_NAME = "Binaural Beats Therapy Donation";
-	    public static final String PAYPAL_CURRENCY_CODE = "EUR";
+	    public static final String PAYPAL_CURRENCY_CODE = "USD";
 
 	}
 	

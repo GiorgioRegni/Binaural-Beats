@@ -48,6 +48,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.PowerManager;
+import android.os.SystemClock;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -150,7 +151,7 @@ public class BBeat extends Activity {
 	
 
 	private static final float FADE_INOUT_PERIOD = 5f;
-	private static final float FADE_MIN = 0f;
+	private static final float FADE_MIN = 0.3f;
 
 	private static final String PREFS_NAME = "BBT";
 	private static final String PREFS_VIZ = "VIZ";
@@ -586,14 +587,14 @@ public class BBeat extends Activity {
     public void pauseOrResume() {
     	if (state == appState.INPROGRAM) {
     		if (pause_time > 0) {
-    			long delta = System.currentTimeMillis() - pause_time;
+    			long delta = SystemClock.elapsedRealtime() - pause_time;
     			programFSM.catchUpAfterPause(delta);
     			pause_time = -1;
     			unmuteAll();
 
     		} else {
     			/* This is a pause time */
-    			pause_time = System.currentTimeMillis();
+    			pause_time = SystemClock.elapsedRealtime();
     			muteAll();
     		}
     	}
@@ -801,7 +802,7 @@ public class BBeat extends Activity {
 	}
 	
     private void _start_notification(String programName) {
-    	Notification notification = new Notification(R.drawable.icon, getString(R.string.notif_started), System.currentTimeMillis());
+    	Notification notification = new Notification(R.drawable.icon, getString(R.string.notif_started), SystemClock.elapsedRealtime());
     	
     	Context context = getApplicationContext();
     	CharSequence contentTitle = getString(R.string.notif_started);
@@ -966,7 +967,9 @@ public class BBeat extends Activity {
 			
 			float fade_period = Math.min(FADE_INOUT_PERIOD/2, length/2);
 			
-			if (pos < fade_period)
+			if (length < FADE_INOUT_PERIOD)
+				vp.setFade(1f);
+			else if (pos < fade_period)
 				vp.setFade(FADE_MIN + pos/fade_period*(1f-FADE_MIN));
 			else if (length - pos < fade_period) {
 				float fade = FADE_MIN + (length-pos)/fade_period*(1f-FADE_MIN);
@@ -1022,7 +1025,7 @@ public class BBeat extends Activity {
 					formatTimeNumberwithLeadingZero((int) programLength%60));
 			formatString = getString(R.string.info_timing);
 			format_INFO_TIMING_MIN_SEC = getString(R.string.time_format_min_sec);
-			startTime = System.currentTimeMillis();
+			startTime = SystemClock.elapsedRealtime();
 			oldDelta = -1;
 			_last_graph_update = 0;
 			
@@ -1097,7 +1100,7 @@ public class BBeat extends Activity {
 		}
 		
 		public void run() {
-			long now = System.currentTimeMillis();
+			long now = SystemClock.elapsedRealtime();
 			
 			switch(s) {
 			case START:
@@ -1204,7 +1207,7 @@ public class BBeat extends Activity {
 						formatTimeNumberwithLeadingZero((int) value/60),
 						formatTimeNumberwithLeadingZero((int) value%60));
 					} else { 
-						return String.format("%.2f", value); 
+						return String.format("%.1f", value); 
 					}
 				}  };
 				graphView.addSeries(voiceSeries); // data

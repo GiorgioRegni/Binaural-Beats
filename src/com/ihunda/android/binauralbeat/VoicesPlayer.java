@@ -128,8 +128,6 @@ public class VoicesPlayer extends Thread {
 			}
 			
 			
-			//long start = System.currentTimeMillis();
-			
 			short[] samples = fillSamples();
 			int totalWritten = 0;
 			int total = samples.length;

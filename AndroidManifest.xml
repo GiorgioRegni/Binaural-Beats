@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
       package="com.ihunda.android.binauralbeat"
-      android:versionCode="41"
-      android:versionName="2.1"
+      android:versionCode="42"
+      android:versionName="4.2"
       android:installLocation="auto">
       
-    
-<supports-screens android:smallScreens="false"/>
     
 	<uses-permission android:name="android.permission.WAKE_LOCK"/>
 	<uses-permission android:name="android.permission.READ_PHONE_STATE"/>

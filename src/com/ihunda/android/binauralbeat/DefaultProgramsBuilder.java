@@ -321,7 +321,8 @@ public class DefaultProgramsBuilder {
 				addVoice(new BinauralBeatVoice(15f,	10f, 0.65f)).
 				addVoice(new BinauralBeatVoice(15f,	10f, 0.65f)).
 				addVoice(new BinauralBeatVoice(15f,	10f, 0.65f)).
-				setV(new Plasma()));
+				setV(new Black()));
+				//setV(new Plasma()));
 
 		return p;
 	}
@@ -501,6 +502,13 @@ public class DefaultProgramsBuilder {
 		p2.name = p.name;		
 		return p2;
 	}
+	
+	/*
+	public static Program STIMULATION_HYPERBOLICCONCSHARP(Program p) {
+		Program p2 = Program.fromGnauralFactory(readRawTextFile(R.raw.hyperbolicconciousnesssharpened));
+		p2.name = p.name;		
+		return p2;
+	}*/
 	
 	public static Program OOBE_LUCID_DREAMS_2(Program p) {
 		Visualization v = new Aurora();

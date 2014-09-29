@@ -42,6 +42,7 @@ import com.ihunda.android.binauralbeat.viz.Black;
 import com.ihunda.android.binauralbeat.viz.Flash;
 import com.ihunda.android.binauralbeat.viz.HypnoFlash;
 import com.ihunda.android.binauralbeat.viz.Image;
+import com.ihunda.android.binauralbeat.viz.LSD;
 import com.ihunda.android.binauralbeat.viz.Leds;
 import com.ihunda.android.binauralbeat.viz.Morphine;
 import com.ihunda.android.binauralbeat.viz.None;
@@ -315,13 +316,13 @@ public class DefaultProgramsBuilder {
 		p.setDescription("A preset that simulates Lysergic acid diethylamide, abbreviated LSD, also known as acid, is a semisynthetic psychedelic drug...");
 
 		p.setAuthor("@GiorgioRegni");
-		p.setGL();
+		//p.setGL();
 		
 		p.addPeriod(new Period(600, SoundLoop.WHITE_NOISE, 0.2f, null).
 				addVoice(new BinauralBeatVoice(15f,	10f, 0.65f)).
 				addVoice(new BinauralBeatVoice(15f,	10f, 0.65f)).
 				addVoice(new BinauralBeatVoice(15f,	10f, 0.65f)).
-				setV(new Black()));
+				setV(new LSD()));
 				//setV(new Plasma()));
 
 		return p;

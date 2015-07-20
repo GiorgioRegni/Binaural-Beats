@@ -28,6 +28,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Vector;
@@ -74,13 +75,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import com.appjolt.winback.Winback;
+import com.google.android.gms.analytics.GoogleAnalytics;
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 import com.ihunda.android.binauralbeat.viz.Black;
 import com.ihunda.android.binauralbeat.viz.GLBlack;
 import com.jjoe64.graphview.GraphView.GraphViewData;
 import com.jjoe64.graphview.GraphView.GraphViewSeries;
 import com.jjoe64.graphview.LineGraphView;
-
-import com.appjolt.winback.Winback;
 
 public class BBeat extends Activity {
 	
@@ -153,7 +156,7 @@ public class BBeat extends Activity {
 	
 
 	private static final float FADE_INOUT_PERIOD = 5f;
-	private static final float FADE_MIN = 0.3f;
+	private static final float FADE_MIN = 0.6f;
 
 	private static final String PREFS_NAME = "BBT";
 	private static final String PREFS_VIZ = "VIZ";
@@ -170,6 +173,23 @@ public class BBeat extends Activity {
 	 ArrayList<CategoryGroup> groups;
 
 	private long numStarts;
+	
+	// Stats tracking
+	/**
+	   * Enum used to identify the tracker that needs to be used for tracking.
+	   *
+	   * A single tracker is usually enough for most purposes. In case you do need multiple trackers,
+	   * storing them all in Application object helps ensure that they are created only once per
+	   * application instance.
+	   */
+	  public enum TrackerName {
+	    APP_TRACKER, // Tracker used only in this app.
+	    GLOBAL_TRACKER, // Tracker used by all the apps from a company. eg: roll-up tracking.
+	    ECOMMERCE_TRACKER, // Tracker used by all ecommerce transactions from a company.
+	  }
+
+	  HashMap<TrackerName, Tracker> mTrackers = new HashMap<TrackerName, Tracker>();
+	  public final String PROPERTY_ID = "UA-76238-16";
 	
 	/* 
 	 * Not sure this is the best way to do it but it seems to work
@@ -311,6 +331,11 @@ public class BBeat extends Activity {
         
         // Set a static pointer to this instance so that vizualisation can access it
         setInstance(this);
+        
+        /* Init Tracker */
+        Tracker tra = getTracker(TrackerName.APP_TRACKER);
+        // Enable Advertising Features.
+        tra.enableAdvertisingIdCollection(true);
 
         mPresetList = (ExpandableListView) findViewById(R.id.presetListView);
         //final List<String> programs = new ArrayList<String>(DefaultProgramsBuilder.getProgramMethods(this).keySet());
@@ -541,12 +566,13 @@ public class BBeat extends Activity {
 		state = newState;
 		switch(state) {
 		case SETUP:
+			_track_screen("SETUP");
 			runComeBackAnimationOnView(mPresetView);
 			mPresetList.invalidate();
 			mVizHolder.setVisibility(View.GONE);
 			break;
 		case INPROGRAM:
-			
+			_track_screen("INPROGRAM");
 			// Track number of usage
 			numStarts++;
 			_save_config();
@@ -834,12 +860,16 @@ public class BBeat extends Activity {
 		Program p = DefaultProgramsBuilder.getProgram(pm, this);
 		_tmp_program_holder = p;
 		
+		_track_ui_click(p.getName(), "select"); 
+		
 		showDialog(DIALOG_PROGRAM_PREVIEW);
 	}
 	
 	private void StartPreviouslySelectedProgram() {
 		Program p = _tmp_program_holder;
 		_tmp_program_holder = null;
+		
+		_track_ui_click(p.getName(), "start");
 		
 		((TextView) findViewById(R.id.programName)).setText(p.getName());
 		
@@ -1419,5 +1449,61 @@ public class BBeat extends Activity {
         startActivity(viewIntent);
     }
 	
+	synchronized Tracker getTracker(TrackerName trackerId) {
+		if (!mTrackers.containsKey(trackerId)) {
+
+			GoogleAnalytics analytics = GoogleAnalytics.getInstance(this);
+			Tracker t = (trackerId == TrackerName.APP_TRACKER) ? analytics.newTracker(PROPERTY_ID) : null;
+			/*: (trackerId == TrackerName.GLOBAL_TRACKER) ? analytics.newTracker(R.xml.global_tracker)
+							: analytics.newTracker(R.xml.ecommerce_tracker);*/
+
+			mTrackers.put(trackerId, t);
+
+		}
+		return mTrackers.get(trackerId);
+	}
+	
+	private void _track_ui_click(String what, String cat) {
+		Tracker t = getTracker(TrackerName.APP_TRACKER);
+		if (t == null)
+			return;
+		
+		t.send(new HitBuilders.EventBuilder()
+        .setCategory(cat)
+        .setAction(what)
+        .setLabel("click")
+        .setValue(1)
+        .build());
+	}
+	
+	private void _track_ui_click(String what) {
+		_track_ui_click(what, "UI");
+	}
+	
+	private void _track_time(String what, long timems) {
+		Tracker t = getTracker(TrackerName.APP_TRACKER);
+		if (t == null)
+			return;
+		
+		 // Build and send timing.
+        t.send(new HitBuilders.TimingBuilder()
+            .setCategory("Time")
+            .setValue(timems)
+            .setVariable(what)
+            .setLabel("ms")
+            .build());
+	}
+	
+	private void _track_screen(String screenName) {
+		Tracker t = getTracker(TrackerName.APP_TRACKER);
+		if (t == null)
+			return;
+		
+        // Set screen name.
+        t.setScreenName(screenName);
+
+        // Send a screen view.
+        t.send(new HitBuilders.AppViewBuilder().build());
+	}
     
 }

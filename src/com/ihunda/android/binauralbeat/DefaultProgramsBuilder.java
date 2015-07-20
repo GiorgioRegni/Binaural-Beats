@@ -223,7 +223,7 @@ public class DefaultProgramsBuilder {
 	}
 
 	public static Program STIMULATION_CREATIVITY(Program p) {
-		p.setDescription("ItÕs a 20mn meditation preset to assist in Creative Thinking "
+		p.setDescription("Itï¿½s a 20mn meditation preset to assist in Creative Thinking "
 				+ "It begins at 10hz then varying from 8 to 6 hz with a glide back to 8hz at the end");
 		p.setAuthor("@thegreenman");
 
@@ -312,8 +312,8 @@ public class DefaultProgramsBuilder {
 		return p;
 	}
 	
-	public static Program STIMULATION_LSD(Program p) {
-		p.setDescription("A preset that simulates Lysergic acid diethylamide, abbreviated LSD, also known as acid, is a semisynthetic psychedelic drug...");
+	public static Program STIMULATION_HALLUCINATION(Program p) {
+		p.setDescription("A fun preset that simulates psychedelic hallucinations.");
 
 		p.setAuthor("@GiorgioRegni");
 		//p.setGL();
@@ -333,7 +333,7 @@ public class DefaultProgramsBuilder {
 		Visualization v = new None();
 		
         p.setDescription("Sleep induction for use about 15 mn before bedtime to help you fall asleep. "
-        		+ "ItÕs a one hour programm, with 6mn drop into delta waves"
+        		+ "Itï¿½s a one hour programm, with 6mn drop into delta waves"
         		+ " followed by 54 mn of relaxing delta plateau");
         p.setAuthor("@thegreenman");
 
@@ -453,8 +453,8 @@ public class DefaultProgramsBuilder {
 		CanvasVisualization m = new Image(R.drawable.egg);
 		
 		p.setDescription("Insomnia relief through stimulating Sensory Motor Rythm. "
-				+ "DonÕt use it at bedtime, use it only during your insomnia, "
-				+ "for example if you wake up in the middle of the night and canÕt go back to sleep "
+				+ "Donï¿½t use it at bedtime, use it only during your insomnia, "
+				+ "for example if you wake up in the middle of the night and canï¿½t go back to sleep "
 				+ "38 mn of crossing frequencies from 8 to 12 Hz");
 		p.setAuthor("@thegreenman);");
 	

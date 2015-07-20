@@ -80,6 +80,8 @@ import com.jjoe64.graphview.GraphView.GraphViewData;
 import com.jjoe64.graphview.GraphView.GraphViewSeries;
 import com.jjoe64.graphview.LineGraphView;
 
+import com.appjolt.winback.Winback;
+
 public class BBeat extends Activity {
 	
 	enum eState {START, RUNNING, END};
@@ -187,6 +189,10 @@ public class BBeat extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        
+        // Appjolt - Init SDK
+        Winback.init(this);
+        
         setContentView(R.layout.main);
         
         /* Init sounds */

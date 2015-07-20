@@ -261,6 +261,34 @@ public class DefaultProgramsBuilder {
 
 		return p;
 	}
+	
+	
+	public static Program MEDITATION_WAKEFULRELAX(Program p) {
+			Visualization v = new None();
+		
+		p.setDescription("This presets stimulates a wakeful relaxation state with closed eyes. "
+				+ "Zen-trained meditation masters produce noticeably more alpha waves during meditation."
+				+ "To be used in short 10 to 15 minutes doses to calm down and concentrate when needed.");
+
+		p.setAuthor("@GiorgioRegni");
+
+		p.addPeriod(new Period(120, SoundLoop.WHITE_NOISE, 0.4f, null).
+				addVoice(new BinauralBeatVoice(12f,	7.83f, 0.6f)).
+				addVoice(new BinauralBeatVoice(12f,	7.83f, 0.4f)).
+				addVoice(new BinauralBeatVoice(12f,	10f, 0.4f)).
+				setV(v)
+		).
+		addPeriod(new Period(900, SoundLoop.WHITE_NOISE, 0.4f, null).
+				addVoice(new BinauralBeatVoice(7.83f, 7.83f, 0.65f)).
+				addVoice(new BinauralBeatVoice(7.83f, 7.83f, 0.65f)).
+				addVoice(new BinauralBeatVoice(10f, 10f, 0.65f)).
+				setV(v)
+				);
+
+		return p;	
+	};
+	
+	
 
 	public static Program MEDITATION_SCHUMANN_RESONANCE(Program p) {
 		Visualization v = new Image(R.drawable.warp);

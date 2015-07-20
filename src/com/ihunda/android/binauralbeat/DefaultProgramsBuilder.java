@@ -278,10 +278,10 @@ public class DefaultProgramsBuilder {
 				addVoice(new BinauralBeatVoice(12f,	10f, 0.4f)).
 				setV(v)
 		).
-		addPeriod(new Period(900, SoundLoop.WHITE_NOISE, 0.4f, null).
-				addVoice(new BinauralBeatVoice(7.83f, 7.83f, 0.65f)).
-				addVoice(new BinauralBeatVoice(7.83f, 7.83f, 0.65f)).
-				addVoice(new BinauralBeatVoice(10f, 10f, 0.65f)).
+		addPeriod(new Period(900-120, SoundLoop.WHITE_NOISE, 0.4f, null).
+				addVoice(new BinauralBeatVoice(7.83f, 7.83f, 0.6f)).
+				addVoice(new BinauralBeatVoice(7.83f, 7.83f, 0.4f)).
+				addVoice(new BinauralBeatVoice(10f, 10f, 0.4f)).
 				setV(v)
 				);
 

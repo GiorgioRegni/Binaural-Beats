@@ -40,6 +40,7 @@ import com.ihunda.android.binauralbeat.ProgramMeta.Category;
 import com.ihunda.android.binauralbeat.viz.Aurora;
 import com.ihunda.android.binauralbeat.viz.Black;
 import com.ihunda.android.binauralbeat.viz.Flash;
+import com.ihunda.android.binauralbeat.viz.Hiit;
 import com.ihunda.android.binauralbeat.viz.HypnoFlash;
 import com.ihunda.android.binauralbeat.viz.Image;
 import com.ihunda.android.binauralbeat.viz.LSD;
@@ -337,6 +338,26 @@ public class DefaultProgramsBuilder {
 				setV(new Starfield())
 		);
 
+		return p;
+	}
+	
+	public static Program STIMULATION_HIIT(Program p) {
+		Hiit v = new Hiit();
+		p.setDescription("This preset is based on a Tabata HIIT protocol, it helps you give your maximum during work periods and recover quicker during rest periods. As always use headphones.");
+
+		p.setAuthor("@GiorgioRegni");
+		//p.setGL();
+
+		for (int i=0; i<8;i++)
+			p.addPeriod(new Period(20, SoundLoop.NONE, 0.2f, null).
+					addVoice(new BinauralBeatVoice(70f, 70f, 0.65f)).
+					addVoice(new BinauralBeatVoice(70f, 50f, 0.55f)).
+					setV(v))
+					.addPeriod(new Period(10, SoundLoop.NONE, 0.2f, null).
+							addVoice(new BinauralBeatVoice(8f, 8f, 0.65f)).
+							addVoice(new BinauralBeatVoice(50f, 70f, 0.55f)).
+							setV(v));
+		
 		return p;
 	}
 	

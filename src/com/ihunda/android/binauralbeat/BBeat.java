@@ -76,6 +76,9 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.appjolt.winback.Winback;
+import com.facebook.FacebookSdk;
+import com.facebook.share.model.ShareLinkContent;
+import com.facebook.share.widget.ShareDialog;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
@@ -139,8 +142,9 @@ public class BBeat extends Activity {
 	private static final String FORUM_URL = "https://plus.google.com/u/1/communities/113832254482827107359";
 	private static final String FACEBOOK_URL = "http://www.facebook.com/pages/Binaural-Beat-Therapy/121737064536801";
 	private static final String CONTACT_EMAIL = "binaural-beats@ihunda.com";
+	private static final String FACEBOOK_INSTALL_URL = "https://fb.me/766853113381744"; // JENLA
 	private static final String LOGBBEAT = "BBT-MAIN";
-	private static final int NUM_START_BEFORE_DONATE = 10;
+	private static final int NUM_START_BEFORE_DONATE = 2;
 	
 	/* All dialogs declaration go here */
 	private static final int DIALOG_WELCOME = 1;
@@ -212,6 +216,9 @@ public class BBeat extends Activity {
         
         // Appjolt - Init SDK
         Winback.init(this);
+        
+	    /* Facebook */
+	    FacebookSdk.sdkInitialize(getApplicationContext());
         
         setContentView(R.layout.main);
         
@@ -987,13 +994,14 @@ public class BBeat extends Activity {
 	 */
 	protected float skewVoices(ArrayList<BinauralBeatVoice> voices, float pos, float length, boolean doskew) {
 		int i = 0;
-		float res = 1;
+		float res = -1;
 		
 		float freqs[] = new float[voices.size()];
 		for (BinauralBeatVoice v: voices) {
 			float ratio = (v.freqEnd - v.freqStart) / length;
 			
-			res = ratio*pos + v.freqStart;
+			if (res == -1)
+				res = ratio*pos + v.freqStart; // Only set res for the first voice
 			
 			freqs[i] = res;
 				
@@ -1505,5 +1513,37 @@ public class BBeat extends Activity {
         // Send a screen view.
         t.send(new HitBuilders.AppViewBuilder().build());
 	}
+	
+	private void ToastText(String s) {
+		Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
+	}
+	
+	private boolean displayFacebookShare() {	
+		if (ShareDialog.canShow(ShareLinkContent.class)) {
+			ShareDialog shareDialog = new ShareDialog(this);
+		    ShareLinkContent linkContent = new ShareLinkContent.Builder()
+		            .setContentTitle("High Intensity Interval Training")
+		            .setContentDescription("JENLA")
+		            .setContentUrl(Uri.parse(FACEBOOK_INSTALL_URL))
+		            .setImageUrl(Uri.parse("http://i.imgur.com/8epvVIy.png"))
+		            .build();
+
+		    shareDialog.show(linkContent);
+		    
+		    ToastText("Opening facebook dialog...");
+		    
+			//.setPicture("http://i.imgur.com/8epvVIy.png")
+	        //.setLink(FACEBOOK_INSTALL_URL);
+			//facebook_activity_in_progress = true;
+		    
+		    return true;
+		}
+		// If the Facebook app is installed and we can present the share dialog
+		else {
+			ToastText("Couldn't open facebook dialog...");
+			return false;
+		}
+	}
+	
     
 }

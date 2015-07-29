@@ -1,17 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
       package="com.ihunda.android.binauralbeat"
-      android:versionCode="45"
-      android:versionName="4.5"
+      android:versionCode="46"
+      android:versionName="4.6"
       android:installLocation="auto">
       
     
 	<uses-permission android:name="android.permission.WAKE_LOCK"/>
 	<uses-permission android:name="android.permission.READ_PHONE_STATE"/>
 	
-	<!-- Appjolt Permissions -->
 	<uses-permission android:name="android.permission.INTERNET" />	
-	<uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />  
 	
     <application android:icon="@drawable/icon" android:label="@string/app_name" android:theme="@android:style/Theme.NoTitleBar" android:allowBackup="true">
         <activity android:name=".BBeat"
@@ -35,34 +33,6 @@
                 <action android:name="android.intent.action.PHONE_STATE" />
             </intent-filter>
         </receiver>
-        
-        <!-- Appjolt -->
-<!-- Note: For optimal OS version compatibility, please do not change any attributes -->
-
-<!-- Appjolt Activity -->
-<activity android:name="com.appjolt.winback.AppjoltActivity"
-    android:taskAffinity="com.appjolt.winback.twentyeight"
-    android:configChanges="orientation|keyboardHidden|screenSize"
-    android:hardwareAccelerated="false"
-    android:theme="@android:style/Theme.Panel"  />
-                            
-<!-- Appjolt Service -->
-<service
-    android:name="com.appjolt.winback.WinbackService"
-    android:enabled="true"
-    android:process=":appjolt"
-    android:exported="true" />
-
-<!-- Appjolt BOOT receiver -->
-<receiver
-    android:name="com.appjolt.winback.WinbackBootReceiver"
-    android:enabled="true"
-    android:exported="true">
-
-    <intent-filter>
-        <action android:name="android.intent.action.BOOT_COMPLETED" />
-    </intent-filter>
-</receiver>
         
 
     </application>

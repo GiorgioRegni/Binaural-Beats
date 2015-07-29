@@ -75,7 +75,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
-import com.appjolt.winback.Winback;
 import com.facebook.FacebookSdk;
 import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.widget.ShareDialog;
@@ -213,9 +212,6 @@ public class BBeat extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        
-        // Appjolt - Init SDK
-        Winback.init(this);
         
 	    /* Facebook */
 	    FacebookSdk.sdkInitialize(getApplicationContext());

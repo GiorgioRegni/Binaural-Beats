@@ -343,11 +343,18 @@ public class DefaultProgramsBuilder {
 	
 	public static Program STIMULATION_HIIT(Program p) {
 		Hiit v = new Hiit();
-		p.setDescription("This preset is based on a Tabata HIIT protocol, it helps you give your maximum during work periods and recover quicker during rest periods. As always use headphones.");
+		p.setDescription("This preset is based on a Tabata HIIT protocol, it helps you give your maximum during work periods and recover quicker during rest periods. "
+				+ "Starts with 2 minutes warm up then 8 times 20 secs work, 10 secs rest followed by 2 minutes  of cool down. "
+				+ "As always use headphones.");
 
 		p.setAuthor("@GiorgioRegni");
 		//p.setGL();
 
+		p.addPeriod(new Period(120, SoundLoop.NONE, 0.2f, null).
+				addVoice(new BinauralBeatVoice(20f, 70f, 0.65f)).
+				addVoice(new BinauralBeatVoice(20f, 50f, 0.55f)).
+				setV(new Image(R.drawable.hiit_warmup)));
+		
 		for (int i=0; i<8;i++)
 			p.addPeriod(new Period(20, SoundLoop.NONE, 0.2f, null).
 					addVoice(new BinauralBeatVoice(70f, 70f, 0.65f)).
@@ -357,6 +364,14 @@ public class DefaultProgramsBuilder {
 							addVoice(new BinauralBeatVoice(8f, 8f, 0.65f)).
 							addVoice(new BinauralBeatVoice(50f, 70f, 0.55f)).
 							setV(v));
+		
+		p.addPeriod(new Period(120, SoundLoop.NONE, 0.2f, null).
+				addVoice(new BinauralBeatVoice(70f, 10f, 0.65f)).
+				addVoice(new BinauralBeatVoice(50f, 10f, 0.55f)).
+				addVoice(new BinauralBeatVoice(3.7f, 3.7f, 0.4f)).
+				addVoice(new BinauralBeatVoice(2.5f, 2.5f, 0.4f)).
+				addVoice(new BinauralBeatVoice(5.9f, 5.9f, 0.4f)).
+				setV(new Image(R.drawable.hiit_cooldown)));
 		
 		return p;
 	}

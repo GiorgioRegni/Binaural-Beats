@@ -43,6 +43,7 @@
     <string name="source">Source</string>
     <string name="forum">Forum</string>
     <string name="like">Like</string>
+    <string name="share_facebook">Share on Facebook</string>
     <string name="jointhecommunity">Join the community!</string>
     
     <string name="notif_started">Binaural Beats</string>
@@ -84,4 +85,7 @@
     <string name="program_hgh">Human Growth Hormone</string>
     <string name="program_adhd">ADHD</string>
     <string name="program_hiit">High Intensity Interval Training</string>
+    
+    
+<string name="facebook_app_id">117055728638150</string>
 </resources>

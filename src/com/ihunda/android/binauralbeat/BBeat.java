@@ -76,6 +76,7 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.facebook.FacebookSdk;
+import com.facebook.appevents.AppEventsLogger;
 import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.widget.ShareDialog;
 import com.google.android.gms.analytics.GoogleAnalytics;
@@ -141,9 +142,10 @@ public class BBeat extends Activity {
 	private static final String FORUM_URL = "https://plus.google.com/u/1/communities/113832254482827107359";
 	private static final String FACEBOOK_URL = "http://www.facebook.com/pages/Binaural-Beat-Therapy/121737064536801";
 	private static final String CONTACT_EMAIL = "binaural-beats@ihunda.com";
-	private static final String FACEBOOK_INSTALL_URL = "https://fb.me/766853113381744"; // JENLA
+	private static final String FACEBOOK_INSTALL_URL = "http://bit.ly/BBTFBSHARE"; 
+	private static final String FACEBOOK_SHARE_IMG = "http://i.imgur.com/bG9coHF.png";
 	private static final String LOGBBEAT = "BBT-MAIN";
-	private static final int NUM_START_BEFORE_DONATE = 2;
+	private static final int NUM_START_BEFORE_DONATE = 1;
 	
 	/* All dialogs declaration go here */
 	private static final int DIALOG_WELCOME = 1;
@@ -622,14 +624,14 @@ public class BBeat extends Activity {
     public void pauseOrResume() {
     	if (state == appState.INPROGRAM) {
     		if (pause_time > 0) {
-    			long delta = SystemClock.elapsedRealtime() - pause_time;
+    			long delta = _getClock() - pause_time;
     			programFSM.catchUpAfterPause(delta);
     			pause_time = -1;
     			unmuteAll();
 
     		} else {
     			/* This is a pause time */
-    			pause_time = SystemClock.elapsedRealtime();
+    			pause_time = _getClock();
     			muteAll();
     		}
     	}
@@ -687,6 +689,10 @@ public class BBeat extends Activity {
 	protected void onPause() {
 		Log.v(LOGBBEAT, "onPause");
 		super.onPause();
+		
+		// Facebook
+		  // Logs 'app deactivate' App Event.
+		  AppEventsLogger.deactivateApp(this);
 	}
 
 
@@ -694,6 +700,10 @@ public class BBeat extends Activity {
 	protected void onResume() {
 		Log.v(LOGBBEAT, "onResume");
 		super.onResume();
+		
+		// Facebook
+		  // Logs 'install' and 'app activate' App Events.
+		  AppEventsLogger.activateApp(this);
 	}
     
 	@Override
@@ -805,6 +815,8 @@ public class BBeat extends Activity {
 		}
 		
 		case DIALOG_DONATE: {
+			_track_ui_click("DONATE", "DIALOG");
+			
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
 			builder.setMessage(R.string.donate_text)
 			.setCancelable(true)
@@ -815,6 +827,11 @@ public class BBeat extends Activity {
 			}).setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
  	           public void onClick(DialogInterface dialog, int id) {
 	        	   removeDialog(DIALOG_DONATE);
+	           }
+	       }).setNeutralButton(R.string.share_facebook, new DialogInterface.OnClickListener() {
+	           public void onClick(DialogInterface dialog, int id) {
+	        	   removeDialog(DIALOG_DONATE);
+	        	   displayFacebookShare();
 	           }
 	       });
 
@@ -837,7 +854,7 @@ public class BBeat extends Activity {
 	}
 	
     private void _start_notification(String programName) {
-    	Notification notification = new Notification(R.drawable.icon, getString(R.string.notif_started), SystemClock.elapsedRealtime());
+    	Notification notification = new Notification(R.drawable.icon, getString(R.string.notif_started), 0); // JENLA
     	
     	Context context = getApplicationContext();
     	CharSequence contentTitle = getString(R.string.notif_started);
@@ -1065,7 +1082,7 @@ public class BBeat extends Activity {
 					formatTimeNumberwithLeadingZero((int) programLength%60));
 			formatString = getString(R.string.info_timing);
 			format_INFO_TIMING_MIN_SEC = getString(R.string.time_format_min_sec);
-			startTime = SystemClock.elapsedRealtime();
+			startTime = _getClock();
 			oldDelta = -1;
 			_last_graph_update = 0;
 			
@@ -1140,7 +1157,7 @@ public class BBeat extends Activity {
 		}
 		
 		public void run() {
-			long now = SystemClock.elapsedRealtime();
+			long now = _getClock();
 			
 			switch(s) {
 			case START:
@@ -1518,27 +1535,29 @@ public class BBeat extends Activity {
 		if (ShareDialog.canShow(ShareLinkContent.class)) {
 			ShareDialog shareDialog = new ShareDialog(this);
 		    ShareLinkContent linkContent = new ShareLinkContent.Builder()
-		            .setContentTitle("High Intensity Interval Training")
-		            .setContentDescription("JENLA")
+		            .setContentTitle("Binaural Beats Therapy App")
+		            .setContentDescription("Already approved by hundred thousands of people, a very powerful self-improvement, brain enhancement and stress-relief app.")
 		            .setContentUrl(Uri.parse(FACEBOOK_INSTALL_URL))
-		            .setImageUrl(Uri.parse("http://i.imgur.com/8epvVIy.png"))
+		            .setImageUrl(Uri.parse(FACEBOOK_SHARE_IMG))
 		            .build();
 
 		    shareDialog.show(linkContent);
 		    
 		    ToastText("Opening facebook dialog...");
-		    
-			//.setPicture("http://i.imgur.com/8epvVIy.png")
-	        //.setLink(FACEBOOK_INSTALL_URL);
-			//facebook_activity_in_progress = true;
+			_track_ui_click("FACEBOOK_SHARE_OK");
 		    
 		    return true;
 		}
 		// If the Facebook app is installed and we can present the share dialog
 		else {
 			ToastText("Couldn't open facebook dialog...");
+			_track_ui_click("FACEBOOK_SHARE_NOK");
 			return false;
 		}
+	}
+	
+	private long _getClock() {
+		return SystemClock.elapsedRealtime();
 	}
 	
     

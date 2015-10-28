@@ -11,10 +11,11 @@ import android.util.Log;
 
 public class VoicesPlayer extends Thread {
 
+	private static final float DEFAULT_VOLUME = .7f;
 	private static final String LOGVP = "VoiceP";
-	private static final int MAX_VOICES = 20;
+	private static final int MAX_VOICES = 10;
 	AudioTrack track;
-	static int HZ = 8192;
+	static int HZ = 16384;
 	private static final int AUDIOBUF_SIZE = HZ/4;
 	float freqs[];
 	float pitchs[];
@@ -52,7 +53,7 @@ public class VoicesPlayer extends Thread {
 		Log.e(LOGVP, String.format("minsize %d bufsize %d ", minSize, AUDIOBUF_SIZE*2));
 		setPriority(Thread.MAX_PRIORITY);
 		
-		volume = 1f;
+		volume = DEFAULT_VOLUME;
 	}
 	
 	public void playVoices(ArrayList<BinauralBeatVoice> voices) {
@@ -71,7 +72,6 @@ public class VoicesPlayer extends Thread {
 			}
 		}
 		
-		//fakeS = fillSamples();
 		fade = 1f;
 		
 		playing = true;
@@ -99,6 +99,7 @@ public class VoicesPlayer extends Thread {
 	}
 
 	public void shutdown() {
+		setVolume(0);
 		want_shutdown = true;
 	}
 	
@@ -126,8 +127,6 @@ public class VoicesPlayer extends Thread {
 				continue;
 			}
 			
-			
-			//long start = System.currentTimeMillis();
 			
 			short[] samples = fillSamples();
 			int totalWritten = 0;
@@ -163,7 +162,7 @@ public class VoicesPlayer extends Thread {
 					}	
 				}
 				
-				if (sleep) {
+				if (!want_shutdown && sleep) {
 					Log.v(LOGVP, String.format("we're going too fast - throttling"));
 					try {
 						sleep(50);
@@ -235,7 +234,8 @@ public class VoicesPlayer extends Thread {
 	}
 
 	private short[] fillSamples() {
-		assert(freqs != null);
+		if (freqs == null || freqs.length == 0)
+			return new short[AUDIOBUF_SIZE];
 		
 		short samples[] = new short[AUDIOBUF_SIZE];
 		float ws[] = new float[samples.length];

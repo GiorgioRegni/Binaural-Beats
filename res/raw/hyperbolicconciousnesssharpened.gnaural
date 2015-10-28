@@ -1,0 +1,181 @@
+<?xml version="1.0"?>
+<!-- See http://gnaural.sourceforge.net -->
+<!-- This is like Hyperbolic conciousness, but with a sharpening voice. Similar to the one from which it was based, You will need about 5 minutes after listening to this to recover, 10 minutes after listening to this to actually begin experiencing the intended product. If you listen with headphones, at completion they will appear to be part of your mind or head. Listening to music afterwards is nice. It has the effect of making your head seem about 800 times larger. This does induce a sharpening capacity, but due to the other content it may not be immediately apparent- say after 3 or 5 minutes. Your proprioception will be accelerated, as will the speed at which one task follows another in your activity. It very much is a long term schedule. After listening to some music, go and have a warm shower. -->
+<schedule>
+<gnauralfile_version>1.20101006</gnauralfile_version>
+<gnaural_version>1.0.20110215</gnaural_version>
+<date>Sat Apr 23 09:32:58 2011
+</date>
+<title>Arrive sharp</title>
+<schedule_description>Transduction to precision clarity : Behold, the Universe sharpened</schedule_description>
+<author>Giridhari</author>
+<totaltime>1359.93</totaltime>
+<voicecount>9</voicecount>
+<totalentrycount>53</totalentrycount>
+<loops>1</loops>
+<overallvolume_left>1</overallvolume_left>
+<overallvolume_right>1</overallvolume_right>
+<stereoswap>0</stereoswap>
+<graphview>3</graphview>
+<voice>
+<description>0:Alpha context medium - waking conciousness</description>
+<id>0</id>
+<type>1</type>
+<voice_state>1</voice_state>
+<voice_hide>0</voice_hide>
+<voice_mute>0</voice_mute>
+<voice_mono>0</voice_mono>
+<entrycount>1</entrycount>
+<entries>
+<entry parent="0" duration="1359.93" volume_left="0.1" volume_right="0.1" beatfreq="1" basefreq="7.95756" state="0"/>
+</entries>
+</voice>
+<voice>
+<description>1:Delta context medium 0 - deep sleep</description>
+<id>1</id>
+<type>1</type>
+<voice_state>0</voice_state>
+<voice_hide>0</voice_hide>
+<voice_mute>0</voice_mute>
+<voice_mono>0</voice_mono>
+<entrycount>1</entrycount>
+<entries>
+<entry parent="1" duration="1359.93" volume_left="0.1" volume_right="0.1" beatfreq="0" basefreq="0.68947" state="0"/>
+</entries>
+</voice>
+<voice>
+<description>2:Gamma context medium - transcendental plane</description>
+<id>2</id>
+<type>1</type>
+<voice_state>0</voice_state>
+<voice_hide>0</voice_hide>
+<voice_mute>0</voice_mute>
+<voice_mono>0</voice_mono>
+<entrycount>1</entrycount>
+<entries>
+<entry parent="2" duration="1359.93" volume_left="0.1" volume_right="0.1" beatfreq="0" basefreq="106.178" state="0"/>
+</entries>
+</voice>
+<voice>
+<description>3:Delta context medium 1 - deep sleep 1/4 harmonic</description>
+<id>3</id>
+<type>1</type>
+<voice_state>0</voice_state>
+<voice_hide>0</voice_hide>
+<voice_mute>0</voice_mute>
+<voice_mono>0</voice_mono>
+<entrycount>1</entrycount>
+<entries>
+<entry parent="3" duration="1359.93" volume_left="0.1" volume_right="0.1" beatfreq="0" basefreq="0.172368" state="0"/>
+</entries>
+</voice>
+<voice>
+<description>4:Alpha to Gamma #0, then Theta</description>
+<id>4</id>
+<type>0</type>
+<voice_state>0</voice_state>
+<voice_hide>0</voice_hide>
+<voice_mute>0</voice_mute>
+<voice_mono>0</voice_mono>
+<entrycount>7</entrycount>
+<entries>
+<entry parent="4" duration="0" volume_left="0.6" volume_right="1" beatfreq="10.051" basefreq="11.076" state="0"/>
+<entry parent="4" duration="236.381" volume_left="0.574675" volume_right="0.574675" beatfreq="10.051" basefreq="10.5869" state="0"/>
+<entry parent="4" duration="132.275" volume_left="0.795455" volume_right="0.795455" beatfreq="12.0612" basefreq="15.1831" state="0"/>
+<entry parent="4" duration="661.376" volume_left="0.847403" volume_right="0.847403" beatfreq="28.5449" basefreq="23.3974" state="0"/>
+<entry parent="4" duration="208.93" volume_left="1" volume_right="1" beatfreq="0" basefreq="100.599" state="0"/>
+<entry parent="4" duration="47.8569" volume_left="1" volume_right="1" beatfreq="5.42755" basefreq="100.141" state="0"/>
+<entry parent="4" duration="73.1147" volume_left="0.841758" volume_right="1" beatfreq="7.25661" basefreq="5.60636" state="1"/>
+</entries>
+</voice>
+<voice>
+<description>5:Alpha to Gamma #1</description>
+<id>5</id>
+<type>0</type>
+<voice_state>0</voice_state>
+<voice_hide>0</voice_hide>
+<voice_mute>0</voice_mute>
+<voice_mono>0</voice_mono>
+<entrycount>14</entrycount>
+<entries>
+<entry parent="5" duration="18.3715" volume_left="0.1" volume_right="0.1" beatfreq="10.8551" basefreq="9.94607" state="0"/>
+<entry parent="5" duration="50.5331" volume_left="0.1" volume_right="0.1" beatfreq="10.8551" basefreq="10.3589" state="0"/>
+<entry parent="5" duration="49.6465" volume_left="0.1" volume_right="0.1" beatfreq="14.0714" basefreq="14.0022" state="0"/>
+<entry parent="5" duration="53.1927" volume_left="0.1" volume_right="0.1" beatfreq="14.0714" basefreq="19.755" state="0"/>
+<entry parent="5" duration="57.288" volume_left="0.1" volume_right="0.1" beatfreq="14.0714" basefreq="28.576" state="0"/>
+<entry parent="5" duration="317.215" volume_left="0.1" volume_right="0.1" beatfreq="21.5092" basefreq="41.7762" state="0"/>
+<entry parent="5" duration="40.4174" volume_left="0.1" volume_right="0.1" beatfreq="80.0061" basefreq="114.868" state="0"/>
+<entry parent="5" duration="25.7201" volume_left="0.1" volume_right="0.1" beatfreq="90.8612" basefreq="116.786" state="0"/>
+<entry parent="5" duration="45.3165" volume_left="0.1" volume_right="0.1" beatfreq="98.4999" basefreq="118.32" state="0"/>
+<entry parent="5" duration="79.61" volume_left="0.1" volume_right="0.1" beatfreq="106.541" basefreq="118.703" state="0"/>
+<entry parent="5" duration="118.803" volume_left="0.1" volume_right="0.1" beatfreq="108.551" basefreq="118.703" state="0"/>
+<entry parent="5" duration="341.638" volume_left="0.1" volume_right="0.1" beatfreq="107.747" basefreq="119.087" state="0"/>
+<entry parent="5" duration="150.217" volume_left="0.1" volume_right="0.1" beatfreq="106.742" basefreq="114.834" state="0"/>
+<entry parent="5" duration="11.9642" volume_left="0.1" volume_right="0.1" beatfreq="17.9287" basefreq="114.254" state="0"/>
+</entries>
+</voice>
+<voice>
+<description>6:Beta to Theta</description>
+<id>6</id>
+<type>0</type>
+<voice_state>0</voice_state>
+<voice_hide>0</voice_hide>
+<voice_mute>0</voice_mute>
+<voice_mono>0</voice_mono>
+<entrycount>13</entrycount>
+<entries>
+<entry parent="6" duration="153.096" volume_left="0.1" volume_right="0.1" beatfreq="7.23673" basefreq="7.73291" state="0"/>
+<entry parent="6" duration="84.5091" volume_left="0.1" volume_right="0.1" beatfreq="16.4837" basefreq="15.6844" state="0"/>
+<entry parent="6" duration="50.2155" volume_left="0.1" volume_right="0.1" beatfreq="22.9163" basefreq="13.748" state="0"/>
+<entry parent="6" duration="30.6192" volume_left="0.1" volume_right="0.1" beatfreq="23.7204" basefreq="12.1989" state="0"/>
+<entry parent="6" duration="24.4954" volume_left="0.1" volume_right="0.1" beatfreq="22.5143" basefreq="10.9618" state="0"/>
+<entry parent="6" duration="33.0688" volume_left="0.1" volume_right="0.1" beatfreq="18.8959" basefreq="9.88609" state="0"/>
+<entry parent="6" duration="95.532" volume_left="0.1" volume_right="0.1" beatfreq="16.0816" basefreq="8.32626" state="0"/>
+<entry parent="6" duration="124.926" volume_left="0.1" volume_right="0.1" beatfreq="7.63877" basefreq="6.77719" state="0"/>
+<entry parent="6" duration="123.702" volume_left="0.1" volume_right="0.1" beatfreq="4.02041" basefreq="6.77719" state="0"/>
+<entry parent="6" duration="118.803" volume_left="0.1" volume_right="0.1" beatfreq="2.41224" basefreq="6.38992" state="0"/>
+<entry parent="6" duration="111.454" volume_left="0.1" volume_right="0.1" beatfreq="3.21632" basefreq="6.00266" state="0"/>
+<entry parent="6" duration="24.4954" volume_left="0.1" volume_right="0.1" beatfreq="6.03061" basefreq="6.77719" state="0"/>
+<entry parent="6" duration="385.017" volume_left="0.1" volume_right="0.1" beatfreq="5.82959" basefreq="7.55173" state="0"/>
+</entries>
+</voice>
+<voice>
+<description>7:mid-Gamma to Theta</description>
+<id>7</id>
+<type>3</type>
+<voice_state>0</voice_state>
+<voice_hide>0</voice_hide>
+<voice_mute>0</voice_mute>
+<voice_mono>0</voice_mono>
+<entrycount>4</entrycount>
+<entries>
+<entry parent="7" duration="900.205" volume_left="0.1" volume_right="0.1" beatfreq="55.4816" basefreq="54.6048" state="0"/>
+<entry parent="7" duration="360.026" volume_left="0.1" volume_right="0.1" beatfreq="5.82959" basefreq="17.1523" state="0"/>
+<entry parent="7" duration="91.7257" volume_left="0.1" volume_right="0.1" beatfreq="7.43775" basefreq="5.41304" state="0"/>
+<entry parent="7" duration="7.97615" volume_left="0.1" volume_right="0.1" beatfreq="51.6381" basefreq="6.37965" state="0"/>
+</entries>
+</voice>
+<voice>
+<description>8:mid-Gamma to Gamma</description>
+<id>8</id>
+<type>4</type>
+<voice_state>0</voice_state>
+<voice_hide>0</voice_hide>
+<voice_mute>0</voice_mute>
+<voice_mono>0</voice_mono>
+<entrycount>11</entrycount>
+<entries>
+<entry parent="8" duration="384.577" volume_left="0.1" volume_right="0.1" beatfreq="55.8836" basefreq="54" state="0"/>
+<entry parent="8" duration="96.7568" volume_left="0.1" volume_right="0.1" beatfreq="55.8836" basefreq="54.4112" state="0"/>
+<entry parent="8" duration="88.1834" volume_left="0.1" volume_right="0.1" beatfreq="68.3469" basefreq="66.4165" state="0"/>
+<entry parent="8" duration="42.8669" volume_left="0.1" volume_right="0.1" beatfreq="82.4183" basefreq="88.4908" state="0"/>
+<entry parent="8" duration="72.2614" volume_left="0.1" volume_right="0.1" beatfreq="90.4591" basefreq="102.432" state="0"/>
+<entry parent="8" duration="94.3072" volume_left="0.1" volume_right="0.1" beatfreq="102.118" basefreq="114.438" state="0"/>
+<entry parent="8" duration="55.1146" volume_left="0.1" volume_right="0.1" beatfreq="115.788" basefreq="117.536" state="0"/>
+<entry parent="8" duration="67.3623" volume_left="0.1" volume_right="0.1" beatfreq="121.818" basefreq="118.698" state="0"/>
+<entry parent="8" duration="342.849" volume_left="0.1" volume_right="0.1" beatfreq="123.829" basefreq="119.085" state="0"/>
+<entry parent="8" duration="111.666" volume_left="0.1" volume_right="0.1" beatfreq="123.627" basefreq="110.967" state="0"/>
+<entry parent="8" duration="3.98807" volume_left="0.1" volume_right="0.1" beatfreq="58.2196" basefreq="108.067" state="0"/>
+</entries>
+</voice>
+</schedule>

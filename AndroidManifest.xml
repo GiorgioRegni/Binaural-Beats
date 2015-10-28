@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
       package="com.ihunda.android.binauralbeat"
-      android:versionCode="41"
-      android:versionName="2.1"
+      android:versionCode="47"
+      android:versionName="4.7"
       android:installLocation="auto">
       
     
-<supports-screens android:smallScreens="false"/>
-    
 	<uses-permission android:name="android.permission.WAKE_LOCK"/>
 	<uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+	
+	<uses-permission android:name="android.permission.INTERNET" />	
 	
     <application android:icon="@drawable/icon" android:label="@string/app_name" android:theme="@android:style/Theme.NoTitleBar" android:allowBackup="true">
         <activity android:name=".BBeat"
@@ -34,7 +34,20 @@
             </intent-filter>
         </receiver>
         
-
+        <meta-data android:name="com.google.android.gms.version"
+        android:value="@integer/google_play_services_version" />
+        
+        <!-- Facebook -->
+        <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
+		<activity android:name="com.facebook.FacebookActivity"
+          android:configChanges=
+                 "keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+          android:theme="@android:style/Theme.Translucent.NoTitleBar"
+          android:label="@string/app_name" />
+		<provider android:authorities="com.facebook.app.FacebookContentProvider117055728638150"
+          android:name="com.facebook.FacebookContentProvider"
+          android:exported="true" />
+		
     </application>
 	
 

@@ -40,8 +40,10 @@ import com.ihunda.android.binauralbeat.ProgramMeta.Category;
 import com.ihunda.android.binauralbeat.viz.Aurora;
 import com.ihunda.android.binauralbeat.viz.Black;
 import com.ihunda.android.binauralbeat.viz.Flash;
+import com.ihunda.android.binauralbeat.viz.Hiit;
 import com.ihunda.android.binauralbeat.viz.HypnoFlash;
 import com.ihunda.android.binauralbeat.viz.Image;
+import com.ihunda.android.binauralbeat.viz.LSD;
 import com.ihunda.android.binauralbeat.viz.Leds;
 import com.ihunda.android.binauralbeat.viz.Morphine;
 import com.ihunda.android.binauralbeat.viz.None;
@@ -124,8 +126,9 @@ public class DefaultProgramsBuilder {
 	 */
 
 	public static Program HYPNOSIS_SELF_HYPNOSIS(Program p) {
-		p.setDescription("Short meditation preset to unite your conscious and subconsious mind. " +
-		"Glide down to theta waves, plateau for 10 minutes then slowly come back up to awake state.");
+		p.setDescription("Short meditation preset to unite your conscious and subconscious mind. "
+				+ "It lasts 20mn : Glide down to theta waves, "
+				+ "plateau for 10mn then then slowly come back up to awake state");
 		p.setAuthor("@GiorgioRegni");
 
 		p.addPeriod(new Period(300, SoundLoop.WHITE_NOISE, 0.3f, null).
@@ -145,8 +148,8 @@ public class DefaultProgramsBuilder {
 	}
 
 	public static Program STIMULATION_HIGHEST_MENTAL_ACTIVITY(Program p) {
-		p.setDescription("A quick cafeine boost, this preset shorly reaches Gamma waves, provides "
-				+ "higher mental activity, including perception, problem solving, and consciousness.");
+		p.setDescription("A quick cafeine boost ! This preset shortly reaches Gamma waves, provides higher mental activity, including perception, problem solving, and consciousness. "
+				+ "It can be used whenever needed");
 		p.setAuthor("@GiorgioRegni");
 
 		p.addPeriod(new Period(120, SoundLoop.WHITE_NOISE, 0.3f, null).
@@ -202,7 +205,7 @@ public class DefaultProgramsBuilder {
 
 	public static Program LEARNING_LEARNING(Program p) {
 
-		p.setDescription("Enhanced learning, ability to concentrate and think clearly increased significantly, reduce unwillingness to work. Students can't get enough of this program.");
+		p.setDescription("A 2h preset that enhances learning, increases ability to concentrate and think clearly, reduces unwillingness to work.  Students can't get enough of this program! This one is to be listened while studying. ");
 		p.setAuthor("@GiorgioRegni");
 		p.addPeriod(new Period(120, SoundLoop.NONE, 0.6f, null).
 				addVoice(new BinauralBeatVoice(60f, 14f, 0.60f)).
@@ -221,8 +224,8 @@ public class DefaultProgramsBuilder {
 	}
 
 	public static Program STIMULATION_CREATIVITY(Program p) {
-		p.setDescription("Meditation to assist in Creative Thinking. " +
-		"Begin at 10hz then varying from 8 to 6 hz with a glide back to 8hz at the end.");
+		p.setDescription("It�s a 20mn meditation preset to assist in Creative Thinking "
+				+ "It begins at 10hz then varying from 8 to 6 hz with a glide back to 8hz at the end");
 		p.setAuthor("@thegreenman");
 
 		p.addPeriod(new Period(15, SoundLoop.WHITE_NOISE, 0.4f, null).
@@ -259,6 +262,34 @@ public class DefaultProgramsBuilder {
 
 		return p;
 	}
+	
+	
+	public static Program MEDITATION_WAKEFULRELAX(Program p) {
+			Visualization v = new None();
+		
+		p.setDescription("This presets stimulates a wakeful relaxation state with closed eyes. "
+				+ "Zen-trained meditation masters produce noticeably more alpha waves during meditation."
+				+ "To be used in short 10 to 15 minutes doses to calm down and concentrate when needed.");
+
+		p.setAuthor("@GiorgioRegni");
+
+		p.addPeriod(new Period(120, SoundLoop.WHITE_NOISE, 0.4f, null).
+				addVoice(new BinauralBeatVoice(12f,	7.83f, 0.6f)).
+				addVoice(new BinauralBeatVoice(12f,	7.83f, 0.4f)).
+				addVoice(new BinauralBeatVoice(12f,	10f, 0.4f)).
+				setV(v)
+		).
+		addPeriod(new Period(900-120, SoundLoop.WHITE_NOISE, 0.4f, null).
+				addVoice(new BinauralBeatVoice(7.83f, 7.83f, 0.6f)).
+				addVoice(new BinauralBeatVoice(7.83f, 7.83f, 0.4f)).
+				addVoice(new BinauralBeatVoice(10f, 10f, 0.4f)).
+				setV(v)
+				);
+
+		return p;	
+	};
+	
+	
 
 	public static Program MEDITATION_SCHUMANN_RESONANCE(Program p) {
 		Visualization v = new Image(R.drawable.warp);
@@ -287,9 +318,9 @@ public class DefaultProgramsBuilder {
 	}
 
 	public static Program OOBE_ASTRAL_01_RELAX(Program p) {
-		p.setDescription("From the book Mastering Astral Projection, Week 1: Relaxation. " +
-				"Use a low to medium sound level, sit in a quiet place, and listen to the preset with eyes closed." +
-				" A hard-backed chair without neck support is recommended to prevent falling asleep.");
+		p.setDescription("From the book Mastering Astral Projection, Week 1: Relaxation. "
+				+ "Use a low to medium sound level, sit in a quiet place, and listen to the preset with eyes closed. "
+				+ "A hard-backed chair without neck support is recommended to prevent falling asleep.");
 
 		p.setAuthor("@GiorgioRegni");
 
@@ -310,18 +341,53 @@ public class DefaultProgramsBuilder {
 		return p;
 	}
 	
-	public static Program STIMULATION_LSD(Program p) {
-		p.setDescription("Lysergic acid diethylamide, abbreviated LSD , " +
-				"also known as acid, is a semisynthetic psychedelic drug...");
+	public static Program STIMULATION_HIIT(Program p) {
+		Hiit v = new Hiit();
+		p.setDescription("This preset is based on a Tabata HIIT protocol, it helps you give your maximum during work periods and recover quicker during rest periods. "
+				+ "Starts with 2 minutes warm up then 8 times 20 secs work, 10 secs rest followed by 2 minutes  of cool down. "
+				+ "As always use headphones.");
 
 		p.setAuthor("@GiorgioRegni");
-		p.setGL();
+		//p.setGL();
+
+		p.addPeriod(new Period(120, SoundLoop.NONE, 0.2f, null).
+				addVoice(new BinauralBeatVoice(20f, 70f, 0.65f)).
+				addVoice(new BinauralBeatVoice(20f, 50f, 0.55f)).
+				setV(new Image(R.drawable.hiit_warmup)));
+		
+		for (int i=0; i<8;i++)
+			p.addPeriod(new Period(20, SoundLoop.NONE, 0.2f, null).
+					addVoice(new BinauralBeatVoice(70f, 70f, 0.65f)).
+					addVoice(new BinauralBeatVoice(70f, 50f, 0.55f)).
+					setV(v))
+					.addPeriod(new Period(10, SoundLoop.NONE, 0.2f, null).
+							addVoice(new BinauralBeatVoice(8f, 8f, 0.65f)).
+							addVoice(new BinauralBeatVoice(50f, 70f, 0.55f)).
+							setV(v));
+		
+		p.addPeriod(new Period(120, SoundLoop.NONE, 0.2f, null).
+				addVoice(new BinauralBeatVoice(70f, 10f, 0.65f)).
+				addVoice(new BinauralBeatVoice(50f, 10f, 0.55f)).
+				addVoice(new BinauralBeatVoice(3.7f, 3.7f, 0.4f)).
+				addVoice(new BinauralBeatVoice(2.5f, 2.5f, 0.4f)).
+				addVoice(new BinauralBeatVoice(5.9f, 5.9f, 0.4f)).
+				setV(new Image(R.drawable.hiit_cooldown)));
+		
+		return p;
+	}
+	
+	public static Program STIMULATION_HALLUCINATION(Program p) {
+		p.setDescription("A fun preset that simulates psychedelic hallucinations.");
+
+		p.setAuthor("@GiorgioRegni");
+		//p.setGL();
 		
 		p.addPeriod(new Period(600, SoundLoop.WHITE_NOISE, 0.2f, null).
 				addVoice(new BinauralBeatVoice(15f,	10f, 0.65f)).
 				addVoice(new BinauralBeatVoice(15f,	10f, 0.65f)).
 				addVoice(new BinauralBeatVoice(15f,	10f, 0.65f)).
-				setV(new Plasma()));
+				setV(new LSD()));
+				//setV(new Plasma()));
 
 		return p;
 	}
@@ -330,8 +396,9 @@ public class DefaultProgramsBuilder {
 		
 		Visualization v = new None();
 		
-        p.setDescription("Insomnia relief for use at bed time" +
-                        " 6 minute drop into delta then 54 minutes of relaxing delta ");
+        p.setDescription("Sleep induction for use about 15 mn before bedtime to help you fall asleep. "
+        		+ "It�s a one hour programm, with 6mn drop into delta waves"
+        		+ " followed by 54 mn of relaxing delta plateau");
         p.setAuthor("@thegreenman");
 
         p.addPeriod(new Period(360, SoundLoop.UNITY, 0.7f, null).
@@ -350,8 +417,8 @@ public class DefaultProgramsBuilder {
 	public static Program OOBE_LUCID_DREAMS(Program p) {
 		
 		Visualization m = new Black();
-        p.setDescription("Stimulates lucid dreaming. Play while sleeping" +
-                        " 5hz base frequency with 8 hz spikes.");
+        p.setDescription("This preset stimulates lucid dreaming. It has to be played while sleeping, it is recommend during a nap, while seated in a chair or sofa to prevent falling fully asleep."
+        		+ " 5hz base frequency with 8 hz spikes");
         p.setAuthor("@thegreenman");
 
         p.addPeriod(new Period(60, SoundLoop.NONE, 0.7f, null).
@@ -449,8 +516,10 @@ public class DefaultProgramsBuilder {
 		
 		CanvasVisualization m = new Image(R.drawable.egg);
 		
-		p.setDescription("Insomnia relief through stimulating Sensory Motor Rhythm. Not for use at bed time" +
-		" 61 minutes of crossing frequencies from 8 to 12 hz.");
+		p.setDescription("Insomnia relief through stimulating Sensory Motor Rythm. "
+				+ "Don�t use it at bedtime, use it only during your insomnia, "
+				+ "for example if you wake up in the middle of the night and can�t go back to sleep "
+				+ "38 mn of crossing frequencies from 8 to 12 Hz");
 		p.setAuthor("@thegreenman);");
 	
 		p.addPeriod(new Period(333, SoundLoop.NONE, 0.7f, null).
@@ -498,6 +567,13 @@ public class DefaultProgramsBuilder {
 		p2.name = p.name;		
 		return p2;
 	}
+	
+	/*
+	public static Program STIMULATION_HYPERBOLICCONCSHARP(Program p) {
+		Program p2 = Program.fromGnauralFactory(readRawTextFile(R.raw.hyperbolicconciousnesssharpened));
+		p2.name = p.name;		
+		return p2;
+	}*/
 	
 	public static Program OOBE_LUCID_DREAMS_2(Program p) {
 		Visualization v = new Aurora();
@@ -614,7 +690,7 @@ public class DefaultProgramsBuilder {
 	public static Program STIMULATION_ADHD(Program p) {
 		Visualization v = new HypnoFlash();
 		
-		p.setDescription("Aid for Attention Deficit Disorder." + " Alternating between 12 and 20 hz.");
+		p.setDescription("This preset is an aid for Attention Deficit Hyperactivity Disorder. It lasts 30mn and alternates between 12 and 20 hz. It can be used whenever needed");
 		p.setAuthor("@thegreenman");
 
 		p.addPeriod(new Period(300, SoundLoop.WHITE_NOISE, 0.7f, null).

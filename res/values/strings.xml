@@ -43,6 +43,7 @@
     <string name="source">Source</string>
     <string name="forum">Forum</string>
     <string name="like">Like</string>
+    <string name="share_facebook">Share on Facebook</string>
     <string name="jointhecommunity">Join the community!</string>
     
     <string name="notif_started">Binaural Beats</string>
@@ -70,11 +71,12 @@
     <string name="program_creativity">Creativity</string>
     <string name="program_schumann_resonance">Schumann Resonance</string>
     <string name="program_astral_01_relax">Astral projection - Relaxation</string>
-    <string name="program_lsd">LSD Drug</string>
+    <string name="program_hallucination">Hallucination</string>
     <string name="program_sleep_induction">Sleep induction</string>
     <string name="program_lucid_dreams">Lucid dreams</string>
     <string name="program_lucid_dreams_2">Lucid dreams - variant</string>
     
+    <string name="program_wakefulrelax">Wakeful Relaxation</string>
     <string name="program_shamanic_rhythm">Shamanic rhythm</string>
     <string name="program_smr">Insomnia Relief</string>
     <string name="program_powernap">Power Nap</string>
@@ -82,4 +84,8 @@
     <string name="program_oobe">Out Of Body Experience</string>
     <string name="program_hgh">Human Growth Hormone</string>
     <string name="program_adhd">ADHD</string>
+    <string name="program_hiit">High Intensity Interval Training</string>
+    
+    
+<string name="facebook_app_id">117055728638150</string>
 </resources>

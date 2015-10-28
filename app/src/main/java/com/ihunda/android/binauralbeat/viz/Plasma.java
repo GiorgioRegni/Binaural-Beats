@@ -23,15 +23,15 @@ package com.ihunda.android.binauralbeat.viz;
  *   BBT project home is at https://github.com/GiorgioRegni/Binaural-Beats
  */
 
+import com.ihunda.android.binauralbeat.GLVisualization;
+
+import android.graphics.Color;
+
 import java.nio.ByteBuffer;
 
 import javax.microedition.khronos.opengles.GL10;
 import javax.microedition.khronos.opengles.GL11;
 import javax.microedition.khronos.opengles.GL11Ext;
-
-import android.graphics.Color;
-
-import com.ihunda.android.binauralbeat.GLVisualization;
 
 public class Plasma implements GLVisualization {
 	private static final int PALETTE_SIZE = 257;
@@ -220,13 +220,13 @@ public class Plasma implements GLVisualization {
 				pixelBuffer.put((byte) (pixel & 0xff));
 				
 				pos++;
-				t3 -= 1; // on incrémente les "pointeurs" de ligne.
+				t3 -= 1; // on incremente les "pointeurs" de ligne.
 				t4 += 4; // ceci fait bouger la courbe du plasma sur l'axe horizontal
 			}
-			t1 -= 4; // on incrémente les "pointeurs" de colonne.
+			t1 -= 4; // on incremente les "pointeurs" de colonne.
 			t2 += 2; // ceci fait bouger la courbe du plasma sur l'axe vertical
 		}
-		p1 += 1; // on incrémente les positions des différents pointeurs
+		p1 += 1; // on incremente les positions des diffï¿½rents pointeurs
 		p2 += 4; // pour faire bouger le plasma sur les 2 axes1
 		p3 += 1;
 		p4 -= (int) Math.ceil((8*ratio));	

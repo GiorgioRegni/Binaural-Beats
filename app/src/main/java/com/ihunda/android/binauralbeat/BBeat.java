@@ -23,14 +23,11 @@ package com.ihunda.android.binauralbeat;
  *   BBT project home is at https://github.com/GiorgioRegni/Binaural-Beats
  */
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Vector;
+import com.ihunda.android.binauralbeat.viz.Black;
+import com.ihunda.android.binauralbeat.viz.GLBlack;
+import com.jjoe64.graphview.GraphView.GraphViewData;
+import com.jjoe64.graphview.GraphView.GraphViewSeries;
+import com.jjoe64.graphview.LineGraphView;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -73,11 +70,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
-import com.ihunda.android.binauralbeat.viz.Black;
-import com.ihunda.android.binauralbeat.viz.GLBlack;
-import com.jjoe64.graphview.GraphView.GraphViewData;
-import com.jjoe64.graphview.GraphView.GraphViewSeries;
-import com.jjoe64.graphview.LineGraphView;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Vector;
 
 public class BBeat extends Activity {
 

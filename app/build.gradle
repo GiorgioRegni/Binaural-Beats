@@ -17,7 +17,13 @@ android {
         versionCode 42
         versionName "2.1"
     }
+
     buildTypes {
+        debug {
+            //multiDexEnabled true
+            minifyEnabled false
+        }
+
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'

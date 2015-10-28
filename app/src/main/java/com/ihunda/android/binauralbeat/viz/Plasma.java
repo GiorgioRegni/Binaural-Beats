@@ -164,9 +164,9 @@ public class Plasma implements GLVisualization {
         				   GL10.GL_LINEAR);
         // repeat the edge pixels if a surface is larger than the texture
         gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_WRAP_S,
-                		   GL10.GL_CLAMP_TO_EDGE);
+                		   GL10.GL_REPEAT);
         gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_WRAP_T,
-                           GL10.GL_CLAMP_TO_EDGE); 
+                           GL10.GL_REPEAT); 
         
         pixelBuffer.rewind();
         // we need to output the pixels upside down due to glDrawTex peculiarities
@@ -220,13 +220,13 @@ public class Plasma implements GLVisualization {
 				pixelBuffer.put((byte) (pixel & 0xff));
 				
 				pos++;
-				t3 -= 1; // on incremente les "pointeurs" de ligne.
+				t3 -= 1; // on incrmente les "pointeurs" de ligne.
 				t4 += 4; // ceci fait bouger la courbe du plasma sur l'axe horizontal
 			}
-			t1 -= 4; // on incremente les "pointeurs" de colonne.
+			t1 -= 4; // on incrmente les "pointeurs" de colonne.
 			t2 += 2; // ceci fait bouger la courbe du plasma sur l'axe vertical
 		}
-		p1 += 1; // on incremente les positions des diff�rents pointeurs
+		p1 += 1; // on incrmente les positions des diff�rents pointeurs
 		p2 += 4; // pour faire bouger le plasma sur les 2 axes1
 		p3 += 1;
 		p4 -= (int) Math.ceil((8*ratio));	

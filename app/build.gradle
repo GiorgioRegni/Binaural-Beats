@@ -14,8 +14,8 @@ android {
         applicationId "com.ihunda.android.binauralbeat"
         minSdkVersion 16
         targetSdkVersion 23
-        versionCode 42
-        versionName "2.1"
+        versionCode 48
+        versionName "4.8"
     }
 
     buildTypes {

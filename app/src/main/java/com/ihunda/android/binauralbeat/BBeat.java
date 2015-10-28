@@ -23,6 +23,14 @@ package com.ihunda.android.binauralbeat;
  *   BBT project home is at https://github.com/GiorgioRegni/Binaural-Beats
  */
 
+import com.google.android.gms.analytics.GoogleAnalytics;
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
+
+import com.facebook.FacebookSdk;
+import com.facebook.appevents.AppEventsLogger;
+import com.facebook.share.model.ShareLinkContent;
+import com.facebook.share.widget.ShareDialog;
 import com.ihunda.android.binauralbeat.viz.Black;
 import com.ihunda.android.binauralbeat.viz.GLBlack;
 import com.jjoe64.graphview.GraphView.GraphViewData;
@@ -45,6 +53,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.PowerManager;
+import android.os.SystemClock;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -75,6 +84,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Vector;
@@ -146,8 +156,10 @@ public class BBeat extends Activity {
     private static final String FORUM_URL = "https://plus.google.com/u/1/communities/113832254482827107359";
     private static final String FACEBOOK_URL = "http://www.facebook.com/pages/Binaural-Beat-Therapy/121737064536801";
     private static final String CONTACT_EMAIL = "binaural-beats@ihunda.com";
+    private static final String FACEBOOK_INSTALL_URL = "http://bit.ly/BBTFBSHARE";
+    private static final String FACEBOOK_SHARE_IMG = "http://i.imgur.com/bG9coHF.png";
     private static final String LOGBBEAT = "BBT-MAIN";
-    private static final int NUM_START_BEFORE_DONATE = 10;
+    private static final int NUM_START_BEFORE_DONATE = 1;
 
     /* All dialogs declaration go here */
     private static final int DIALOG_WELCOME = 1;
@@ -161,8 +173,8 @@ public class BBeat extends Activity {
 
     private static final float BG_VOLUME_RATIO = 0.4f;
 
-    private static final float FADE_INOUT_PERIOD = 2f;
-    private static final float FADE_MIN = 0.7f;
+    private static final float FADE_INOUT_PERIOD = 5f;
+    private static final float FADE_MIN = 0.6f;
 
     private static final String PREFS_NAME = "BBT";
     private static final String PREFS_VIZ = "VIZ";
@@ -179,6 +191,25 @@ public class BBeat extends Activity {
     ArrayList<CategoryGroup> groups;
 
     private long numStarts;
+
+    // Stats tracking
+
+    /**
+     * Enum used to identify the tracker that needs to be used for tracking.
+     * <p/>
+     * A single tracker is usually enough for most purposes. In case you do need multiple trackers, storing them all in Application object
+     * helps ensure that they are created only once per application instance.
+     */
+    public enum TrackerName {
+        APP_TRACKER,
+        // Tracker used only in this app.
+        GLOBAL_TRACKER,
+        // Tracker used by all the apps from a company. eg: roll-up tracking.
+        ECOMMERCE_TRACKER, // Tracker used by all ecommerce transactions from a company.
+    }
+
+    HashMap<TrackerName, Tracker> mTrackers = new HashMap<TrackerName, Tracker>();
+    public final String PROPERTY_ID = "UA-76238-16";
 
     /*
      * Not sure this is the best way to do it but it seems to work
@@ -199,6 +230,10 @@ public class BBeat extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        
+	    /* Facebook */
+        FacebookSdk.sdkInitialize(getApplicationContext());
+
         setContentView(R.layout.main);
         
         /* Init sounds */
@@ -318,6 +353,11 @@ public class BBeat extends Activity {
 
         // Set a static pointer to this instance so that vizualisation can access it
         setInstance(this);
+        
+        /* Init Tracker */
+        Tracker tra = getTracker(TrackerName.APP_TRACKER);
+        // Enable Advertising Features.
+        tra.enableAdvertisingIdCollection(true);
 
         mPresetList = (ExpandableListView) findViewById(R.id.presetListView);
         //final List<String> programs = new ArrayList<String>(DefaultProgramsBuilder.getProgramMethods(this).keySet());
@@ -445,17 +485,29 @@ public class BBeat extends Activity {
     }
 
     void stopVoicePlayer() {
-        vp.shutdown();
+        try {
+            vp.shutdown();
+        } catch (Exception e) {
+            // ignore
+        }
+
         vp = null;
     }
 
     @Override
     protected void onStart() {
+        Log.v(LOGBBEAT, "onStart");
         super.onStart();
     }
 
     @Override
     protected void onStop() {
+        Log.v(LOGBBEAT, "onStop");
+
+        if (!isInProgram()) {
+            stopVoicePlayer();
+        }
+
         super.onStop();
     }
 
@@ -541,12 +593,13 @@ public class BBeat extends Activity {
         state = newState;
         switch (state) {
             case SETUP:
+                _track_screen("SETUP");
                 runComeBackAnimationOnView(mPresetView);
                 mPresetList.invalidate();
                 mVizHolder.setVisibility(View.GONE);
                 break;
             case INPROGRAM:
-
+                _track_screen("INPROGRAM");
                 // Track number of usage
                 numStarts++;
                 _save_config();
@@ -596,13 +649,13 @@ public class BBeat extends Activity {
     public void pauseOrResume() {
         if (state == appState.INPROGRAM) {
             if (pause_time > 0) {
-                long delta = System.currentTimeMillis() - pause_time;
+                long delta = _getClock() - pause_time;
                 programFSM.catchUpAfterPause(delta);
                 pause_time = -1;
                 unmuteAll();
             } else {
     			/* This is a pause time */
-                pause_time = System.currentTimeMillis();
+                pause_time = _getClock();
                 muteAll();
             }
         }
@@ -659,12 +712,22 @@ public class BBeat extends Activity {
 
     @Override
     protected void onPause() {
+        Log.v(LOGBBEAT, "onPause");
         super.onPause();
+
+        // Facebook
+        // Logs 'app deactivate' App Event.
+        AppEventsLogger.deactivateApp(this);
     }
 
     @Override
     protected void onResume() {
+        Log.v(LOGBBEAT, "onResume");
         super.onResume();
+
+        // Facebook
+        // Logs 'install' and 'app activate' App Events.
+        AppEventsLogger.activateApp(this);
     }
 
     @Override
@@ -777,6 +840,8 @@ public class BBeat extends Activity {
             }
 
             case DIALOG_DONATE: {
+                _track_ui_click("DONATE", "DIALOG");
+
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.setMessage(R.string.donate_text)
                         .setCancelable(true)
@@ -787,6 +852,11 @@ public class BBeat extends Activity {
                         }).setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         removeDialog(DIALOG_DONATE);
+                    }
+                }).setNeutralButton(R.string.share_facebook, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        removeDialog(DIALOG_DONATE);
+                        displayFacebookShare();
                     }
                 });
 
@@ -835,6 +905,21 @@ public class BBeat extends Activity {
         mNotificationManager.notify(NOTIFICATION_STARTED, notification);
     }
 
+//    private void _start_notification(String programName) {
+//        Notification notification = new Notification(R.drawable.icon, getString(R.string.notif_started), 0); // JENLA
+//
+//        Context context = getApplicationContext();
+//        CharSequence contentTitle = getString(R.string.notif_started);
+//        CharSequence contentText = getString(R.string.notif_descr, programName);
+//        Intent notificationIntent = this.getIntent(); //new Intent(this, hiit.class);
+//        PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
+//
+//        notification.setLatestEventInfo(context, contentTitle, contentText, contentIntent);
+//        notification.flags |= Notification.FLAG_ONGOING_EVENT | Notification.FLAG_NO_CLEAR;
+//
+//        mNotificationManager.notify(NOTIFICATION_STARTED, notification);
+//    }
+
     private void _cancel_all_notifications() {
         mNotificationManager.cancelAll();
     }
@@ -847,12 +932,16 @@ public class BBeat extends Activity {
         Program p = DefaultProgramsBuilder.getProgram(pm, this);
         _tmp_program_holder = p;
 
+        _track_ui_click(p.getName(), "select");
+
         showDialog(DIALOG_PROGRAM_PREVIEW);
     }
 
     private void StartPreviouslySelectedProgram() {
         Program p = _tmp_program_holder;
         _tmp_program_holder = null;
+
+        _track_ui_click(p.getName(), "start");
 
         ((TextView) findViewById(R.id.programName)).setText(p.getName());
 
@@ -973,26 +1062,30 @@ public class BBeat extends Activity {
      */
     protected float skewVoices(ArrayList<BinauralBeatVoice> voices, float pos, float length, boolean doskew) {
         int i = 0;
-        float res = 1;
+        float res = -1;
 
         float freqs[] = new float[voices.size()];
         for (BinauralBeatVoice v : voices) {
             float ratio = (v.freqEnd - v.freqStart) / length;
 
-            res = ratio * pos + v.freqStart;
+            if (res == -1) {
+                res = ratio * pos + v.freqStart; // Only set res for the first voice
+            }
 
             freqs[i] = res;
 
             i++;
         }
         if (doskew) {
-            if (pos < FADE_INOUT_PERIOD) {
-                vp.setFade(FADE_MIN + pos / FADE_INOUT_PERIOD * (1 - FADE_MIN));
-            } else if (length - pos < FADE_INOUT_PERIOD) {
-                float fade = FADE_MIN + (length - pos) / FADE_INOUT_PERIOD * (1 - FADE_MIN);
-                if (fade < FADE_MIN) {
-                    fade = FADE_MIN;
-                }
+
+            float fade_period = Math.min(FADE_INOUT_PERIOD / 2, length / 2);
+
+            if (length < FADE_INOUT_PERIOD) {
+                vp.setFade(1f);
+            } else if (pos < fade_period) {
+                vp.setFade(FADE_MIN + pos / fade_period * (1f - FADE_MIN));
+            } else if (length - pos < fade_period) {
+                float fade = FADE_MIN + (length - pos) / fade_period * (1f - FADE_MIN);
                 vp.setFade(fade);
             } else {
                 vp.setFade(1f);
@@ -1045,7 +1138,7 @@ public class BBeat extends Activity {
                     formatTimeNumberwithLeadingZero((int) programLength % 60));
             formatString = getString(R.string.info_timing);
             format_INFO_TIMING_MIN_SEC = getString(R.string.time_format_min_sec);
-            startTime = System.currentTimeMillis();
+            startTime = _getClock();
             oldDelta = -1;
             _last_graph_update = 0;
 
@@ -1120,7 +1213,7 @@ public class BBeat extends Activity {
         }
 
         public void run() {
-            long now = System.currentTimeMillis();
+            long now = _getClock();
 
             switch (s) {
                 case START:
@@ -1229,7 +1322,7 @@ public class BBeat extends Activity {
                                 formatTimeNumberwithLeadingZero((int) value / 60),
                                 formatTimeNumberwithLeadingZero((int) value % 60));
                     } else {
-                        return String.format("%.2f", value);
+                        return String.format("%.1f", value);
                     }
                 }
             };
@@ -1399,7 +1492,7 @@ public class BBeat extends Activity {
 
         public static final String PAYPAL_USER = "giorgio.paypal@ihunda.com";
         public static final String PAYPAL_ITEM_NAME = "Binaural Beats Therapy Donation";
-        public static final String PAYPAL_CURRENCY_CODE = "EUR";
+        public static final String PAYPAL_CURRENCY_CODE = "USD";
     }
 
     /**
@@ -1429,5 +1522,97 @@ public class BBeat extends Activity {
         // Start your favorite browser
         Intent viewIntent = new Intent(Intent.ACTION_VIEW, payPalUri);
         startActivity(viewIntent);
+    }
+
+    synchronized Tracker getTracker(TrackerName trackerId) {
+        if (!mTrackers.containsKey(trackerId)) {
+
+            GoogleAnalytics analytics = GoogleAnalytics.getInstance(this);
+            Tracker t = (trackerId == TrackerName.APP_TRACKER) ? analytics.newTracker(PROPERTY_ID) : null;
+			/*: (trackerId == TrackerName.GLOBAL_TRACKER) ? analytics.newTracker(R.xml.global_tracker)
+							: analytics.newTracker(R.xml.ecommerce_tracker);*/
+
+            mTrackers.put(trackerId, t);
+        }
+        return mTrackers.get(trackerId);
+    }
+
+    private void _track_ui_click(String what, String cat) {
+        Tracker t = getTracker(TrackerName.APP_TRACKER);
+        if (t == null) {
+            return;
+        }
+
+        t.send(new HitBuilders.EventBuilder()
+                .setCategory(cat)
+                .setAction(what)
+                .setLabel("click")
+                .setValue(1)
+                .build());
+    }
+
+    private void _track_ui_click(String what) {
+        _track_ui_click(what, "UI");
+    }
+
+    private void _track_time(String what, long timems) {
+        Tracker t = getTracker(TrackerName.APP_TRACKER);
+        if (t == null) {
+            return;
+        }
+
+        // Build and send timing.
+        t.send(new HitBuilders.TimingBuilder()
+                .setCategory("Time")
+                .setValue(timems)
+                .setVariable(what)
+                .setLabel("ms")
+                .build());
+    }
+
+    private void _track_screen(String screenName) {
+        Tracker t = getTracker(TrackerName.APP_TRACKER);
+        if (t == null) {
+            return;
+        }
+
+        // Set screen name.
+        t.setScreenName(screenName);
+
+        // Send a screen view.
+        t.send(new HitBuilders.AppViewBuilder().build());
+    }
+
+    private void ToastText(String s) {
+        Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
+    }
+
+    private boolean displayFacebookShare() {
+        if (ShareDialog.canShow(ShareLinkContent.class)) {
+            ShareDialog shareDialog = new ShareDialog(this);
+            ShareLinkContent linkContent = new ShareLinkContent.Builder()
+                    .setContentTitle("Binaural Beats Therapy App")
+                    .setContentDescription("Already approved by hundred thousands of people, a very powerful self-improvement, brain enhancement and stress-relief app.")
+                    .setContentUrl(Uri.parse(FACEBOOK_INSTALL_URL))
+                    .setImageUrl(Uri.parse(FACEBOOK_SHARE_IMG))
+                    .build();
+
+            shareDialog.show(linkContent);
+
+            ToastText("Opening facebook dialog...");
+            _track_ui_click("FACEBOOK_SHARE_OK");
+
+            return true;
+        }
+        // If the Facebook app is installed and we can present the share dialog
+        else {
+            ToastText("Couldn't open facebook dialog...");
+            _track_ui_click("FACEBOOK_SHARE_NOK");
+            return false;
+        }
+    }
+
+    private long _getClock() {
+        return SystemClock.elapsedRealtime();
     }
 }

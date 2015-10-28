@@ -25,6 +25,7 @@
         android:contentDescription="@string/getting_involved"
         android:padding="0dip"
         android:src="@drawable/icon"
-        android:layout_weight="1" />
+        android:layout_weight="1"
+        android:scaleType="fitXY" />
     
 </LinearLayout>

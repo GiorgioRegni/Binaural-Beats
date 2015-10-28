@@ -30,6 +30,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Rect;
 
 import com.ihunda.android.binauralbeat.BBeat;
 import com.ihunda.android.binauralbeat.CanvasVisualization;
@@ -73,6 +74,8 @@ public class Starfield implements CanvasVisualization {
 	Random r = new Random();
 	private Bitmap background;
 	int modulo;
+	private Rect srcR;
+	private Rect dstR;
 	
 	public Starfield() {
 		pStar = new Paint();
@@ -82,6 +85,8 @@ public class Starfield implements CanvasVisualization {
 		pBG.setColor(COLOR_BG);
 		
 		background = BitmapFactory.decodeResource(BBeat.getInstance().getResources(), R.drawable.oobe);
+		srcR = new Rect(0,0,background.getWidth(),background.getHeight());
+		dstR = new Rect(0,0,0,0);
 	}
 	
 	public void redraw(Canvas c, int width, int height, float now,
@@ -91,17 +96,18 @@ public class Starfield implements CanvasVisualization {
 		
 		ratio = (now % dperiod) / dperiod;
 		
-		//c.drawColor(COLOR_BG);
-		c.drawBitmap(background, 0, 0, null);
 		
 		if (stars == null) {
-			
 			// Init starts
 			stars = new Star[NUM_STARS];
 			for (int i=0; i<NUM_STARS; i++) {
 				stars[i] = new Star(r.nextInt(width), r.nextInt(height), 1+ r.nextInt(4), 0);
 			}
+			dstR.right = width;
+			dstR.bottom = height;
 		}
+		
+		c.drawBitmap(background, srcR, dstR, null);
 		
 		for (Star s: stars) {
 			// move it

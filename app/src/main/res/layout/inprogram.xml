@@ -1,74 +1,99 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout android:id="@+id/inProgramLayout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:bb="http://schemas.android.com/apk/res/com.ihunda.android.binauralbeat"
-    android:id="@+id/inProgramLayout"
-    android:orientation="vertical"
-	android:layout_width="fill_parent" android:layout_height="fill_parent">
-	<LinearLayout android:layout_width="fill_parent"
-		android:layout_height="wrap_content" android:orientation="horizontal"
-		android:gravity="center_vertical">
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
 
 
-		<Button android:text="@string/menu" android:id="@+id/Menu"
-			android:layout_width="65dip" android:layout_height="wrap_content"
-			android:layout_weight="0"></Button>
+        <Button
+            android:id="@+id/Menu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:text="@string/menu" />
 
-		<TextView android:id="@+id/programName"
-			android:layout_width="fill_parent" android:layout_height="wrap_content"
-			android:gravity="center" android:layout_weight="4"></TextView>
+        <TextView
+            android:id="@+id/programName"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="4"
+            android:gravity="center" />
 
-		<ToggleButton android:textOn="@string/pause" android:textOff="@string/resume" android:id="@+id/MenuPause"
-			android:layout_width="65dip" android:layout_height="wrap_content"
-			android:layout_weight="0"></ToggleButton>
+        <ToggleButton
+            android:id="@+id/MenuPause"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:textOff="@string/resume"
+            android:textOn="@string/pause" />
 
-	</LinearLayout>
+    </LinearLayout>
 
-	<FrameLayout android:id="@+id/VisualizationView" android:layout_width="fill_parent"
-		android:layout_height="fill_parent" android:layout_weight="4"/>
-	
-	
-	<LinearLayout android:layout_width="fill_parent"
-		android:layout_height="wrap_content" android:orientation="horizontal"
-		android:gravity="center_vertical"
-		android:layout_weight="0">
-		
-	<TextView 
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content" android:text="@string/background" 
-		android:textAppearance="@style/textSmallItalic"
-		android:layout_marginLeft="2dip"
-		android:layout_marginRight="2dip"/>
-		
-	<SeekBar android:id="@+id/soundBGVolumeBar"
-		android:layout_width="fill_parent"
-		android:layout_height="wrap_content"
-		android:layout_weight="1" />
-		
-	<TextView 
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content" android:text="@string/voices"
-		android:textAppearance="@style/textSmallItalic"
-		android:layout_marginLeft="2dip"
-		android:layout_marginRight="2dip"/>
-	
-	<SeekBar android:id="@+id/soundVolumeBar"
-		android:layout_width="fill_parent"
-		android:layout_height="wrap_content"
-		android:layout_weight="1" />
-	</LinearLayout>
-	
-	<LinearLayout
+    <FrameLayout
+        android:id="@+id/VisualizationView"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="4" />
+
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="2dip"
+            android:layout_marginRight="2dip"
+            android:text="@string/background"
+            android:textAppearance="@style/textSmallItalic" />
+
+        <SeekBar
+            android:id="@+id/soundBGVolumeBar"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="2dip"
+            android:layout_marginRight="2dip"
+            android:text="@string/voices"
+            android:textAppearance="@style/textSmallItalic" />
+
+        <SeekBar
+            android:id="@+id/soundVolumeBar"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+    </LinearLayout>
+
+    <LinearLayout
         android:id="@+id/graphVoices"
         android:layout_width="fill_parent"
         android:layout_height="50dip"
         android:layout_gravity="center"
         android:orientation="horizontal" />
-		
-	<TextView android:id="@+id/Status"
-		android:layout_width="fill_parent"
-		android:layout_height="wrap_content" android:text="timing..."
-		android:textAppearance="@style/textSmallItalic"
-		android:layout_gravity="right"
-		android:layout_weight="0" />
-	
+
+    <TextView
+        android:id="@+id/Status"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:layout_weight="0"
+        android:text="timing..."
+        android:textAppearance="@style/textSmallItalic" />
+
 </LinearLayout>

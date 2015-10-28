@@ -37,7 +37,6 @@ import com.jjoe64.graphview.GraphView.GraphViewData;
 import com.jjoe64.graphview.GraphView.GraphViewSeries;
 import com.jjoe64.graphview.LineGraphView;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.Notification;
@@ -54,6 +53,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.PowerManager;
 import android.os.SystemClock;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -89,7 +89,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Vector;
 
-public class BBeat extends Activity {
+public class BBeat extends AppCompatActivity {
 
     enum eState {
         START,
@@ -97,15 +97,11 @@ public class BBeat extends Activity {
         END
     }
 
-    ;
-
     enum appState {
         NONE,
         SETUP,
         INPROGRAM
     }
-
-    ;
 
     private static final int MAX_STREAMS = 5;
 

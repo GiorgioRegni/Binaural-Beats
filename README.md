@@ -1,8 +1,8 @@
-# **Binaural Beats Therapy** ![Icon](https://raw.githubusercontent.com/GiorgioRegni/Binaural-Beats/master/res/drawable-hdpi/icon.png)
+# **Binaural Beats Therapy** [![Icon](https://raw.githubusercontent.com/GiorgioRegni/Binaural-Beats/master/res/drawable-hdpi/icon.png)](https://github.com/GiorgioRegni/Binaural-Beats "Train your brain!")
 
 ---
 
-[Binaural beats](https://en.wikipedia.org/wiki/Binaural_beats) stimulate your brain by sending special auditory artifacts directly into your headphones to produce subtle changes in behavior through entrainment of brainwaves frequency. With the app `Binaural Beats Therapy` you'll always carry a refreshing therapy in your pocket! Improves healing, meditation, sleep and more - with the click of a button.
+[Binaural beats](https://en.wikipedia.org/wiki/Binaural_beats) stimulate your brain by sending special auditory artifacts directly into your headphones to produce subtle changes in behavior through [entrainment of brainwaves frequency](https://en.wikipedia.org/wiki/Binaural_beats#Frequency_bands_of_cortical_neural_ensembles). With the app `Binaural Beats Therapy` you'll always carry a refreshing therapy in your pocket! Improves healing, meditation, sleep and more - with the click of a button.
 
 ### Installation
 
@@ -19,7 +19,7 @@
 
 ### Support
 
-This application is free and will stay free. Developing `Binaural Beats Therapy`, researching and staying up to date on binaural beats and mind science takes time and a lot of efforts. Donating by pressing the `Donate` button from within the app will help me spend more time on `Binaural Beats Therapy` and continue delivering updates and answering requests. Also remember that this app appreciates your improvements via [pull requests](https://help.github.com/articles/using-pull-requests/). Thanks for your help! -Giorgio Regni
+This application is free and will always stay free. Developing `Binaural Beats Therapy`, researching and staying up to date on binaural beats and mind science takes time and a lot of effort. Donating by pressing the `Donate` button from within the app will help me spend more time on `Binaural Beats Therapy` and continue delivering updates and answering requests. Also remember that this app appreciates your improvements via [pull requests](https://help.github.com/articles/using-pull-requests/). Thanks for your help! -Giorgio Regni
 
 ### Contact
 

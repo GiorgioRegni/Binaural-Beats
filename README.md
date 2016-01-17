@@ -19,7 +19,7 @@
 
 ### Support
 
-This application is free and will stay free. Developing `Binaural Beats Therapy`, researching and staying up to date on binaural beats and mind science takes time and a lot of efforts. Donating by pressing the `Donate` button from within the app will help me spend more time on `Binaural Beats Therapy` and continue delivering updates and answering requests. Thanks for your help! -Giorgio Regni
+This application is free and will stay free. Developing `Binaural Beats Therapy`, researching and staying up to date on binaural beats and mind science takes time and a lot of efforts. Donating by pressing the `Donate` button from within the app will help me spend more time on `Binaural Beats Therapy` and continue delivering updates and answering requests. Also remember that this app appreciates your improvements via [pull requests](https://help.github.com/articles/using-pull-requests/). Thanks for your help! -Giorgio Regni
 
 ### Contact
 

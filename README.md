@@ -2,7 +2,7 @@
 
 ---
 
-[Binaural beats](https://en.wikipedia.org/wiki/Binaural_beats) stimulate your brain by sending special auditory artifacts directly into your headphones to produce subtle changes in behavior through entrainment of brainwaves frequency. With the app `Binaural Beats Therapy` you'll always carry a refreshing therapy in your pocket!
+[Binaural beats](https://en.wikipedia.org/wiki/Binaural_beats) stimulate your brain by sending special auditory artifacts directly into your headphones to produce subtle changes in behavior through entrainment of brainwaves frequency. With the app `Binaural Beats Therapy` you'll always carry a refreshing therapy in your pocket! Improves healing, meditation, sleep and more - with the click of a button.
 
 ### Installation
 

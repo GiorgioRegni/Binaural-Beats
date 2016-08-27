@@ -6,37 +6,6 @@
     android:layout_height="fill_parent"
     android:orientation="vertical">
 
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
-
-
-        <Button
-            android:id="@+id/Menu"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="0"
-            android:text="@string/menu" />
-
-        <TextView
-            android:id="@+id/programName"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="4"
-            android:gravity="center" />
-
-        <ToggleButton
-            android:id="@+id/MenuPause"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="0"
-            android:textOff="@string/resume"
-            android:textOn="@string/pause" />
-
-    </LinearLayout>
-
     <FrameLayout
         android:id="@+id/VisualizationView"
         android:layout_width="fill_parent"

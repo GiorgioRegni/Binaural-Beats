@@ -1,8 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu
-  xmlns:android="http://schemas.android.com/apk/res/android">
-<item android:id="@+id/stop" android:title="@string/stop_program" 
-    android:icon="@drawable/icon_quit" android:orderInCategory="1"></item>
-<item android:id="@+id/togglegraphics" android:title="@string/toggle_graphics" 
-    android:icon="@drawable/icon_graphics" android:orderInCategory="1"></item>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/stop"
+        android:icon="@android:drawable/ic_media_previous"
+        android:orderInCategory="1"
+        android:title="@string/stop_program"></item>
+    <item
+        android:id="@+id/pause"
+        android:icon="@android:drawable/ic_media_pause"
+        android:orderInCategory="1"
+        android:title="@string/pause"
+        app:showAsAction="always"></item>
+    <item
+        android:id="@+id/togglegraphics"
+        android:icon="@drawable/icon_graphics"
+        android:orderInCategory="1"
+        android:title="@string/toggle_graphics"
+        app:showAsAction="always"></item>
 </menu>

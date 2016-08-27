@@ -54,6 +54,7 @@ import android.os.Handler;
 import android.os.PowerManager;
 import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -120,7 +121,6 @@ public class BBeat extends AppCompatActivity {
     private FrameLayout mVizHolder;
     private TextView mStatus;
     private ExpandableListView mPresetList;
-    private ToggleButton mPlayPause;
 
     private appState state;
 
@@ -188,6 +188,8 @@ public class BBeat extends AppCompatActivity {
 
     private long numStarts;
 
+    private Toolbar mToolbar;
+
     // Stats tracking
 
     /**
@@ -244,28 +246,7 @@ public class BBeat extends AppCompatActivity {
         mWl = mPm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK, "BBTherapy");
         
         /* Setup all buttons */
-        Button b = (Button) findViewById(R.id.MenuForum);
-        b.setOnClickListener(new OnClickListener() {
-            public void onClick(View v) {
-                gotoForum();
-            }
-        });
-
-        b = (Button) findViewById(R.id.MenuHelp);
-        b.setOnClickListener(new OnClickListener() {
-
-            public void onClick(View v) {
-                gotoHelp();
-            }
-        });
-
-        b = (Button) findViewById(R.id.Menu);
-        b.setOnClickListener(new OnClickListener() {
-
-            public void onClick(View v) {
-                openOptionsMenu();
-            }
-        });
+        Button b;
 
         b = (Button) findViewById((R.id.likeButton));
         b.setOnClickListener(new OnClickListener() {
@@ -291,14 +272,6 @@ public class BBeat extends AppCompatActivity {
         mGraphVoicesLayout = (LinearLayout) findViewById(R.id.graphVoices);
 
         pause_time = -1;
-        mPlayPause = (ToggleButton) findViewById((R.id.MenuPause));
-        mPlayPause.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-
-            public void onCheckedChanged(CompoundButton buttonView,
-                    boolean isChecked) {
-                pauseOrResume();
-            }
-        });
 
         /* Set up volume bar */
         soundBeatV = (SeekBar) findViewById((R.id.soundVolumeBar));
@@ -432,6 +405,10 @@ public class BBeat extends AppCompatActivity {
             }
         }
 
+
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(mToolbar);
+
         showDialog(DIALOG_WELCOME);
 
         _load_config();
@@ -522,17 +499,17 @@ public class BBeat extends AppCompatActivity {
 
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.inprogram, menu);
+        if (state == appState.INPROGRAM) {
+            inflater.inflate(R.menu.inprogram, menu);
+        } else {
+            inflater.inflate(R.menu.insetup, menu);
+        }
 
         return true;
     }
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        if (state != appState.INPROGRAM) {
-            return false;
-        }
-
         return true;
     }
 
@@ -545,6 +522,16 @@ public class BBeat extends AppCompatActivity {
             }
             case R.id.togglegraphics:
                 setGraphicsEnabled(!vizEnabled);
+                break;
+            case R.id.help:
+                gotoHelp();
+                break;
+            case R.id.forum:
+                gotoForum();
+                break;
+            // In program
+            case R.id.pause:
+                pauseOrResume();
                 break;
         }
         return false;
@@ -620,10 +607,11 @@ public class BBeat extends AppCompatActivity {
                 }
                 mVizHolder.addView(mVizV);
 
-                mPlayPause.setChecked(true);
+                // JENLA managed state of pause button mPlayPause.setChecked(true);
                 pause_time = -1;
                 break;
         }
+        invalidateOptionsMenu(); // Force re-evaluation of option menu
     }
 
     public boolean isInProgram() {
@@ -939,7 +927,7 @@ public class BBeat extends AppCompatActivity {
 
         _track_ui_click(p.getName(), "start");
 
-        ((TextView) findViewById(R.id.programName)).setText(p.getName());
+        mToolbar.setTitle(p.getName());
 
         programFSM = new RunProgram(p, mHandler);
         goToState(appState.INPROGRAM);

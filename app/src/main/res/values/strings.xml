@@ -15,7 +15,7 @@
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="confirm_reset">Stop program and go back to Setup screen?</string>
-    
+
     <string name="getting_involved">Getting Involved?</string>
     <string name="getting_involved_dialog">This application is free and open source, anyone can participate and make it better.
     I am looking for people to help on graphics, sounds, tone presets, documentation, video tutorial, ideas etc... as well as developers too!</string>
@@ -32,37 +32,37 @@
         
         Thanks for your help!
         Giorgio Regni</string>
-    
+
     <string name="voices">Voices</string>
     <string name="background">Background</string>
     <string name="volume">Volume</string>
     
     <string name="welcome_text">Welcome to Binaural Beats Therapy! This app is free and open source, have fun and join the community! 
     Headphones and a safe environment are required.</string>
-    
+
     <string name="source">Source</string>
     <string name="forum">Forum</string>
     <string name="like">Like</string>
     <string name="share_facebook">Share on Facebook</string>
     <string name="jointhecommunity">Join the community!</string>
-    
+
     <string name="notif_started">Binaural Beats</string>
     <string name="notif_descr" formatted="false">%s in progress</string>
-    
+
     <string name="info_timing" formatted="false">Main Beat %.2fHz - %s:%s/</string>
     <string name="time_format" formatted="false">%s:%s</string>
     <string name="time_format_min_sec" formatted="false">%sm%s</string>
-    
+
     <string name="comments_title">Comments</string>
     <string name="menu">Menu</string>
     <string name="stop_program">Stop program</string>
     <string name="toggle_graphics">Graphics on/off</string>
     <string name="graphics_on">Graphics on</string>
     <string name="graphics_off">Graphics off, screen will turn off automatically</string>
-    
+
     <string name="group_oobe">Out of body experience</string>
-    
-    
+
+
     <string name="program_self_hypnosis">Self Hypnosis</string>
     <string name="program_highest_mental_activity">Highest mental activity</string>
     <string name="program_unity">Unity</string>
@@ -75,7 +75,7 @@
     <string name="program_sleep_induction">Sleep induction</string>
     <string name="program_lucid_dreams">Lucid dreams</string>
     <string name="program_lucid_dreams_2">Lucid dreams - variant</string>
-    
+
     <string name="program_wakefulrelax">Wakeful Relaxation</string>
     <string name="program_shamanic_rhythm">Shamanic rhythm</string>
     <string name="program_smr">Insomnia Relief</string>
@@ -85,7 +85,12 @@
     <string name="program_hgh">Human Growth Hormone</string>
     <string name="program_adhd">ADHD</string>
     <string name="program_hiit">High Intensity Interval Training</string>
-    
-    
-<string name="facebook_app_id">117055728638150</string>
+
+
+    <string name="facebook_app_id">117055728638150</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="drawer_open">open</string>
+    <string name="drawer_close">close</string>
 </resources>

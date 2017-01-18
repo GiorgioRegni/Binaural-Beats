@@ -263,10 +263,10 @@ public class BBeat extends AppCompatActivity {
             }
         });
 
-        TextView t = (TextView) findViewById((R.id.jointhecommunityText));
-        t.setOnClickListener(new OnClickListener() {
+        b = (Button) findViewById((R.id.joinCommunityButton));
+        b.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
-                showDialog(DIALOG_JOIN_COMMUNITY);
+                gotoForum();
             }
         });
 
@@ -385,7 +385,7 @@ public class BBeat extends AppCompatActivity {
         });
 
         LayoutInflater inflater = getLayoutInflater();
-        View headerView = inflater.inflate(R.layout.presetlist_getting_involved, null);
+        /*View headerView = inflater.inflate(R.layout.presetlist_getting_involved, null);
         mPresetList.addHeaderView(headerView);
 
         headerView.setOnClickListener(new OnClickListener() {
@@ -395,6 +395,8 @@ public class BBeat extends AppCompatActivity {
                 showDialog(DIALOG_GETTING_INVOLVED);
             }
         });
+        // Interivew is ugly and not really needed
+        */
 
         mPresetList.setGroupIndicator(getResources().getDrawable(R.drawable.empty));
         mPresetList.setAdapter(adapter);
@@ -414,7 +416,47 @@ public class BBeat extends AppCompatActivity {
         NavigationDrawerFragment drawerFragment = (NavigationDrawerFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_nav_drawer);
         drawerFragment.setUp((DrawerLayout) findViewById(R.id.drawer_layout), mToolbar);
 
-        showDialog(DIALOG_WELCOME);
+        // TODO, remove DIALOG_WELCOME
+        //showDialog(DIALOG_WELCOME);
+
+
+        // Wire Navigation Drawer Buttons
+        b = (Button) findViewById((R.id.NDUserGuide));
+        b.setOnClickListener(new OnClickListener() {
+            public void onClick(View v) {
+                gotoHelp();
+            }
+        });
+
+        b = (Button) findViewById((R.id.NDCommunityButton));
+        b.setOnClickListener(new OnClickListener() {
+            public void onClick(View v) {
+                gotoForum();
+            }
+        });
+
+        b = (Button) findViewById((R.id.NDFacebooklikeButton));
+        b.setOnClickListener(new OnClickListener() {
+            public void onClick(View v) {
+                gotoFacebook();
+            }
+        });
+
+        b = (Button) findViewById((R.id.NDDonateButton));
+        b.setOnClickListener(new OnClickListener() {
+            public void onClick(View v) {
+                showDialog(DIALOG_DONATE);
+            }
+        });
+
+        b = (Button) findViewById((R.id.NDRateButton));
+        b.setOnClickListener(new OnClickListener() {
+            public void onClick(View v) {
+                gotoMarket();
+            }
+        });
+
+        _show_tutorial();
 
         _load_config();
 
@@ -422,6 +464,11 @@ public class BBeat extends AppCompatActivity {
 
         state = appState.NONE;
         goToState(appState.SETUP);
+    }
+
+    private void _show_tutorial() {
+        Intent intent = new Intent(this, TutorialActivity.class);
+        startActivity(intent);
     }
 
     /*
@@ -527,12 +574,6 @@ public class BBeat extends AppCompatActivity {
             }
             case R.id.togglegraphics:
                 setGraphicsEnabled(!vizEnabled);
-                break;
-            case R.id.help:
-                gotoHelp();
-                break;
-            case R.id.forum:
-                gotoForum();
                 break;
             // In program
             case R.id.pause:
@@ -755,7 +796,8 @@ public class BBeat extends AppCompatActivity {
                 return alert;
             }
 
-            case DIALOG_GETTING_INVOLVED: {
+            case DIALOG_GETTING_INVOLVED:
+            case DIALOG_JOIN_COMMUNITY: {
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.setMessage(R.string.getting_involved_dialog)
                         .setCancelable(true)
@@ -774,24 +816,6 @@ public class BBeat extends AppCompatActivity {
                         showDialog(DIALOG_DONATE);
                     }
                 });
-                AlertDialog alert = builder.create();
-                return alert;
-            }
-
-            case DIALOG_JOIN_COMMUNITY: {
-                AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.setMessage(R.string.getting_involved_dialog)
-                        .setCancelable(true)
-                        .setPositiveButton(R.string.contact, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                shareWith(getString(R.string.app_name), getString(R.string.share_text));
-                            }
-                        })
-                        .setNegativeButton(R.string.blog, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                gotoBlog();
-                            }
-                        });
                 AlertDialog alert = builder.create();
                 return alert;
             }
@@ -918,7 +942,7 @@ public class BBeat extends AppCompatActivity {
             programFSM.stopProgram();
         }
 
-        Program p = DefaultProgramsBuilder.getProgram(pm, this);
+        Program p = DefaultProgramsBuilder.getProgram(pm);
         _tmp_program_holder = p;
 
         _track_ui_click(p.getName(), "select");
@@ -1199,6 +1223,7 @@ public class BBeat extends AppCompatActivity {
 
         public void catchUpAfterPause(long delta) {
             cT += delta;
+            startTime += delta;
         }
 
         public void run() {

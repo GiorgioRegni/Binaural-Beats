@@ -36,23 +36,31 @@ public class ProgramListAdapter extends BaseExpandableListAdapter {
 
 	public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
 		final ProgramMeta objet = (ProgramMeta) getChild(groupPosition, childPosition);
-		
+		Program p = DefaultProgramsBuilder.getProgram(objet);
+
 		ChildViewHolder childViewHolder;
 		
         if (convertView == null) {
         	childViewHolder = new ChildViewHolder();
         	
             convertView = inflater.inflate(R.layout.presetlist_group_child, null);
-            
-            childViewHolder.textViewChild = (TextView) convertView.findViewById(R.id.TVChild);
-            
-            convertView.setTag(childViewHolder);
+
+			childViewHolder.textViewChild = (TextView) convertView.findViewById(R.id.TVChild);
+			childViewHolder.textViewChildDescription = (TextView) convertView.findViewById(R.id.TVChildDescription);
+			childViewHolder.textViewChildTime = (TextView) convertView.findViewById(R.id.TVChildTime);
+
+			convertView.setTag(childViewHolder);
         } else {
         	childViewHolder = (ChildViewHolder) convertView.getTag();
         }
+
         
         childViewHolder.textViewChild.setText(objet.getName());
-        
+		childViewHolder.textViewChildDescription.setText(p.getDescription());
+		childViewHolder.textViewChildTime.setText(String.format("%sH%s",
+				formatTimeNumberwithLeadingZero(p.getLength() / 60 / 60),
+				formatTimeNumberwithLeadingZero((p.getLength() / 60) % 60)));
+
         return convertView;
 	}
 
@@ -90,7 +98,6 @@ public class ProgramListAdapter extends BaseExpandableListAdapter {
         }
         
         gholder.textViewGroup.setText(group.getNiceName());
-        gholder.textViewGroup.getBackground().setAlpha(120);
         
        /* ExpandableListView eLV = (ExpandableListView) parent;
         if (eLV.isGroupExpanded(groupPosition) == false) {
@@ -114,7 +121,16 @@ public class ProgramListAdapter extends BaseExpandableListAdapter {
 	
 	class ChildViewHolder {
 		public TextView textViewChild;
+		public TextView textViewChildDescription;
+		public TextView textViewChildTime;
 	}
 
+	private String formatTimeNumberwithLeadingZero(int t) {
+		if (t > 9) {
+			return String.format("%2d", t);
+		} else {
+			return String.format("0%1d", t);
+		}
+	}
 }
 

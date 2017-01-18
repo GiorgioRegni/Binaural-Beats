@@ -93,4 +93,19 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="drawer_open">open</string>
     <string name="drawer_close">close</string>
+    <string name="community">Community</string>
+    <string name="user_guide">User Guide</string>
+    <string name="user_community">User Community</string>
+    <string name="welcome">Welcome</string>
+    <string name="tutorial_1_text">Binaural Beats Therapy is a free and open source app.</string>
+    <string name="tutorial_2_title">What are binaural beats?</string>
+    <string name="tutorial_2_text">Specific audio frequency send directly to your ears to stimulate your brain.</string>
+    <string name="tutorial_3_title">How?</string>
+    <string name="tutorial_3_text">They produce subtle changes in behavior through entrainment of brainwaves frequency.</string>
+    <string name="tutorial_4_title">Why?</string>
+    <string name="tutorial_4_text">They can help quit an addiction, concentrate, go to sleep, ...</string>
+    <string name="tutorial_5_title">How to use this app?</string>
+    <string name="tutorial_5_text">Plug Headphones and select one of builtin presets to get started.</string>
+    <string name="tutorial_6_title">Safety</string>
+    <string name="tutorial_6_text">Please make sure you are in a safe &amp; relaxed environment.</string>
 </resources>

@@ -109,7 +109,7 @@ public class DefaultProgramsBuilder {
 		return names;
 	}
 
-	public static Program getProgram(ProgramMeta pm, Context context) {
+	public static Program getProgram(ProgramMeta pm) {
 		try {
 			return (Program) pm.getMethod().invoke(null, new Program(pm.getName()));
 		} catch (IllegalArgumentException e) {

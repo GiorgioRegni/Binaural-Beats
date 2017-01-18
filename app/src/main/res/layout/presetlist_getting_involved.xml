@@ -8,7 +8,7 @@
   >
     
     <TextView android:id="@+id/GettingInvolved" android:text="@string/getting_involved"
-         style="@style/textCaption"
+         style="@style/TextAppearance.AppCompat.Medium"
           android:layout_width="fill_parent"
            android:layout_height="wrap_content"
     android:paddingTop="2dip"

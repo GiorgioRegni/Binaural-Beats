@@ -29,6 +29,13 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".TutorialActivity"
+            android:label="@string/app_name"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:exported="true">
+        </activity>
+        <activity
             android:name=".Comments"
             android:label="@string/comments_title"/>
 

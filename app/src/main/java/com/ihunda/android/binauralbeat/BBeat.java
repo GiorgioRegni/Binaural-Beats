@@ -23,6 +23,7 @@ package com.ihunda.android.binauralbeat;
  *   BBT project home is at https://github.com/GiorgioRegni/Binaural-Beats
  */
 
+import com.facebook.share.widget.LikeView;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
@@ -46,6 +47,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.net.Uri;
@@ -55,6 +58,7 @@ import android.os.PowerManager;
 import android.os.SystemClock;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.NotificationCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -175,12 +179,14 @@ public class BBeat extends AppCompatActivity {
 
     private static final String PREFS_NAME = "BBT";
     private static final String PREFS_VIZ = "VIZ";
+    private static final String PREFS_TUTORIAL = "TUT";
     private static final String PREFS_NUM_STARTS = "NUM_STARTS";
 
     private VoicesPlayer vp;
 
     boolean glMode = false;
     boolean vizEnabled = true;
+    boolean seenTutorial = false;
 
     private LinearLayout mGraphVoicesLayout;
 
@@ -249,10 +255,10 @@ public class BBeat extends AppCompatActivity {
         /* Setup all buttons */
         Button b;
 
-        b = (Button) findViewById((R.id.likeButton));
+        b = (Button) findViewById((R.id.bmUserGuide));
         b.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
-                gotoFacebook();
+                gotoHelp();
             }
         });
 
@@ -385,18 +391,6 @@ public class BBeat extends AppCompatActivity {
         });
 
         LayoutInflater inflater = getLayoutInflater();
-        /*View headerView = inflater.inflate(R.layout.presetlist_getting_involved, null);
-        mPresetList.addHeaderView(headerView);
-
-        headerView.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                showDialog(DIALOG_GETTING_INVOLVED);
-            }
-        });
-        // Interivew is ugly and not really needed
-        */
 
         mPresetList.setGroupIndicator(getResources().getDrawable(R.drawable.empty));
         mPresetList.setAdapter(adapter);
@@ -435,10 +429,10 @@ public class BBeat extends AppCompatActivity {
             }
         });
 
-        b = (Button) findViewById((R.id.NDFacebooklikeButton));
+        b = (Button) findViewById((R.id.NDFacebookShareButton));
         b.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
-                gotoFacebook();
+                displayFacebookShare();
             }
         });
 
@@ -456,9 +450,17 @@ public class BBeat extends AppCompatActivity {
             }
         });
 
-        _show_tutorial();
+        b = (Button) findViewById((R.id.NDGettingInvolved));
+        b.setOnClickListener(new OnClickListener() {
+            public void onClick(View v) {
+                showDialog(DIALOG_GETTING_INVOLVED);
+            }
+        });
 
         _load_config();
+
+        if (!seenTutorial)
+            _show_tutorial();
 
         initSounds();
 
@@ -469,6 +471,7 @@ public class BBeat extends AppCompatActivity {
     private void _show_tutorial() {
         Intent intent = new Intent(this, TutorialActivity.class);
         startActivity(intent);
+        seenTutorial = true;
     }
 
     /*
@@ -479,6 +482,7 @@ public class BBeat extends AppCompatActivity {
         SharedPreferences.Editor editor = settings.edit();
         editor.putBoolean(PREFS_VIZ, vizEnabled);
         editor.putLong(PREFS_NUM_STARTS, numStarts);
+        editor.putBoolean(PREFS_TUTORIAL, seenTutorial);
         editor.commit();
     }
 
@@ -486,6 +490,7 @@ public class BBeat extends AppCompatActivity {
         SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
         vizEnabled = settings.getBoolean(PREFS_VIZ, true);
         numStarts = settings.getLong(PREFS_NUM_STARTS, 0);
+        seenTutorial = settings.getBoolean(PREFS_TUTORIAL, false);
     }
 
     void initSounds() {
@@ -806,11 +811,7 @@ public class BBeat extends AppCompatActivity {
                                 shareWith(getString(R.string.app_name), getString(R.string.share_text));
                             }
                         })
-                        .setNegativeButton(R.string.rate_on_market, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                gotoMarket();
-                            }
-                        }).setNeutralButton(R.string.donate, new DialogInterface.OnClickListener() {
+                        .setNeutralButton(R.string.donate, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
                         showDialog(DIALOG_DONATE);
@@ -862,11 +863,7 @@ public class BBeat extends AppCompatActivity {
                             public void onClick(DialogInterface dialog, int id) {
                                 donatePayPalOnClick();
                             }
-                        }).setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        removeDialog(DIALOG_DONATE);
-                    }
-                }).setNeutralButton(R.string.share_facebook, new DialogInterface.OnClickListener() {
+                        }).setNeutralButton(R.string.share_facebook, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         removeDialog(DIALOG_DONATE);
                         displayFacebookShare();
@@ -895,27 +892,24 @@ public class BBeat extends AppCompatActivity {
     }
 
     private void _start_notification(String programName) {
-        Context context = getApplicationContext();
-        CharSequence contentTitle = getString(R.string.notif_started);
-        CharSequence contentText = getString(R.string.notif_descr, programName);
+        //Bitmap bMap = BitmapFactory.decodeResource(getResources(), R.drawable.icon);
+
+        NotificationCompat.Builder mBuilder =
+                (NotificationCompat.Builder) new NotificationCompat.Builder(this)
+                        .setSmallIcon(R.drawable.ic_notification)
+                        // Show controls on lock screen even when user hides sensitive content.
+                        .setVisibility(Notification.VISIBILITY_PUBLIC)
+                        .setContentTitle(getString(R.string.notif_started))
+                        .setContentText(getString(R.string.notif_descr, programName))
+                        .setOngoing(true);
+
         Intent notificationIntent = this.getIntent(); //new Intent(this, hiit.class);
         PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
 
-        //this method is deprecated
-        //Notification notification = new Notification(R.drawable.icon, getString(R.string.notif_started), System.currentTimeMillis());
-        //notification.setLatestEventInfo(context, contentTitle, contentText, contentIntent);
-        //this is the correct way to do it
-        Notification notification = new Notification.Builder(context)
-                .setContentTitle(contentTitle)
-                .setContentText(contentText)
-                .setSmallIcon(R.drawable.icon)
-                        //.setLargeIcon(R.drawable.icon)
-                .setContentIntent(contentIntent)
-                .build(); // available from API level 11 and onwards
+        mBuilder.setContentIntent(contentIntent);
 
-        notification.flags |= Notification.FLAG_ONGOING_EVENT | Notification.FLAG_NO_CLEAR;
-
-        mNotificationManager.notify(NOTIFICATION_STARTED, notification);
+        // mId allows you to update the notification later on.
+        mNotificationManager.notify(NOTIFICATION_STARTED, mBuilder.build());
     }
 
 //    private void _start_notification(String programName) {

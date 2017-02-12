@@ -37,7 +37,7 @@
 
     <Button
         style="@style/Widget.AppCompat.Button.Borderless"
-        android:id="@+id/NDFacebooklikeButton"
+        android:id="@+id/NDFacebookShareButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:drawableLeft="@drawable/facebooksmall"
@@ -55,6 +55,15 @@
         android:layout_marginLeft="5dp"
         android:text="@string/rate_on_market" />
 
+    <Button
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:id="@+id/NDGettingInvolved"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawableLeft="@drawable/ic_language_black_36dp"
+        android:drawablePadding="4dip"
+        android:layout_marginLeft="5dp"
+        android:text="@string/getting_involved" />
 
     <Button
         style="@style/Widget.AppCompat.Button.Borderless"
@@ -65,5 +74,6 @@
         android:drawablePadding="4dip"
         android:layout_marginLeft="5dp"
         android:text="@string/donate" />
+
 
 </LinearLayout>

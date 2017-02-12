@@ -16,6 +16,11 @@
         android:scrollbars="vertical"
         android:childDivider="#FFF"/>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@color/primary"></View>
+    
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -66,4 +71,5 @@
             android:layout_weight="1" />
 
     </LinearLayout>
+
 </LinearLayout>

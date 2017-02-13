@@ -3,7 +3,8 @@
     xmlns:bb="http://schemas.android.com/apk/res/com.ihunda.android.binauralbeat"
     android:id="@+id/inProgramLayout"
     android:orientation="vertical"
-	android:layout_width="fill_parent" android:layout_height="fill_parent">
+	android:layout_width="fill_parent" android:layout_height="fill_parent"
+	android:background="@color/black">
 	<LinearLayout android:layout_width="fill_parent"
 		android:layout_height="wrap_content" android:orientation="horizontal"
 		android:gravity="center_vertical">

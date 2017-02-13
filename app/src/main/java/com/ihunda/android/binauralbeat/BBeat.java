@@ -56,6 +56,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.PowerManager;
 import android.os.SystemClock;
+import android.support.v4.app.ShareCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.NotificationCompat;
@@ -583,6 +584,10 @@ public class BBeat extends AppCompatActivity {
             // In program
             case R.id.pause:
                 pauseOrResume();
+                if (pause_time == -1)
+                    item.setIcon(R.drawable.ic_media_pause);
+                else
+                    item.setIcon(R.drawable.ic_media_play);
                 break;
         }
         return false;
@@ -808,7 +813,7 @@ public class BBeat extends AppCompatActivity {
                         .setCancelable(true)
                         .setPositiveButton(R.string.contact, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
-                                shareWith(getString(R.string.app_name), getString(R.string.share_text));
+                                emailAuthor(getString(R.string.app_name), getString(R.string.share_text));
                             }
                         })
                         .setNeutralButton(R.string.donate, new DialogInterface.OnClickListener() {
@@ -962,6 +967,9 @@ public class BBeat extends AppCompatActivity {
             programFSM = null;
         }
         panic();
+
+        mToolbar.setTitle(getString(R.string.app_name));
+
         goToState(appState.SETUP);
     }
 
@@ -1445,16 +1453,22 @@ public class BBeat extends AppCompatActivity {
         }
     }
 
-    public void shareWith(String subject, String text) {
-        final Intent intent = new Intent(Intent.ACTION_SEND);
-
+    public void emailAuthor(String subject, String text) {
         String aEmailList[] = {CONTACT_EMAIL};
-        intent.setType("text/plain");
-        intent.putExtra(android.content.Intent.EXTRA_EMAIL, aEmailList);
-        intent.putExtra(Intent.EXTRA_SUBJECT, subject);
-        intent.putExtra(Intent.EXTRA_TEXT, text);
 
-        startActivity(Intent.createChooser(intent, getString(R.string.share)));
+        composeEmail(aEmailList, subject, text);
+    }
+
+    private void composeEmail(String[] addresses, String subject, String body) {
+        Intent intent = new Intent(Intent.ACTION_SENDTO);
+        intent.setData(Uri.parse("mailto:")); // only email apps should handle this
+        intent.putExtra(Intent.EXTRA_EMAIL, addresses);
+        intent.putExtra(Intent.EXTRA_SUBJECT, subject);
+        intent.putExtra(Intent.EXTRA_TEXT, body);
+
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            startActivity(intent);
+        }
     }
 
     private static void setInstance(BBeat instance) {

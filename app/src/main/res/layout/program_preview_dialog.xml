@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="280dp"
+    android:layout_height="wrap_content"
+    android:background="@color/grey_200"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:padding="4dp" >
+
+    <LinearLayout
+        android:layout_width="280dp"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:padding="4dp" >
+
+        <android.support.v7.widget.CardView
+            xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/card_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp"
+            card_view:contentPadding="6dp"
+            card_view:cardCornerRadius="4dp"
+            card_view:cardElevation="4dp"
+            >
+
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/p_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:text="@string/hello"
+                    android:textColor="#222"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textStyle="bold"
+                    android:maxLines="1" />
+
+                <TextView
+                    android:id="@+id/p_descr"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/p_name"
+                    android:maxLines="10"
+                    android:padding="2dp"
+                    android:text="@string/hello"
+                    android:textColor="#666"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    />
+
+                <TextView
+                    android:id="@+id/p_author"
+                    android:gravity="center"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/p_descr"
+                    android:layout_alignParentRight="true"
+                    android:text="@string/hello"
+                    android:textColor="#666"
+                    android:layout_margin="5dp"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    />
+
+<!--                <SeekBar
+                    android:id="@+id/p_change_length"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/p_descr"
+                    android:layout_margin="5dp"/>-->
+
+                <TextView
+                    android:id="@+id/p_totaltime"
+                    android:gravity="center"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/p_author"
+                    android:text="@string/time_format"
+                    android:textColor="#666"
+                    android:layout_margin="5dp"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    />
+
+            </RelativeLayout>
+
+        </android.support.v7.widget.CardView>
+
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="10dp" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <Button
+                style="@style/Widget.AppCompat.Button.Colored"
+                android:id="@+id/p_back"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:text="@string/back"
+                android:layout_toLeftOf="@+id/p_start"/>
+
+        <Button
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:id="@+id/p_start"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:text="@string/start"
+            android:layout_alignParentRight="true"/>
+        </RelativeLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

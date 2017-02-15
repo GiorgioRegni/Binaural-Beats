@@ -49,6 +49,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.ColorDrawable;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.net.Uri;
@@ -69,6 +70,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationUtils;
@@ -79,6 +81,7 @@ import android.widget.ExpandableListView;
 import android.widget.ExpandableListView.OnChildClickListener;
 import android.widget.ExpandableListView.OnGroupClickListener;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
@@ -416,6 +419,14 @@ public class BBeat extends AppCompatActivity {
 
 
         // Wire Navigation Drawer Buttons
+
+        ImageButton imb = (ImageButton) findViewById((R.id.NDLogo));
+        imb.setOnClickListener(new OnClickListener() {
+            public void onClick(View v) {
+                _show_tutorial();
+            }
+        });
+
         b = (Button) findViewById((R.id.NDUserGuide));
         b.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
@@ -826,7 +837,7 @@ public class BBeat extends AppCompatActivity {
                 return alert;
             }
 
-            case DIALOG_PROGRAM_PREVIEW: {
+            case DIALOG_PROGRAM_PREVIEW:
                 Program p = _tmp_program_holder;
                 if (p == null) {
                     return null;
@@ -834,29 +845,40 @@ public class BBeat extends AppCompatActivity {
 
                 int length = p.getLength();
 
-                AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.setTitle(p.getName())
-                        .setIcon(android.R.drawable.ic_dialog_info)
-                        .setMessage(p.getDescription() + " " + p.getAuthor() +
-                                        String.format(" %sh%smin.",
-                                                formatTimeNumberwithLeadingZero(length / 60 / 60),
-                                                formatTimeNumberwithLeadingZero((length / 60) % 60))
-                        )
-                        .setCancelable(true)
-                        .setPositiveButton(R.string.start, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                StartPreviouslySelectedProgram();
-                                removeDialog(DIALOG_PROGRAM_PREVIEW);
-                            }
-                        })
-                        .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                removeDialog(DIALOG_PROGRAM_PREVIEW);
-                            }
-                        });
-                AlertDialog alert = builder.create();
-                return alert;
-            }
+                LayoutInflater inflater = LayoutInflater.from(this);
+                final View view = inflater.inflate(R.layout.program_preview_dialog, null);
+
+                final Dialog dialog = new Dialog(this);
+                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+                dialog.setContentView(view);
+
+                Button close = (Button) view.findViewById(R.id.p_back);
+                close.setOnClickListener(new OnClickListener() {
+
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                    }
+                });
+                Button start = (Button) view.findViewById(R.id.p_start);
+                start.setOnClickListener(new OnClickListener() {
+
+                    @Override
+                    public void onClick(View v) {
+                        StartPreviouslySelectedProgram();
+                        dialog.dismiss();
+                    }
+                });
+
+                ((TextView) view.findViewById(R.id.p_name)).setText(p.getName());
+                ((TextView) view.findViewById(R.id.p_descr)).setText(p.getDescription());
+                ((TextView) view.findViewById(R.id.p_author)).setText(p.getAuthor());
+                ((TextView) view.findViewById(R.id.p_totaltime)).setText(String.format(" %sh%smin.",
+                        formatTimeNumberwithLeadingZero(length / 60 / 60),
+                        formatTimeNumberwithLeadingZero((length / 60) % 60)));
+
+                return dialog;
 
             case DIALOG_DONATE: {
                 _track_ui_click("DONATE", "DIALOG");

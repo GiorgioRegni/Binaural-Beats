@@ -9,7 +9,9 @@
     tools:context="com.ihunda.android.binauralbeat.NavigationDrawerFragment">
 
     <!-- TODO: Update blank fragment layout -->
-    <ImageView
+    <ImageButton
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:id="@+id/NDLogo"
         android:layout_width="280dp"
         android:layout_height="140dp"
         android:src="@drawable/icon"

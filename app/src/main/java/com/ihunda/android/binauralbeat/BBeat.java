@@ -846,9 +846,9 @@ public class BBeat extends AppCompatActivity {
                 int length = p.getLength();
 
                 LayoutInflater inflater = LayoutInflater.from(this);
-                final View view = inflater.inflate(R.layout.program_preview_dialog, null);
+                View view = inflater.inflate(R.layout.program_preview_dialog, null);
 
-                final Dialog dialog = new Dialog(this);
+                Dialog dialog = new Dialog(this);
                 dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                 dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
                 dialog.setContentView(view);
@@ -858,7 +858,7 @@ public class BBeat extends AppCompatActivity {
 
                     @Override
                     public void onClick(View v) {
-                        dialog.dismiss();
+                        removeDialog(DIALOG_PROGRAM_PREVIEW);
                     }
                 });
                 Button start = (Button) view.findViewById(R.id.p_start);
@@ -867,7 +867,7 @@ public class BBeat extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         StartPreviouslySelectedProgram();
-                        dialog.dismiss();
+                        removeDialog(DIALOG_PROGRAM_PREVIEW);
                     }
                 });
 

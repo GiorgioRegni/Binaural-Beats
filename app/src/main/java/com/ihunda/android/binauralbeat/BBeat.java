@@ -32,6 +32,7 @@ import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
 import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.widget.ShareDialog;
+import com.google.android.gms.plus.PlusShare;
 import com.ihunda.android.binauralbeat.viz.Black;
 import com.ihunda.android.binauralbeat.viz.GLBlack;
 import com.jjoe64.graphview.GraphView.GraphViewData;
@@ -1654,6 +1655,30 @@ public class BBeat extends AppCompatActivity {
             _track_ui_click("FACEBOOK_SHARE_NOK");
             return false;
         }
+    }
+
+    private boolean displayGooglePlusShare() {
+        PlusShare.Builder builder = new PlusShare.Builder(this);
+
+        // Set call-to-action metadata.
+        builder.addCallToAction(
+                "CREATE_ITEM", /** call-to-action button label */
+                Uri.parse("http://plus.google.com/pages/create"), /** call-to-action url (for desktop use) */
+                "/pages/create" /** call to action deep-link ID (for mobile use), 512 characters or fewer */);
+
+        // Set the content url (for desktop use).
+        builder.setContentUrl(Uri.parse(FORUM_URL));
+
+        // Set the target deep-link ID (for mobile use).
+        //builder.setContentDeepLinkId("/pages/",
+        //        null, null, null);
+
+        // Set the share text.
+        builder.setText("Create your Google+ Page too!");
+
+         startActivityForResult(builder.getIntent(), 0);
+
+        return true;
     }
 
     private long _getClock() {

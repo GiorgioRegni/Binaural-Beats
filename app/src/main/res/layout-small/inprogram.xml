@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:bb="http://schemas.android.com/apk/res/com.ihunda.android.binauralbeat"
+    xmlns:bb="http://schemas.android.com/apk/res-auto"
     android:id="@+id/inProgramLayout"
     android:orientation="vertical"
 	android:layout_width="fill_parent" android:layout_height="fill_parent"

@@ -415,10 +415,6 @@ public class BBeat extends AppCompatActivity {
         NavigationDrawerFragment drawerFragment = (NavigationDrawerFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_nav_drawer);
         drawerFragment.setUp((DrawerLayout) findViewById(R.id.drawer_layout), mToolbar);
 
-        // TODO, remove DIALOG_WELCOME
-        //showDialog(DIALOG_WELCOME);
-
-
         // Wire Navigation Drawer Buttons
 
         ImageButton imb = (ImageButton) findViewById((R.id.NDLogo));

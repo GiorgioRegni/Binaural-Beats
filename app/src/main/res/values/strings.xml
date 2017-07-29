@@ -108,4 +108,5 @@
     <string name="tutorial_5_text">Wear Headphones, select one of builtin presets and relax!</string>
     <string name="tutorial_6_title">Safety</string>
     <string name="tutorial_6_text">Please make sure you are in a safe &amp; relaxed environment.</string>
+    <string name="tutorial_start">Start</string>
 </resources>

@@ -24,7 +24,7 @@ public class TutorialActivity extends AhoyOnboarderActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        AhoyOnboarderCard ahoyOnboarderCard1 = new AhoyOnboarderCard(getString(R.string.welcome), getString(R.string.tutorial_1_text), R.drawable.icon);
+        AhoyOnboarderCard ahoyOnboarderCard1 = new AhoyOnboarderCard(getString(R.string.welcome), getString(R.string.tutorial_1_text), R.drawable.tutorial_1);
         AhoyOnboarderCard ahoyOnboarderCard2 = new AhoyOnboarderCard(
                 getString(R.string.tutorial_2_title),
                 getString(R.string.tutorial_2_text),
@@ -44,7 +44,7 @@ public class TutorialActivity extends AhoyOnboarderActivity {
         AhoyOnboarderCard ahoyOnboarderCard6 = new AhoyOnboarderCard(
                 getString(R.string.tutorial_6_title),
                 getString(R.string.tutorial_6_text),
-                R.drawable.tutorial_2);
+                R.drawable.tutorial_1);
 
         List<AhoyOnboarderCard> pages = new ArrayList<>();
         pages.add(ahoyOnboarderCard1);
@@ -69,7 +69,7 @@ public class TutorialActivity extends AhoyOnboarderActivity {
 
         setColorBackground(colorList);
 
-        setFinishButtonTitle("Start");
+        setFinishButtonTitle(getString(R.string.tutorial_start));
 
         setOnboardPages(pages);
     }

@@ -32,7 +32,7 @@
         android:id="@+id/NDCommunityButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:drawableLeft="@drawable/ic_public_black_36dp"
+        android:drawableLeft="@drawable/ic_people_black_36px"
         android:drawablePadding="4dip"
         android:layout_marginLeft="5dp"
         android:text="@string/user_community" />
@@ -52,7 +52,7 @@
         android:id="@+id/NDRateButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:drawableLeft="@drawable/ic_stars_black_36dp"
+        android:drawableLeft="@drawable/ic_stars_black"
         android:drawablePadding="4dip"
         android:layout_marginLeft="5dp"
         android:text="@string/rate_on_market" />

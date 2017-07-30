@@ -14,7 +14,7 @@
         app:showAsAction="always"></item>
     <item
         android:id="@+id/togglegraphics"
-        android:icon="@drawable/icon_graphics"
+        android:icon="@drawable/ic_visibility_white"
         android:orderInCategory="1"
         android:title="@string/toggle_graphics"
         app:showAsAction="always"></item>

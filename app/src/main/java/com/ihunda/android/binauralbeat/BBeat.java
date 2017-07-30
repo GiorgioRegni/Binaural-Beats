@@ -587,6 +587,11 @@ public class BBeat extends AppCompatActivity {
                 return true;
             }
             case R.id.togglegraphics:
+                if (!vizEnabled)
+                    item.setIcon(R.drawable.ic_visibility_white);
+                else
+                    item.setIcon(R.drawable.ic_visibility_off_white);
+
                 setGraphicsEnabled(!vizEnabled);
                 break;
             // In program

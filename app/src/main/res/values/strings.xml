@@ -18,7 +18,8 @@
 
     <string name="getting_involved">Want to get Involved?</string>
     <string name="getting_involved_dialog">This application is free and open source, anyone can participate and make it better.\n\n
-    I am looking for people to help on graphics, sounds, tone presets, documentation, video tutorial, ideas etc... as well as developers too!</string>
+    I am looking for people to help on graphics, sounds, tone presets, documentation, video tutorial, ideas etc... as well as developers too!\n\n
+    Send me an email to introduce yourself and we can get started,</string>
     <string name="share">Share</string>
     <string name="share_text">Type your message here</string>
     <string name="close">Close</string>

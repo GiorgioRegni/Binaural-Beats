@@ -39,13 +39,13 @@
 
     <Button
         style="@style/Widget.AppCompat.Button.Borderless"
-        android:id="@+id/NDFacebookShareButton"
+        android:id="@+id/NDFacebookLikeButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:drawableLeft="@drawable/facebooksmall"
         android:drawablePadding="4dip"
         android:layout_marginLeft="5dp"
-        android:text="@string/share_facebook" />
+        android:text="@string/like_facebook" />
 
     <Button
         style="@style/Widget.AppCompat.Button.Borderless"

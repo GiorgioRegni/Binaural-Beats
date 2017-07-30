@@ -438,10 +438,10 @@ public class BBeat extends AppCompatActivity {
             }
         });
 
-        b = (Button) findViewById((R.id.NDFacebookShareButton));
+        b = (Button) findViewById((R.id.NDFacebookLikeButton));
         b.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
-                displayFacebookShare();
+                gotoFacebook();
             }
         });
 
@@ -593,9 +593,9 @@ public class BBeat extends AppCompatActivity {
             case R.id.pause:
                 pauseOrResume();
                 if (pause_time == -1)
-                    item.setIcon(R.drawable.ic_media_pause);
+                    item.setIcon(android.R.drawable.ic_media_pause);
                 else
-                    item.setIcon(R.drawable.ic_media_play);
+                    item.setIcon(android.R.drawable.ic_media_play);
                 break;
         }
         return false;
@@ -892,7 +892,12 @@ public class BBeat extends AppCompatActivity {
                         removeDialog(DIALOG_DONATE);
                         displayFacebookShare();
                     }
-                });
+                }).setNegativeButton(R.string.like, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        removeDialog(DIALOG_DONATE);
+                        gotoFacebook();
+                    }
+                });;
 
                 AlertDialog alert = builder.create();
                 return alert;

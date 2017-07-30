@@ -5,7 +5,8 @@
     android:installLocation="auto">
 
 
-    <supports-screens android:smallScreens="false" />
+    <supports-screens android:smallScreens="false"
+        />
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />

@@ -828,13 +828,12 @@ public class BBeat extends AppCompatActivity {
                             public void onClick(DialogInterface dialog, int id) {
                                 emailAuthor(getString(R.string.app_name), getString(R.string.share_text));
                             }
-                        })
-                        .setNeutralButton(R.string.donate, new DialogInterface.OnClickListener() {
+                        }).setNeutralButton(R.string.donate, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
                         showDialog(DIALOG_DONATE);
                     }
-                });
+                 });
                 AlertDialog alert = builder.create();
                 return alert;
             }
@@ -897,12 +896,13 @@ public class BBeat extends AppCompatActivity {
                         removeDialog(DIALOG_DONATE);
                         displayFacebookShare();
                     }
-                }).setNegativeButton(R.string.like, new DialogInterface.OnClickListener() {
+                });
+                /*.setNegativeButton(R.string.like, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         removeDialog(DIALOG_DONATE);
                         gotoFacebook();
                     }
-                });;
+                });;*/
 
                 AlertDialog alert = builder.create();
                 return alert;

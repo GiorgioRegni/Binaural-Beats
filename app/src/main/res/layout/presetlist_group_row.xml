@@ -12,8 +12,8 @@
     <TextView
         android:id="@+id/TVGroup"
         android:paddingRight="10dp"
-        android:paddingTop="1dp"
-        android:paddingBottom="1dp"
+        android:paddingTop="2dp"
+        android:paddingBottom="2dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical|right"

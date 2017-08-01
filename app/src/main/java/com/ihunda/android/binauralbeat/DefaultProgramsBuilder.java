@@ -391,6 +391,27 @@ public class DefaultProgramsBuilder {
 
 		return p;
 	}
+
+	public static Program STIMULATION_EUPHORIA(Program p) {
+		p.setDescription("Infuses a feeling of intense excitement and happiness. " +
+				"use while performing a mindfulness body scan meditation. " +
+				"focusing on your little toe all the way through the entire body, eyes closed."
+		);
+
+		p.setAuthor("@GiorgioRegni");
+
+		p.addPeriod(new Period(600, SoundLoop.WHITE_NOISE, 0.1f, null).
+				addVoice(new BinauralBeatVoice(15f, .9f, 0.65f )).
+				addVoice(new BinauralBeatVoice(.9f,	.9f, 0.65f)).
+				setV(new Black()));
+		p.addPeriod(new Period(600, SoundLoop.WHITE_NOISE, 0.1f, null).
+				addVoice(new BinauralBeatVoice(.9f, 15f, 0.65f )).
+				addVoice(new BinauralBeatVoice(.9f,	.9f, 0.65f)).
+				setV(new Black()));
+
+		return p;
+
+	}
 	
 	public static Program SLEEP_SLEEP_INDUCTION(Program p) {
 		

@@ -38,23 +38,34 @@ public class VoicesPlayer extends Thread {
 
 	public VoicesPlayer()
 	{
-		int minSize = AudioTrack.getMinBufferSize(HZ, AudioFormat.CHANNEL_OUT_STEREO, AudioFormat.ENCODING_PCM_16BIT );        
-		
-		assert(AUDIOBUF_SIZE > minSize);
-		
-		track = new AudioTrack( AudioManager.STREAM_MUSIC, HZ, 
-				AudioFormat.CHANNEL_OUT_STEREO, AudioFormat.ENCODING_PCM_16BIT, 
-				AUDIOBUF_SIZE*2, AudioTrack.MODE_STREAM);
 		sinT = new FloatSinTable(ISCALE);
 		TwoPi = ISCALE;
 		
 		want_shutdown = false;
-		
-		Log.e(LOGVP, String.format("minsize %d bufsize %d ", minSize, AUDIOBUF_SIZE*2));
+
 		setPriority(Thread.MAX_PRIORITY);
 		
 		volume = DEFAULT_VOLUME;
 	}
+
+	private void initTrack() {
+        int minSize = AudioTrack.getMinBufferSize(HZ, AudioFormat.CHANNEL_OUT_STEREO, AudioFormat.ENCODING_PCM_16BIT );
+
+        assert(AUDIOBUF_SIZE > minSize);
+
+        if (track != null) {
+            try {
+                track.release();
+            } catch(Exception e) {
+
+            };
+        }
+
+        track = new AudioTrack( AudioManager.STREAM_MUSIC, HZ,
+                AudioFormat.CHANNEL_OUT_STEREO, AudioFormat.ENCODING_PCM_16BIT,
+                AUDIOBUF_SIZE*2, AudioTrack.MODE_STREAM);
+        Log.e(LOGVP, String.format("minsize %d bufsize %d ", minSize, AUDIOBUF_SIZE*2));
+    }
 	
 	public void playVoices(ArrayList<BinauralBeatVoice> voices) {
 		synchronized (voices) {
@@ -75,8 +86,14 @@ public class VoicesPlayer extends Thread {
 		fade = 1f;
 		
 		playing = true;
-		if (track.getPlayState() != AudioTrack.PLAYSTATE_PLAYING)
-			track.play();
+		if (track.getPlayState() != AudioTrack.PLAYSTATE_PLAYING) {
+			try {
+                track.play();
+            } catch (java.lang.IllegalStateException e) {
+                Log.e(LOGVP, "track.play " + e.toString());
+                initTrack();
+            }
+		}
 	}
 	
 	public void setFreqs(float freqs[]) {

@@ -46,6 +46,8 @@ public class VoicesPlayer extends Thread {
 		setPriority(Thread.MAX_PRIORITY);
 		
 		volume = DEFAULT_VOLUME;
+
+		initTrack();
 	}
 
 	private void initTrack() {

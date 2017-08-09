@@ -478,9 +478,11 @@ public class BBeat extends AppCompatActivity {
     }
 
     private void _show_tutorial() {
+        seenTutorial = true;
+        _save_config();
+
         Intent intent = new Intent(this, TutorialActivity.class);
         startActivity(intent);
-        seenTutorial = true;
     }
 
     /*

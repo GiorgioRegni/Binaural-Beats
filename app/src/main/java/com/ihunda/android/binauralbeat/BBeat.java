@@ -58,10 +58,10 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.PowerManager;
 import android.os.SystemClock;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.ShareCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.app.NotificationCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -83,6 +83,7 @@ import android.widget.ExpandableListView.OnChildClickListener;
 import android.widget.ExpandableListView.OnGroupClickListener;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
@@ -417,7 +418,7 @@ public class BBeat extends AppCompatActivity {
 
         // Wire Navigation Drawer Buttons
 
-        ImageButton imb = (ImageButton) findViewById((R.id.NDLogo));
+        ImageView imb = (ImageView) findViewById((R.id.NDLogo));
         imb.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
                 _show_tutorial();

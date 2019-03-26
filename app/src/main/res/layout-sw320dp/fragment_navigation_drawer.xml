@@ -1,7 +1,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="280dp"
+    android:layout_width="@dimen/dp_280"
     android:layout_height="match_parent"
     android:background="#FFF"
     android:orientation="vertical"
@@ -9,11 +9,11 @@
     tools:context="com.ihunda.android.binauralbeat.NavigationDrawerFragment">
 
     <!-- TODO: Update blank fragment layout -->
-    <ImageButton
+    <ImageView
         style="@style/Widget.AppCompat.Button.Borderless"
         android:id="@+id/NDLogo"
-        android:layout_width="280dp"
-        android:layout_height="140dp"
+        android:layout_width="@dimen/dp_280"
+        android:layout_height="@dimen/dp_130"
         android:src="@drawable/icon"
         android:layout_gravity="center"/>
 
@@ -23,8 +23,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:drawableLeft="@drawable/ic_help_outline_black_36dp"
-        android:drawablePadding="4dip"
-        android:layout_marginLeft="5dp"
+        android:drawablePadding="@dimen/dp_10"
+        android:layout_marginLeft="@dimen/dp_5"
+        android:textSize="@dimen/dp_12"
         android:text="@string/user_guide" />
 
     <Button
@@ -33,8 +34,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:drawableLeft="@drawable/ic_people_black_36px"
-        android:drawablePadding="4dip"
-        android:layout_marginLeft="5dp"
+        android:drawablePadding="@dimen/dp_10"
+        android:layout_marginLeft="@dimen/dp_5"
+        android:textSize="@dimen/dp_12"
+        android:layout_marginTop="@dimen/dp_4"
         android:text="@string/user_community" />
 
     <Button
@@ -43,8 +46,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:drawableLeft="@drawable/facebooksmall"
-        android:drawablePadding="4dip"
-        android:layout_marginLeft="5dp"
+        android:drawablePadding="@dimen/dp_10"
+        android:layout_marginLeft="@dimen/dp_5"
+        android:textSize="@dimen/dp_12"
+        android:layout_marginTop="@dimen/dp_4"
         android:text="@string/like_facebook" />
 
     <Button
@@ -53,8 +58,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:drawableLeft="@drawable/ic_stars_black"
-        android:drawablePadding="4dip"
-        android:layout_marginLeft="5dp"
+        android:drawablePadding="@dimen/dp_10"
+        android:layout_marginLeft="@dimen/dp_5"
+        android:textSize="@dimen/dp_12"
+        android:layout_marginTop="@dimen/dp_4"
         android:text="@string/rate_on_market" />
 
     <Button
@@ -63,8 +70,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:drawableLeft="@drawable/ic_language_black_36dp"
-        android:drawablePadding="4dip"
-        android:layout_marginLeft="5dp"
+        android:drawablePadding="@dimen/dp_10"
+        android:layout_marginLeft="@dimen/dp_5"
+        android:textSize="@dimen/dp_12"
+        android:layout_marginTop="@dimen/dp_4"
         android:text="@string/getting_involved" />
 
     <Button
@@ -73,8 +82,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:drawableLeft="@drawable/ic_card_giftcard_black_36dp"
-        android:drawablePadding="4dip"
-        android:layout_marginLeft="5dp"
+        android:drawablePadding="@dimen/dp_10"
+        android:layout_marginLeft="@dimen/dp_5"
+        android:textSize="@dimen/dp_12"
+        android:layout_marginTop="@dimen/dp_4"
         android:text="@string/donate" />
 
 

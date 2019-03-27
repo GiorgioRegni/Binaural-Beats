@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="@dimen/dp_320"
+    android:layout_height="wrap_content"
+    android:background="@drawable/program_preview_dialog_background"
+    android:gravity="center_horizontal"
+    android:layout_gravity="center_horizontal"
+    android:orientation="vertical"
+    android:padding="@dimen/dp_2" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:padding="@dimen/dp_4" >
+
+        <android.support.v7.widget.CardView
+            xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/card_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/dp_4"
+            card_view:contentPadding="@dimen/dp_6"
+            card_view:cardCornerRadius="4dp"
+            card_view:cardElevation="4dp"
+            >
+
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="@dimen/dp_2">
+
+                <TextView
+                    android:id="@+id/p_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:text="@string/hello"
+                    android:textColor="#222"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textStyle="bold"
+                    android:textSize="@dimen/dp_18"
+                    android:maxLines="1" />
+
+                <TextView
+                    android:id="@+id/p_descr"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/p_name"
+                    android:maxLines="10"
+                    android:padding="@dimen/dp_2"
+                    android:text="@string/hello"
+                    android:textColor="#666"
+                    android:textSize="@dimen/dp_14"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    />
+
+                <TextView
+                    android:id="@+id/p_author"
+                    android:gravity="center"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/p_descr"
+                    android:layout_alignParentRight="true"
+                    android:text="@string/hello"
+                    android:textColor="#666"
+                    android:textSize="@dimen/dp_12"
+                    android:layout_margin="@dimen/dp_5"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    />
+
+<!--                <SeekBar
+                    android:id="@+id/p_change_length"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/p_descr"
+                    android:layout_margin="5dp"/>-->
+
+                <TextView
+                    android:id="@+id/p_totaltime"
+                    android:gravity="right"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/p_author"
+                    android:text="@string/time_format"
+                    android:textColor="#666"
+                    android:textSize="@dimen/dp_12"
+                    android:layout_margin="@dimen/dp_5"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    />
+
+            </RelativeLayout>
+
+        </android.support.v7.widget.CardView>
+
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_10" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <Button
+                style="@style/Widget.AppCompat.Button.Colored"
+                android:id="@+id/p_back"
+                android:layout_width="@dimen/dp_100"
+                android:layout_height="wrap_content"
+                android:text="@string/back"
+                android:textSize="@dimen/dp_15"
+                android:layout_toLeftOf="@+id/p_start"/>
+
+        <Button
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:id="@+id/p_start"
+            android:layout_width="@dimen/dp_100"
+            android:layout_height="wrap_content"
+            android:text="@string/start"
+            android:textSize="@dimen/dp_15"
+            android:layout_alignParentRight="true"/>
+        </RelativeLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

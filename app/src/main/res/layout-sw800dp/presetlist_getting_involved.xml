@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:orientation="horizontal"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+    android:gravity="center"
+    android:padding="@dimen/dp_10"
+  android:layout_gravity="center"
+  >
+    <TextView android:id="@+id/GettingInvolved"
+        android:text="@string/getting_involved"
+         style="@style/TextAppearance.AppCompat.Medium"
+          android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+    android:paddingTop="@dimen/dp_2"
+    android:paddingBottom="@dimen/dp_2"
+    android:paddingLeft="@dimen/dp_5"
+    android:paddingRight="@dimen/dp_5"
+        android:textSize="@dimen/dp_18"
+    android:layout_weight="4"
+	android:layout_gravity="center"
+    />
+    
+    <ImageButton android:id="@+id/GettingInvolvedButton"
+        android:layout_width="@dimen/dp_50"
+        android:layout_height="@dimen/dp_40"
+        android:contentDescription="@string/getting_involved"
+        android:padding="0dip"
+        android:src="@drawable/icon"
+        android:layout_weight="1"
+        android:scaleType="fitXY" />
+    
+</LinearLayout>

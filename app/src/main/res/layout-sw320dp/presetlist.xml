@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout android:id="@+id/presetLayout"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:background="#FFF"
     android:orientation="vertical">
 
     <ExpandableListView
         android:id="@+id/presetListView"
-        android:layout_width="fill_parent"
-        android:layout_height="0dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_weight="4"
         android:background="#EEEEEE"
         android:cacheColorHint="#00000000"
@@ -18,7 +18,7 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="2dp"
+        android:layout_height="@dimen/dp_2"
         android:background="@color/primary"></View>
     
     <LinearLayout
@@ -33,15 +33,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_margin="1dip"
+            android:layout_margin="@dimen/dp_1"
             android:drawableTop="@drawable/ic_card_giftcard_black_36dp"
             android:text="@string/donate"
+            android:textSize="@dimen/dp_12"
             android:layout_weight="1"/>
 
-        <View  android:layout_width="1dip"
+        <View  android:layout_width="@dimen/dp_1"
             android:layout_height="match_parent"
-            android:layout_marginTop="@dimen/bottomMenuSpacerMarginH"
-            android:layout_marginBottom="@dimen/bottomMenuSpacerMarginH"
+            android:layout_marginTop="@dimen/dp_5"
+            android:layout_marginBottom="@dimen/dp_5"
             android:background="@color/primary"/>
 
         <Button
@@ -52,12 +53,13 @@
             android:layout_gravity="center"
             android:drawableTop="@drawable/ic_help_outline_black_36dp"
             android:text="@string/user_guide"
+            android:textSize="@dimen/dp_12"
             android:layout_weight="1" />
 
-        <View  android:layout_width="1dip"
+        <View  android:layout_width="@dimen/dp_1"
             android:layout_height="match_parent"
-            android:layout_marginTop="@dimen/bottomMenuSpacerMarginH"
-            android:layout_marginBottom="@dimen/bottomMenuSpacerMarginH"
+            android:layout_marginTop="@dimen/dp_5"
+            android:layout_marginBottom="@dimen/dp_5"
             android:background="@color/primary"/>
 
         <Button
@@ -68,6 +70,7 @@
             android:layout_gravity="center"
             android:drawableTop="@drawable/ic_people_black_36px"
             android:text="@string/community"
+            android:textSize="@dimen/dp_12"
             android:layout_weight="1" />
 
     </LinearLayout>

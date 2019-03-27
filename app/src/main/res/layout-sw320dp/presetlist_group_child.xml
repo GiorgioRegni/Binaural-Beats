@@ -5,10 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:padding="2dp">
+    android:padding="@dimen/dp_2">
 
     <View
-        android:layout_width="4dp"
+        android:layout_width="@dimen/dp_4"
         android:layout_height="match_parent"></View>
 
 <android.support.v7.widget.CardView
@@ -16,10 +16,10 @@
     android:id="@+id/card_view"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="4dp"
-    card_view:contentPadding="6dp"
+    android:layout_margin="@dimen/dp_5"
+    card_view:contentPadding="@dimen/dp_6"
     card_view:cardCornerRadius="4dp"
-    card_view:cardElevation="4dp"
+    card_view:cardElevation="3dp"
     >
 
 
@@ -35,6 +35,7 @@
             android:singleLine="true"
             android:text="@string/hello"
             android:textColor="#222"
+            android:textSize="@dimen/dp_16"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textStyle="bold" />
 
@@ -44,9 +45,10 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/TVChild"
             android:maxLines="3"
-            android:padding="2dp"
+            android:padding="@dimen/dp_2"
             android:text="@string/hello"
             android:textColor="#666"
+            android:textSize="@dimen/dp_14"
             android:textAppearance="?android:attr/textAppearanceSmall"
             />
 
@@ -57,6 +59,7 @@
             android:layout_alignParentRight="true"
             android:text="@string/hello"
             android:textColor="#666"
+            android:textSize="@dimen/dp_14"
             android:textAppearance="?android:attr/textAppearanceSmall"
             />
 

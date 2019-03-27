@@ -11,9 +11,9 @@
 
     <TextView
         android:id="@+id/TVGroup"
-        android:paddingLeft="12dp"
-        android:paddingTop="3dp"
-        android:paddingBottom="3dp"
+        android:paddingLeft="@dimen/dp_12"
+        android:paddingTop="@dimen/dp_3"
+        android:paddingBottom="@dimen/dp_3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical|left"
@@ -21,6 +21,7 @@
         android:textColor="#FFF"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textStyle="bold"
+        android:textSize="@dimen/dp_18"
         android:background="@color/primary_dark"/>
 
 <!--

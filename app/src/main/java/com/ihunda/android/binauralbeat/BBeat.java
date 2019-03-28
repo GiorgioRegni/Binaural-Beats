@@ -482,7 +482,7 @@ public class BBeat extends AppCompatActivity {
         seenTutorial = true;
         _save_config();
 
-        Intent intent = new Intent(this, TutorialActivity.class);
+        Intent intent = new Intent(this, TutorialSliderActivity.class);
         startActivity(intent);
     }
 

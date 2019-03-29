@@ -6,12 +6,12 @@
     android:background="@color/primary"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <android.support.v4.view.ViewPager
+    <com.ihunda.android.binauralbeat.CustomViewPager
         android:id="@+id/pager_tutorial_slider"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginBottom="@dimen/dp_10"
-        android:layout_weight="1"></android.support.v4.view.ViewPager>
+        android:layout_weight="1"></com.ihunda.android.binauralbeat.CustomViewPager>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_70"

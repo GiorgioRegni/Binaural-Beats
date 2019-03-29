@@ -893,6 +893,7 @@ public class BBeat extends AppCompatActivity {
                         .setPositiveButton(R.string.donate, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 donatePayPalOnClick();
+
                             }
                         }).setNeutralButton(R.string.share_facebook, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {

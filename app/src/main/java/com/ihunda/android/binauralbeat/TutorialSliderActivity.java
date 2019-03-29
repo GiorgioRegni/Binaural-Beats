@@ -21,7 +21,7 @@ import com.ihunda.android.binauralbeat.viz.Image;
 
 public class TutorialSliderActivity extends AppCompatActivity {
     ImageView ivPrev,ivNext;
-    ViewPager viewPager;
+    CustomViewPager viewPager;
     CircleIndicatorView circleIndicatorView;
     CardView cardViewStart;
     ShadowTransformer shadowTransformer;
@@ -34,7 +34,7 @@ public class TutorialSliderActivity extends AppCompatActivity {
 
     public void initialization()
     {
-        viewPager = (ViewPager)findViewById(R.id.pager_tutorial_slider);
+        viewPager = (CustomViewPager) findViewById(R.id.pager_tutorial_slider);
         ivPrev = (ImageView)findViewById(R.id.image_tutorial_slider_prev);
         ivNext = (ImageView)findViewById(R.id.image_tutorial_slider_next);
         cardViewStart = (CardView)findViewById(R.id.card_start);
@@ -46,12 +46,19 @@ public class TutorialSliderActivity extends AppCompatActivity {
 
         TutorialPagerAdapter tutorialPagerAdapter = new TutorialPagerAdapter(getSupportFragmentManager());
         viewPager.setAdapter(tutorialPagerAdapter);
+        //TutorialSliderAdapter tutorialSliderAdapter = new TutorialSliderAdapter(this);
+       // viewPager.setAdapter(tutorialSliderAdapter);
+
+        viewPager.setAnimationEnabled(true);
+        viewPager.setFadeEnabled(true);
+        viewPager.setFadeFactor(0.6f);
 
         circleIndicatorView.setCurrentPage(viewPager.getCurrentItem());
 
         viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
 
             }
 
@@ -99,6 +106,13 @@ public class TutorialSliderActivity extends AppCompatActivity {
             public void onClick(View v) {
                 int pos = viewPager.getCurrentItem();
                 viewPager.setCurrentItem(pos+1);
+            }
+        });
+
+        cardViewStart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
             }
         });
 

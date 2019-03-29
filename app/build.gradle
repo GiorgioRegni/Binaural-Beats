@@ -69,6 +69,7 @@ dependencies {
     //compile 'com.codemybrainsout.onboarding:onboarder:1.0.2'
    // implementation 'com.github.GiorgioRegni:ahoy-onboarding:1.0.2'
     implementation 'com.github.GiorgioRegni:ahoy-onboarding:v1.1'
+    implementation 'com.android.billingclient:billing:1.2.2'
 }
 
 

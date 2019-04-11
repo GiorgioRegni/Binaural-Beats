@@ -20,5 +20,10 @@
     <item name="android:textColor">#FFF</item>
     <item name="android:textStyle">italic</item>
   </style>
+    <style name="RadioButtonStyle" parent="Theme.AppCompat.Light">
+        <item name="colorControlNormal">@color/black</item>
+        <item name="colorControlActivated">@color/primary_dark</item>
+        <item name="colorControlHighlight">@color/primary_dark</item>
+    </style>
 </resources>
 

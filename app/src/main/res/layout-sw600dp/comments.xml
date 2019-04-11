@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/presetComment"
+    android:orientation="vertical"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:background="@drawable/background">
+	
+    	<LinearLayout
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:orientation="horizontal"
+			android:gravity="center_vertical">
+		<Button
+			android:text="@string/back"
+			android:id="@+id/CommentBack"
+			android:layout_width="@dimen/dp_75"
+			android:textSize="@dimen/dp_15"
+			android:layout_height="wrap_content"
+			></Button>
+		</LinearLayout> 
+
+	<WebView android:id="@+id/commentView"
+		android:layout_width="fill_parent"
+		android:layout_height="fill_parent"
+		android:layout_weight="1" />
+
+</LinearLayout>

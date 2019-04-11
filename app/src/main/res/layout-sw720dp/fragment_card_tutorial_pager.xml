@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+   >
+<android.support.v7.widget.CardView
+    android:id="@+id/card_tutorial_slider_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:cardCornerRadius="10dp"
+    app:cardUseCompatPadding="true"
+    app:cardBackgroundColor="@color/primary_dark">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingLeft="@dimen/dp_10"
+        android:gravity="center"
+        android:paddingRight="@dimen/dp_10"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/image_row_tutorial_pager"
+            android:layout_width="@dimen/dp_130"
+            android:layout_height="@dimen/dp_130"
+            android:layout_gravity="center_horizontal"
+            app:srcCompat="@drawable/tutorial_1" />
+        <TextView
+            android:id="@+id/text_row_tutorial_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:textSize="@dimen/dp_25"
+            android:gravity="center"
+            android:layout_marginTop="@dimen/dp_25"
+            android:text="Welcome" />
+
+        <TextView
+            android:id="@+id/text_row_tutorial_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/dp_16"
+            android:textColor="@color/grey_200"
+            android:gravity="center"
+            android:layout_marginTop="@dimen/dp_10"
+            android:text="Binaural Beats Therapy is a free and open source mobile app!" />
+    </LinearLayout>
+</android.support.v7.widget.CardView>
+</FrameLayout>

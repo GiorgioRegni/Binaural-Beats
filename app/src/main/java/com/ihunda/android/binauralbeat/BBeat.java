@@ -23,6 +23,14 @@ package com.ihunda.android.binauralbeat;
  *   BBT project home is at https://github.com/GiorgioRegni/Binaural-Beats
  */
 
+import com.android.billingclient.api.BillingClient;
+import com.android.billingclient.api.BillingClientStateListener;
+import com.android.billingclient.api.BillingFlowParams;
+import com.android.billingclient.api.Purchase;
+import com.android.billingclient.api.PurchasesUpdatedListener;
+import com.android.billingclient.api.SkuDetails;
+import com.android.billingclient.api.SkuDetailsParams;
+import com.android.billingclient.api.SkuDetailsResponseListener;
 import com.facebook.share.widget.LikeView;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
@@ -35,6 +43,7 @@ import com.facebook.share.widget.ShareDialog;
 import com.google.android.gms.plus.PlusShare;
 import com.ihunda.android.binauralbeat.viz.Black;
 import com.ihunda.android.binauralbeat.viz.GLBlack;
+import com.ihunda.android.binauralbeat.viz.Image;
 import com.jjoe64.graphview.GraphView.GraphViewData;
 import com.jjoe64.graphview.GraphView.GraphViewSeries;
 import com.jjoe64.graphview.LineGraphView;
@@ -58,10 +67,11 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.PowerManager;
 import android.os.SystemClock;
+import android.support.annotation.Nullable;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.ShareCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.app.NotificationCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -83,7 +93,10 @@ import android.widget.ExpandableListView.OnChildClickListener;
 import android.widget.ExpandableListView.OnGroupClickListener;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
@@ -94,13 +107,17 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
-public class BBeat extends AppCompatActivity {
+public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener, BillingClientStateListener {
 
     enum eState {
         START,
@@ -237,6 +254,13 @@ public class BBeat extends AppCompatActivity {
     /**
      * Called when the activity is first created.
      */
+
+    //In app purchase objects declaration
+    BillingClient billingClient;
+    List<SkuDetails> productSkuList = new ArrayList<>();
+    String selectedTag="";
+    SharedPref sharedPref = SharedPref.getInstance();
+    String donationAmount = "";
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -250,6 +274,10 @@ public class BBeat extends AppCompatActivity {
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
 
         mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+
+        sharedPref.initialize(this);
+        //in app purchase billing client initialization
+        billingClient = BillingClient.newBuilder(this).setListener(this).build();
         
         /*
          * Sets up power management, device should not go to sleep during a program
@@ -417,7 +445,7 @@ public class BBeat extends AppCompatActivity {
 
         // Wire Navigation Drawer Buttons
 
-        ImageButton imb = (ImageButton) findViewById((R.id.NDLogo));
+        ImageView imb = (ImageView) findViewById((R.id.NDLogo));
         imb.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
                 _show_tutorial();
@@ -481,7 +509,7 @@ public class BBeat extends AppCompatActivity {
         seenTutorial = true;
         _save_config();
 
-        Intent intent = new Intent(this, TutorialActivity.class);
+        Intent intent = new Intent(this, TutorialSliderActivity.class);
         startActivity(intent);
     }
 
@@ -886,19 +914,24 @@ public class BBeat extends AppCompatActivity {
             case DIALOG_DONATE: {
                 _track_ui_click("DONATE", "DIALOG");
 
-                AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.setMessage(R.string.donate_text)
-                        .setCancelable(true)
-                        .setPositiveButton(R.string.donate, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                donatePayPalOnClick();
-                            }
-                        }).setNeutralButton(R.string.share_facebook, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        removeDialog(DIALOG_DONATE);
-                        displayFacebookShare();
-                    }
-                });
+                if(!sharedPref.getBoolean(AppConstants.ISDONATIONCOMPLETED))
+                {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                    builder.setMessage(R.string.donate_text)
+                            .setCancelable(true)
+                            .setPositiveButton(R.string.donate, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    // donatePayPalOnClick();
+                                    //start billing client connection
+                                    billingClient.startConnection(BBeat.this);
+
+                                }
+                            }).setNeutralButton(R.string.share_facebook, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            removeDialog(DIALOG_DONATE);
+                            displayFacebookShare();
+                        }
+                    });
                 /*.setNegativeButton(R.string.like, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         removeDialog(DIALOG_DONATE);
@@ -906,8 +939,10 @@ public class BBeat extends AppCompatActivity {
                     }
                 });;*/
 
-                AlertDialog alert = builder.create();
-                return alert;
+                    AlertDialog alert = builder.create();
+                    return alert;
+                }
+
             }
         }
 
@@ -1692,4 +1727,141 @@ public class BBeat extends AppCompatActivity {
     private long _getClock() {
         return SystemClock.elapsedRealtime();
     }
+
+    @Override
+    public void onPurchasesUpdated(int responseCode, @Nullable List<Purchase> purchases) {
+        //after paymnet success
+        if (responseCode == BillingClient.BillingResponse.OK
+                && purchases != null) {
+            for (Purchase purchase : purchases) {
+                String purchaseToken = purchase.getPurchaseToken();
+                String purchaseSku = purchase.getSku();
+                long purchaseTime = purchase.getPurchaseTime();
+                sharedPref.putBoolean(AppConstants.ISDONATIONCOMPLETED,true);
+                sharedPref.putLongValue(AppConstants.DONATIONPURCHASETIME,purchaseTime);
+                sharedPref.putData(AppConstants.DONATIONPURCHASETOKEN,purchaseToken);
+                sharedPref.putData(AppConstants.DONATIONPURCHASESKU,purchaseSku);
+                sharedPref.putData(AppConstants.DONATIONAMOUNT,donationAmount);
+                Date c = Calendar.getInstance().getTime();
+                SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
+                String formattedDate = df.format(c);
+                sharedPref.putData(AppConstants.DONATIONDATE,formattedDate);
+            }
+        } else if (responseCode == BillingClient.BillingResponse.USER_CANCELED) {
+            // Handle an error caused by a user cancelling the purchase flow.
+        } else {
+            // Handle any other error codes.
+        }
+    }
+    @Override
+    public void onBillingSetupFinished(int responseCode) {
+        //billing client is ready
+        if(responseCode== BillingClient.BillingResponse.OK)
+        {
+            getAllProductsList();
+        }
+    }
+
+    @Override
+    public void onBillingServiceDisconnected() {
+        //if client is disconnected restart it
+        billingClient.startConnection(this);
+    }
+
+    public void getAllProductsList()
+    {
+        List<String> skuList = new ArrayList<>();
+        skuList.add("don_10");
+        skuList.add("don_50");
+        skuList.add("don_100");
+        SkuDetailsParams.Builder params = SkuDetailsParams.newBuilder();
+        params.setSkusList(skuList).setType(BillingClient.SkuType.INAPP);
+        billingClient.querySkuDetailsAsync(params.build(), new SkuDetailsResponseListener() {
+            @Override
+            public void onSkuDetailsResponse(int responseCode, List<SkuDetails> skuDetailsList) {
+                if(responseCode== BillingClient.BillingResponse.OK && skuDetailsList!=null)
+                {
+                    for(SkuDetails skuDetails:skuDetailsList)
+                    {
+                        productSkuList.add(skuDetails);
+                    }
+                    showDialogWithAllProducts(productSkuList);
+                }
+            }
+        });
+    }
+
+    public void showDialogWithAllProducts(final List<SkuDetails> list)
+    {
+        final Dialog dialog = new Dialog(BBeat.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.dialog_show_sku_products_list);
+        dialog.show();
+
+        ImageView ivClose = (ImageView)dialog.findViewById(R.id.image_dialog_inapp_close);
+        RadioGroup radioGroup = (RadioGroup)dialog.findViewById(R.id.radiogroup_dialog_inappproducts);
+        RadioButton radioButton1 = (RadioButton)dialog.findViewById(R.id.radioButton1);
+        radioButton1.setTag("0");
+        RadioButton radioButton2 = (RadioButton)dialog.findViewById(R.id.radioButton2);
+        radioButton2.setTag("1");
+        RadioButton radioButton3 = (RadioButton)dialog.findViewById(R.id.radioButton3);
+        radioButton3.setTag("2");
+        TextView tvDonate = (TextView)dialog.findViewById(R.id.text_donate);
+
+        radioButton1.setText(list.get(0).getPrice());
+        radioButton2.setText(list.get(1).getPrice());
+        radioButton3.setText(list.get(2).getPrice());
+
+        radioButton1.setChecked(true);
+        selectedTag = "0";
+        donationAmount = radioButton1.getText().toString();
+
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                RadioButton radioButton = (RadioButton)dialog.findViewById(checkedId);
+                selectedTag = radioButton.getTag().toString();
+                donationAmount = radioButton.getText().toString();
+            }
+        });
+
+        ivClose.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        tvDonate.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(selectedTag.equalsIgnoreCase(""))
+                {
+                    Toast.makeText(BBeat.this, "Please select donation amount.", Toast.LENGTH_SHORT).show();
+                }else {
+                    dialog.dismiss();
+                    switch (selectedTag)
+                    {
+                        case "0":
+                            startBillingFlow(list.get(0));
+                            break;
+                        case "1":
+                            startBillingFlow(list.get(1));
+                            break;
+                        case "2":
+                            startBillingFlow(list.get(2));
+                            break;
+
+                    }
+                }
+            }
+        });
+    }
+
+    public void startBillingFlow(SkuDetails skuDetails)
+    {
+        BillingFlowParams billingFlowParams = BillingFlowParams.newBuilder().setSkuDetails(skuDetails).build();
+        billingClient.launchBillingFlow(BBeat.this,billingFlowParams);
+    }
+
 }

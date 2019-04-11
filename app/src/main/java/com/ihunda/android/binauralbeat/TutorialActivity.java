@@ -58,8 +58,8 @@ public class TutorialActivity extends AhoyOnboarderActivity {
             p.setBackgroundColor(R.color.black_transparent);
             p.setTitleColor(R.color.white);
             p.setDescriptionColor(R.color.grey_200);
-            p.setTitleTextSize(dpToPixels(10, this));
-            p.setDescriptionTextSize(dpToPixels(6, this));
+            p.setTitleTextSize(dpToPixels((int) getResources().getDimension(R.dimen.dp_6), this));
+            p.setDescriptionTextSize(dpToPixels((int) getResources().getDimension(R.dimen.dp_5), this));
         }
 
         List<Integer> colorList = new ArrayList<>();

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar"></include>
+
+<android.support.v4.widget.DrawerLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/drawer_layout">
+
+        <FrameLayout
+            android:id="@+id/setupFrame"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            >
+
+            <include
+                layout="@layout/presetlist"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <include
+                layout="@layout/inprogram"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+        </FrameLayout>
+
+    <fragment
+        android:id="@+id/fragment_nav_drawer"
+        android:layout_width="@dimen/dp_280"
+        android:layout_height="match_parent"
+        app:layout="@layout/fragment_navigation_drawer"
+        android:layout_gravity="start"
+        android:name="com.ihunda.android.binauralbeat.NavigationDrawerFragment"
+        tools:layout="@layout/fragment_navigation_drawer">
+
+    </fragment>
+
+</android.support.v4.widget.DrawerLayout>
+    </LinearLayout>

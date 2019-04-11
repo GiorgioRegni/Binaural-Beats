@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/primary"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.ihunda.android.binauralbeat.CustomViewPager
+        android:id="@+id/pager_tutorial_slider"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="@dimen/dp_10"
+        android:layout_weight="1"></com.ihunda.android.binauralbeat.CustomViewPager>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_70"
+        android:layout_marginLeft="@dimen/dp_20"
+        android:layout_marginRight="@dimen/dp_20"
+        android:orientation="horizontal">
+        <ImageView
+            android:id="@+id/image_tutorial_slider_prev"
+            android:layout_width="@dimen/dp_30"
+            android:layout_height="@dimen/dp_30"
+            android:background="@drawable/background_round_image"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/ic_chevron_left" />
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:layout_gravity="center_vertical"
+            >
+        <com.codemybrainsout.onboarder.views.CircleIndicatorView
+            android:id="@+id/circle_indicator_pager"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"/>
+            <android.support.v7.widget.CardView
+                android:id="@+id/card_start"
+                android:layout_width="@dimen/dp_100"
+                android:layout_height="@dimen/dp_40"
+                app:cardCornerRadius="@dimen/dp_20"
+                app:cardElevation="3dp"
+                android:visibility="gone"
+                android:layout_gravity="center"
+                app:cardBackgroundColor="#ef4a34">
+                <TextView
+                    android:id="@+id/text_row_tutorial_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/dp_16"
+                    android:layout_gravity="center"
+                    android:text="Start" />
+            </android.support.v7.widget.CardView>
+        </FrameLayout>
+        <ImageView
+            android:id="@+id/image_tutorial_slider_next"
+            android:layout_width="@dimen/dp_30"
+            android:layout_height="@dimen/dp_30"
+            android:layout_gravity="center_vertical"
+            android:background="@drawable/background_round_image"
+            android:src="@drawable/ic_chevron_right" />
+    </LinearLayout>
+
+</LinearLayout>

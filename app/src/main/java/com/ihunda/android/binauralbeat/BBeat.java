@@ -921,7 +921,6 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
                             .setCancelable(true)
                             .setPositiveButton(R.string.donate, new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
-                                    // donatePayPalOnClick();
                                     //start billing client connection
                                     billingClient.startConnection(BBeat.this);
 
@@ -1574,42 +1573,6 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
 
         public static final boolean DEBUG = false;
 
-        /**
-         * PayPal
-         */
-
-        public static final String PAYPAL_USER = "giorgio.paypal@ihunda.com";
-        public static final String PAYPAL_ITEM_NAME = "Binaural Beats Therapy Donation";
-        public static final String PAYPAL_CURRENCY_CODE = "USD";
-    }
-
-    /**
-     * Donate button with PayPal by opening browser with defined URL For possible parameters see:
-     * https://cms.paypal.com/us/cgi-bin/?cmd=_render-content&content_ID=developer/e_howto_html_Appx_websitestandard_htmlvariables
-     */
-    public void donatePayPalOnClick() {
-        Uri.Builder uriBuilder = new Uri.Builder();
-        uriBuilder.scheme("https").authority("www.paypal.com").path("cgi-bin/webscr");
-        uriBuilder.appendQueryParameter("cmd", "_donations");
-        uriBuilder.appendQueryParameter("business", DonationsConfiguration.PAYPAL_USER);
-        uriBuilder.appendQueryParameter("lc", "US");
-        uriBuilder.appendQueryParameter("item_name", DonationsConfiguration.PAYPAL_ITEM_NAME);
-        uriBuilder.appendQueryParameter("no_note", "0");
-        uriBuilder.appendQueryParameter("cn", "Message to Developer");
-        uriBuilder.appendQueryParameter("no_shipping", "1");
-        uriBuilder.appendQueryParameter("currency_code",
-                DonationsConfiguration.PAYPAL_CURRENCY_CODE);
-        // uriBuilder.appendQueryParameter("bn", "PP-DonationsBF:btn_donate_LG.gif:NonHosted");
-        Uri payPalUri = uriBuilder.build();
-
-        if (DonationsConfiguration.DEBUG) {
-            Log.d(DonationsConfiguration.TAG,
-                    "Opening the browser with the url: " + payPalUri.toString());
-        }
-
-        // Start your favorite browser
-        Intent viewIntent = new Intent(Intent.ACTION_VIEW, payPalUri);
-        startActivity(viewIntent);
     }
 
     synchronized Tracker getTracker(TrackerName trackerId) {

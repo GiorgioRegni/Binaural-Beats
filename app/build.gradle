@@ -34,8 +34,15 @@ android {
         applicationId "com.ihunda.android.binauralbeat"
         minSdkVersion 16
         targetSdkVersion 28
-        versionCode 57
-	    versionName "5.7"
+        versionCode 60
+	    versionName "6.0"
+    }
+
+    lintOptions {
+        //checkReleaseBuilds false
+        // Or, if you prefer, you can continue to check for errors in release builds,
+        // but continue the build even when errors are found:
+        abortOnError false
     }
     buildTypes {
         debug {

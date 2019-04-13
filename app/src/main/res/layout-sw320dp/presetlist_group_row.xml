@@ -11,18 +11,18 @@
 
     <TextView
         android:id="@+id/TVGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/primary_dark"
+        android:gravity="center_vertical|left"
         android:paddingLeft="@dimen/dp_12"
         android:paddingTop="@dimen/dp_3"
         android:paddingBottom="@dimen/dp_3"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical|left"
         android:text="@string/hello"
-        android:textColor="#FFF"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textStyle="bold"
+        android:textColor="#FFF"
         android:textSize="@dimen/dp_18"
-        android:background="@color/primary_dark"/>
+        android:textStyle="bold" />
 
 <!--
 <TextView xmlns:android="http://schemas.android.com/apk/res/android"

@@ -110,6 +110,8 @@ import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -257,7 +259,7 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
 
     //In app purchase objects declaration
     BillingClient billingClient;
-    List<SkuDetails> productSkuList = new ArrayList<>();
+    List<SkuDetails> productSkuList;
     String selectedTag="";
     SharedPref sharedPref = SharedPref.getInstance();
     String donationAmount = "";
@@ -1719,7 +1721,7 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
     @Override
     public void onBillingSetupFinished(int responseCode) {
         //billing client is ready
-        if(responseCode== BillingClient.BillingResponse.OK)
+        //if(responseCode== BillingClient.BillingResponse.OK)
         {
             getAllProductsList();
         }
@@ -1744,10 +1746,19 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
             public void onSkuDetailsResponse(int responseCode, List<SkuDetails> skuDetailsList) {
                 if(responseCode== BillingClient.BillingResponse.OK && skuDetailsList!=null)
                 {
+                    productSkuList = new ArrayList<>();
                     for(SkuDetails skuDetails:skuDetailsList)
                     {
                         productSkuList.add(skuDetails);
                     }
+
+                    Collections.sort(productSkuList, new Comparator<SkuDetails>() {
+                        @Override
+                        public int compare(SkuDetails lhs, SkuDetails rhs) {
+                            return (int) (lhs.getPriceAmountMicros() - rhs.getPriceAmountMicros());
+                        }
+                    });
+
                     showDialogWithAllProducts(productSkuList);
                 }
             }
@@ -1772,12 +1783,18 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
         TextView tvDonate = (TextView)dialog.findViewById(R.id.text_donate);
 
         radioButton1.setText(list.get(0).getPrice());
+        ((TextView) dialog.findViewById(R.id.title1)).setText(list.get(0).getTitle());
+        ((TextView) dialog.findViewById(R.id.description1)).setText(list.get(0).getDescription());
         radioButton2.setText(list.get(1).getPrice());
+        ((TextView) dialog.findViewById(R.id.title2)).setText(list.get(1).getTitle());
+        ((TextView) dialog.findViewById(R.id.description2)).setText(list.get(1).getDescription());
         radioButton3.setText(list.get(2).getPrice());
+        ((TextView) dialog.findViewById(R.id.title3)).setText(list.get(2).getTitle());
+        ((TextView) dialog.findViewById(R.id.description3)).setText(list.get(2).getDescription());
 
-        radioButton1.setChecked(true);
-        selectedTag = "0";
-        donationAmount = radioButton1.getText().toString();
+        radioGroup.check(R.id.radioButton2);
+        selectedTag = radioButton2.getTag().toString();
+        donationAmount = radioButton2.getText().toString();
 
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -1798,24 +1815,20 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
         tvDonate.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(selectedTag.equalsIgnoreCase(""))
-                {
-                    Toast.makeText(BBeat.this, "Please select donation amount.", Toast.LENGTH_SHORT).show();
-                }else {
-                    dialog.dismiss();
-                    switch (selectedTag)
-                    {
-                        case "0":
-                            startBillingFlow(list.get(0));
-                            break;
-                        case "1":
-                            startBillingFlow(list.get(1));
-                            break;
-                        case "2":
-                            startBillingFlow(list.get(2));
-                            break;
 
-                    }
+                dialog.dismiss();
+                switch (selectedTag)
+                {
+                    case "0":
+                        startBillingFlow(list.get(0));
+                        break;
+                    case "1":
+                        startBillingFlow(list.get(1));
+                        break;
+                    case "2":
+                        startBillingFlow(list.get(2));
+                        break;
+
                 }
             }
         });

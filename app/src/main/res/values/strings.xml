@@ -112,4 +112,6 @@
     <string name="tutorial_6_text">Please make sure you are in a safe &amp; relaxed environment.</string>
     <string name="tutorial_start">Start</string>
     <string name="like_facebook">Like on Facebook</string>
+    <string name="dialog_donate_thank">Thank you for your help, it\'s greatly appreciated.</string>
+    <string name="dialog_donation_title">Support Binaural Beats now</string>
 </resources>

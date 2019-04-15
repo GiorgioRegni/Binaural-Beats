@@ -113,5 +113,8 @@
     <string name="tutorial_start">Start</string>
     <string name="like_facebook">Like on Facebook</string>
     <string name="dialog_donate_thank">Thank you for your help, it\'s greatly appreciated.</string>
-    <string name="dialog_donation_title">Support Binaural Beats now</string>
+    <string name="dialog_donation_title">Please pick a donation level</string>
+    <string name="don_10_level">Supporter</string>
+    <string name="don_50_level">Ambassador</string>
+    <string name="don_100_level">Spiritual Leader</string>
 </resources>

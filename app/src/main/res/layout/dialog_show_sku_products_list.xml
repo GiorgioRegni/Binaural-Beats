@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="@dimen/dp_280"
+    android:layout_height="wrap_content"
+    app:cardElevation="3dp"
+    android:layout_gravity="center"
+    app:cardCornerRadius="5dp">
+
+    <ImageView
+        android:id="@+id/image_dialog_inapp_close"
+        android:layout_width="@dimen/dp_25"
+        android:layout_height="@dimen/dp_25"
+        android:src="@drawable/ic_cancel"
+        android:layout_gravity="right"
+        android:layout_marginRight="@dimen/dp_5"
+        android:layout_marginTop="@dimen/dp_5"
+        android:tint="@color/primary_dark"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="@dimen/dp_10">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:gravity="center"
+            android:text="@string/dialog_donation_title"
+            android:textColor="@color/black"
+            android:textSize="@dimen/dp_16"
+            android:textStyle="bold" />
+
+        <ListView android:id="@+id/dialog_show_sku_listview"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:scrollbars="vertical"
+            android:layout_marginLeft="@dimen/dp_10"
+            android:layout_marginTop="@dimen/dp_15"
+            android:choiceMode="singleChoice"
+            android:listSelector="@color/primary_light">
+        </ListView>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/dialog_donate_thank" />
+
+    </LinearLayout>
+</android.support.v7.widget.CardView>

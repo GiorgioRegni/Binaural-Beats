@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- A CardView that contains a TextView -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="@dimen/dp_2">
+
+    <View
+        android:layout_width="@dimen/dp_4"
+        android:layout_height="match_parent"></View>
+
+<android.support.v7.widget.CardView
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/card_view"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/dp_5"
+    card_view:contentPadding="@dimen/dp_6"
+    card_view:cardCornerRadius="4dp"
+    card_view:cardElevation="3dp"
+    >
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/TVChild"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:text="@string/hello"
+            android:textColor="#222"
+            android:textSize="@dimen/dp_16"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/TVChildDescription"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/TVChild"
+            android:maxLines="3"
+            android:padding="@dimen/dp_2"
+            android:text="@string/hello"
+            android:textColor="#666"
+            android:textSize="@dimen/dp_14"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            />
+
+        <TextView
+            android:id="@+id/TVChildTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:text="@string/hello"
+            android:textColor="#666"
+            android:textSize="@dimen/dp_14"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            />
+
+    </RelativeLayout>
+
+</android.support.v7.widget.CardView>
+</LinearLayout>

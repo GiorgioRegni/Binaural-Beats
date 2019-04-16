@@ -98,12 +98,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -254,7 +251,7 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
     BillingClient mBillingClient;
     List<SkuDetails> mProductSkuList;
     SharedPref mSharedPref = SharedPref.getInstance();
-    String mDonationSku = null;
+    String mDonationLevel = null;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -490,12 +487,13 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
         });
 
         _load_config();
-        _updateDonationLevel();
 
         if (!seenTutorial)
             _show_tutorial();
 
         initSounds();
+
+        mBillingClient.startConnection(BBeat.this);
 
         state = appState.NONE;
         goToState(appState.SETUP);
@@ -917,7 +915,7 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
                         .setPositiveButton(R.string.donate, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 //start billing client connection
-                                mBillingClient.startConnection(BBeat.this);
+                                getAllProductsList();
 
                             }
                         }).setNeutralButton(R.string.share_facebook, new DialogInterface.OnClickListener() {
@@ -1687,58 +1685,72 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
 
 
     private boolean _isDonated() {
-        return (mDonationSku != null);
+        return (mDonationLevel != null);
     }
 
     private void _updateDonationLevel() {
-        mDonationSku = null;
+        mDonationLevel = null;
 
         String sku = mSharedPref.getString(AppConstants.DONATIONPURCHASESKU);
+
+        if (sku == "" || sku == null) {
+            // try to sync up purchase history of that user
+            Purchase.PurchasesResult purchasesRes = mBillingClient.queryPurchases(BillingClient.SkuType.INAPP);
+            if (purchasesRes.getResponseCode() == BillingClient.BillingResponse.OK) {
+                List<Purchase> purchasesList = purchasesRes.getPurchasesList();
+
+                for (Purchase purchase : purchasesList) {
+                    //String purchaseToken = purchase.getPurchaseToken();
+                    String purchaseSku = purchase.getSku();
+                    //long purchaseTime = purchase.getPurchaseTime();
+                    mSharedPref.putData(AppConstants.DONATIONPURCHASESKU, purchaseSku);
+                    sku = purchaseSku;
+                }
+            }
+        }
+
         switch (sku) {
             case "don_10":
-                mDonationSku = getString(R.string.don_10_level);
+                mDonationLevel = getString(R.string.don_10_level);
                 break;
             case "don_50":
-                mDonationSku = getString(R.string.don_50_level);
+                mDonationLevel = getString(R.string.don_50_level);
                 break;
             case "don_100":
-                mDonationSku = getString(R.string.don_100_level);
+                mDonationLevel = getString(R.string.don_100_level);
                 break;
         }
 
-        if (mDonationSku != null) {
+        if (mDonationLevel != null) {
             Button b;
             b = (Button) findViewById((R.id.donateButton));
-            b.setText(mDonationSku);
+            b.setText(mDonationLevel);
             b = (Button) findViewById((R.id.NDDonateButton));
-            b.setText(mDonationSku);
+            b.setText(mDonationLevel);
         }
     }
 
     @Override
     public void onPurchasesUpdated(int responseCode, @Nullable List<Purchase> purchases) {
-        //after paymnet success
+        //after payment success
         if (responseCode == BillingClient.BillingResponse.OK
                 && purchases != null) {
-            for (Purchase purchase : purchases) {
-                String purchaseToken = purchase.getPurchaseToken();
-                String purchaseSku = purchase.getSku();
-                long purchaseTime = purchase.getPurchaseTime();
-                mSharedPref.putBoolean(AppConstants.ISDONATIONCOMPLETED,true);
-                mSharedPref.putLongValue(AppConstants.DONATIONPURCHASETIME,purchaseTime);
-                mSharedPref.putData(AppConstants.DONATIONPURCHASETOKEN,purchaseToken);
-                mSharedPref.putData(AppConstants.DONATIONPURCHASESKU,purchaseSku);
-                Date c = Calendar.getInstance().getTime();
-                SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
-                String formattedDate = df.format(c);
-                mSharedPref.putData(AppConstants.DONATIONDATE,formattedDate);
-
-                _updateDonationLevel();
+                for (Purchase purchase : purchases) {
+                    //String purchaseToken = purchase.getPurchaseToken();
+                    String purchaseSku = purchase.getSku();
+                    //long purchaseTime = purchase.getPurchaseTime();
+                    mSharedPref.putData(AppConstants.DONATIONPURCHASESKU, purchaseSku);
             }
+            _updateDonationLevel();
         } else if (responseCode == BillingClient.BillingResponse.USER_CANCELED) {
             // Handle an error caused by a user cancelling the purchase flow.
+            ToastText(R.string.DONATION_USER_CANCELED);
+        } else if (responseCode == BillingClient.BillingResponse.ITEM_ALREADY_OWNED) {
+            // Handle an error caused by a user cancelling the purchase flow.
+            ToastText(R.string.DONATION_ALREADY_OWNED);
         } else {
             // Handle any other error codes.
+            ToastText(getString(R.string.DONATION_OTHER_ERROR)+ " " + new Integer(responseCode).toString());
         }
     }
     @Override
@@ -1746,7 +1758,7 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
         //billing client is ready
         if(responseCode== BillingClient.BillingResponse.OK)
         {
-            getAllProductsList();
+            _updateDonationLevel();
         }
     }
 

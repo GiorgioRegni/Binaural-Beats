@@ -117,4 +117,7 @@
     <string name="don_10_level">Supporter</string>
     <string name="don_50_level">Ambassador</string>
     <string name="don_100_level">Spiritual Leader</string>
+    <string name="DONATION_USER_CANCELED">User canceled</string>
+    <string name="DONATION_ALREADY_OWNED">Already donated at that level, thank you!</string>
+    <string name="DONATION_OTHER_ERROR">Donation error, please try again later</string>
 </resources>

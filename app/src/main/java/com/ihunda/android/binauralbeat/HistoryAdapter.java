@@ -13,7 +13,7 @@ import com.ihunda.android.binauralbeat.db.HistoryModel;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
+import java.util.Date;
 
 public class HistoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private ArrayList<HistoryModel> historyArrayList;
@@ -44,7 +44,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof ViewHolder) {
-            ((ViewHolder) holder).tvDate.setText(context.getText(R.string.date_history) + " " + getDate(historyArrayList.get(position).getDateMillis(), "dd/MM/yy HH:MM"));
+            ((ViewHolder) holder).tvDate.setText(context.getText(R.string.date_history) + " " + getDate(historyArrayList.get(position).getDateMillis(), "dd/MM/yy HH:mm"));
             ((ViewHolder) holder).tvTotal.setText(context.getText(R.string.total_time) + " " + formatTime((int) (historyArrayList.get(position).getCompletedTime() / 1000)));
 
             if (TextUtils.isEmpty(historyArrayList.get(position).getProgramName())) {
@@ -89,9 +89,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     private String getDate(long milliSeconds, String dateFormat) {
         SimpleDateFormat formatter = new SimpleDateFormat(dateFormat);
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(milliSeconds);
-        return formatter.format(calendar.getTime());
+        return formatter.format(new Date(milliSeconds));
     }
 
     private String formatTime(int timeInSecs) {

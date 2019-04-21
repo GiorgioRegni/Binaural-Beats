@@ -256,6 +256,7 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
     String mDonationLevel = null;
     private int currentHistoryId = -1;
     private long historyTotalTimeElapsed = 0;
+    private String historyProgramName = "";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -685,6 +686,18 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
                 runComeBackAnimationOnView(mPresetView);
                 mPresetList.invalidate();
                 mVizHolder.setVisibility(View.GONE);
+                try {
+                    if (currentHistoryId != -1) {
+                        ArrayList<HistoryModel> arrayList = (ArrayList<HistoryModel>) ((BBeatApp) getApplicationContext()).getDbHelper().get(HistoryModel.class, "" + currentHistoryId);
+                        HistoryModel historyModel = arrayList.get(0);
+                        historyModel.setCompletedTime(historyModel.getCompletedTime() + new Date().getTime() - historyTotalTimeElapsed);
+                        ((BBeatApp) getApplicationContext()).getDbHelper().fillObject(HistoryModel.class, historyModel);
+                    }
+                    historyTotalTimeElapsed = 0;
+                    currentHistoryId = -1;
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
                 break;
             case INPROGRAM:
                 _track_screen("INPROGRAM");
@@ -714,6 +727,17 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
 
                 // JENLA managed state of pause button mPlayPause.setChecked(true);
                 pause_time = -1;
+
+                try {
+                    HistoryModel historyModel = new HistoryModel();
+                    historyModel.setProgramName(historyProgramName);
+                    historyModel.setCompletedTime(0);
+                    historyModel.setDateMillis(new Date().getTime());
+                    currentHistoryId = ((BBeatApp) getApplicationContext()).getDbHelper().insertObject(HistoryModel.class, historyModel);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+                historyTotalTimeElapsed = new Date().getTime();
                 break;
         }
         invalidateOptionsMenu(); // Force re-evaluation of option menu
@@ -927,18 +951,9 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
 
                     @Override
                     public void onClick(View v) {
+                        historyProgramName = p.getName();
                         StartPreviouslySelectedProgram();
                         removeDialog(DIALOG_PROGRAM_PREVIEW);
-                        try {
-                            HistoryModel historyModel = new HistoryModel();
-                            historyModel.setProgramName(p.getName());
-                            historyModel.setCompletedTime(0);
-                            historyModel.setDateMillis(new Date().getTime());
-                            currentHistoryId = ((BBeatApp) getApplicationContext()).getDbHelper().insertObject(HistoryModel.class, historyModel);
-                        } catch (SQLException e) {
-                            e.printStackTrace();
-                        }
-                        historyTotalTimeElapsed = new Date().getTime();
                     }
                 });
 
@@ -1074,18 +1089,6 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
 
         goToState(appState.SETUP);
 
-        try {
-            if (currentHistoryId != -1) {
-                ArrayList<HistoryModel> arrayList = (ArrayList<HistoryModel>) ((BBeatApp) getApplicationContext()).getDbHelper().get(HistoryModel.class, "" + currentHistoryId);
-                HistoryModel historyModel = arrayList.get(0);
-                historyModel.setCompletedTime(historyModel.getCompletedTime() + new Date().getTime() - historyTotalTimeElapsed);
-                ((BBeatApp) getApplicationContext()).getDbHelper().fillObject(HistoryModel.class, historyModel);
-            }
-            historyTotalTimeElapsed = 0;
-            currentHistoryId = -1;
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
     }
 
     int play(int soundID, float leftVolume, float rightVolume, int priority, int loop, float rate) {

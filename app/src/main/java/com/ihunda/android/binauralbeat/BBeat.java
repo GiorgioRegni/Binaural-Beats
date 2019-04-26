@@ -54,6 +54,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationUtils;
@@ -261,6 +262,7 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         /* Facebook */
         FacebookSdk.sdkInitialize(getApplicationContext());
@@ -280,7 +282,7 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
          * Sets up power management, device should not go to sleep during a program
          */
         mPm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-        mWl = mPm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK, "BBTherapy:");
+        mWl = mPm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "BBTherapy:");
 
         /* Setup all buttons */
         Button b;

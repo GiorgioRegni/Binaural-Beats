@@ -28,6 +28,7 @@ import android.app.Dialog;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -36,6 +37,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.PowerManager;
@@ -269,6 +271,7 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
 
         setContentView(R.layout.main);
 
+
         /* Init sounds */
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
 
@@ -380,34 +383,7 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
         programs = DefaultProgramsBuilder.getProgramMethods(this);
         groups = new ArrayList<CategoryGroup>();
 
-        for (String pname : programs.keySet()) {
-
-            ProgramMeta pm = programs.get(pname);
-            String catname = pm.getCat().toString();
-            CategoryGroup g = null;
-
-            /* Check if I already have a group with that name */
-            for (CategoryGroup g2 : groups) {
-                if (g2.getName().equals(catname)) {
-                    g = g2;
-                }
-            }
-            if (g == null) {
-                g = new CategoryGroup(catname);
-
-                try {
-                    g.setNiceName(getString(R.string.class.getField("group_" + catname.toLowerCase()).getInt(null)));
-                } catch (Exception e) {
-                    // pass
-                }
-
-                groups.add(g);
-            }
-
-            g.add(pm);
-        }
-
-        ProgramListAdapter adapter = new ProgramListAdapter(this, groups);
+        new LoadAdapter().execute();
 
         mPresetList.setOnGroupClickListener(new OnGroupClickListener() {
 
@@ -432,14 +408,6 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
         LayoutInflater inflater = getLayoutInflater();
 
         mPresetList.setGroupIndicator(getResources().getDrawable(R.drawable.empty));
-        mPresetList.setAdapter(adapter);
-
-        // Expand all
-        for (int groupPosition = 0; groupPosition < adapter.getGroupCount(); groupPosition++) {
-            if (mPresetList.isGroupExpanded(groupPosition) == false) {
-                mPresetList.expandGroup(groupPosition);
-            }
-        }
 
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -511,6 +479,7 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
 
         state = appState.NONE;
         goToState(appState.SETUP);
+
     }
 
     private void _show_tutorial() {
@@ -1911,4 +1880,68 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
         mBillingClient.launchBillingFlow(BBeat.this, billingFlowParams);
     }
 
+    private class LoadAdapter extends AsyncTask<Void, Void, Void> {
+        ProgressDialog dialog;
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            for (String pname : programs.keySet()) {
+
+                ProgramMeta pm = programs.get(pname);
+                String catname = pm.getCat().toString();
+                CategoryGroup g = null;
+
+                /* Check if I already have a group with that name */
+                for (CategoryGroup g2 : groups) {
+                    if (g2.getName().equals(catname)) {
+                        g = g2;
+                    }
+                }
+                if (g == null) {
+                    g = new CategoryGroup(catname);
+
+                    try {
+                        g.setNiceName(getString(R.string.class.getField("group_" + catname.toLowerCase()).getInt(null)));
+                    } catch (Exception e) {
+                        // pass
+                    }
+
+                    groups.add(g);
+                }
+
+                g.add(pm, DefaultProgramsBuilder.getProgram(pm));
+//            g.setProgram();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            ProgramListAdapter adapter = new ProgramListAdapter(BBeat.this, groups);
+
+            mPresetList.setAdapter(adapter);
+
+            // Expand all
+            for (int groupPosition = 0; groupPosition < adapter.getGroupCount(); groupPosition++) {
+                if (mPresetList.isGroupExpanded(groupPosition) == false) {
+                    mPresetList.expandGroup(groupPosition);
+                }
+            }
+            dialog.dismiss();
+        }
+
+        @Override
+        protected void onPreExecute() {
+            dialog = new ProgressDialog(BBeat.this); // this = YourActivity
+            dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            dialog.setMessage("Loading...");
+            dialog.setIndeterminate(true);
+            dialog.setCanceledOnTouchOutside(false);
+            dialog.show();
+        }
+
+        @Override
+        protected void onProgressUpdate(Void... values) {
+        }
+    }
 }

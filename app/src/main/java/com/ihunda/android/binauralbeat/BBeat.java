@@ -80,6 +80,7 @@ import com.android.billingclient.api.PurchasesUpdatedListener;
 import com.android.billingclient.api.SkuDetails;
 import com.android.billingclient.api.SkuDetailsParams;
 import com.android.billingclient.api.SkuDetailsResponseListener;
+import com.crashlytics.android.Crashlytics;
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
 import com.facebook.share.model.ShareLinkContent;
@@ -109,6 +110,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
+
+import io.fabric.sdk.android.Fabric;
 
 public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener, BillingClientStateListener {
 
@@ -268,7 +271,7 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
         FacebookSdk.sdkInitialize(getApplicationContext());
 
         setContentView(R.layout.main);
-
+        Fabric.with(this, new Crashlytics());
         /* Init sounds */
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
 

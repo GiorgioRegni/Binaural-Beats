@@ -4,5 +4,6 @@
     <dimen name="bottomMenuWH">50dp</dimen>
     <dimen name="bottomMenuSpacerH">40dp</dimen>
     <dimen name="bottomMenuSpacerMarginH">5dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
 
 </resources>

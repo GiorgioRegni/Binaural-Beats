@@ -271,7 +271,10 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
         FacebookSdk.sdkInitialize(getApplicationContext());
 
         setContentView(R.layout.main);
-        Fabric.with(this, new Crashlytics());
+        
+	/* Initialize Fabric and Crashlytics */
+	Fabric.with(this, new Crashlytics());
+	    
         /* Init sounds */
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
 

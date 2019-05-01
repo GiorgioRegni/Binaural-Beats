@@ -120,4 +120,5 @@
     <string name="DONATION_USER_CANCELED">User canceled</string>
     <string name="DONATION_ALREADY_OWNED">Already donated at that level, thank you!</string>
     <string name="DONATION_OTHER_ERROR">Donation error, please try again later</string>
+    <string name="DONATION_CONNECTION_ERROR">Could\'t connect to Google Play Store</string>
 </resources>

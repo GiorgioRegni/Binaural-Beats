@@ -80,6 +80,7 @@ import com.android.billingclient.api.PurchasesUpdatedListener;
 import com.android.billingclient.api.SkuDetails;
 import com.android.billingclient.api.SkuDetailsParams;
 import com.android.billingclient.api.SkuDetailsResponseListener;
+import com.crashlytics.android.Crashlytics;
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
 import com.facebook.share.model.ShareLinkContent;
@@ -88,6 +89,7 @@ import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.plus.PlusShare;
+import com.ihunda.android.binauralbeat.db.HistoryModel;
 import com.ihunda.android.binauralbeat.viz.Black;
 import com.ihunda.android.binauralbeat.viz.GLBlack;
 import com.jjoe64.graphview.GraphView.GraphViewData;
@@ -98,14 +100,18 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
+
+import io.fabric.sdk.android.Fabric;
 
 public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener {
 
@@ -255,6 +261,9 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
     List<SkuDetails> mProductSkuList;
     SharedPref mSharedPref = SharedPref.getInstance();
     String mDonationLevel = null;
+    private int currentHistoryId = -1;
+    private long historyTotalTimeElapsed = 0;
+    private String historyProgramName = "";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -265,7 +274,10 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
         FacebookSdk.sdkInitialize(getApplicationContext());
 
         setContentView(R.layout.main);
-
+        
+	/* Initialize Fabric and Crashlytics */
+	Fabric.with(this, new Crashlytics());
+	    
         /* Init sounds */
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
 
@@ -280,7 +292,6 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
          * Sets up power management, device should not go to sleep during a program
          */
         mPm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-
         mWl = mPm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "BBTherapy:");
 
         /* Setup all buttons */
@@ -297,6 +308,13 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
         b.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
                 showDialog(DIALOG_DONATE);
+            }
+        });
+
+        b = (Button) findViewById((R.id.historyButton));
+        b.setOnClickListener(new OnClickListener() {
+            public void onClick(View v) {
+                startActivity(new Intent(BBeat.this, HistoryActivity.class));
             }
         });
 
@@ -680,6 +698,18 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
                 runComeBackAnimationOnView(mPresetView);
                 mPresetList.invalidate();
                 mVizHolder.setVisibility(View.GONE);
+                try {
+                    if (currentHistoryId != -1) {
+                        ArrayList<HistoryModel> arrayList = (ArrayList<HistoryModel>) ((BBeatApp) getApplicationContext()).getDbHelper().get(HistoryModel.class, "" + currentHistoryId);
+                        HistoryModel historyModel = arrayList.get(0);
+                        historyModel.setCompletedTime(historyModel.getCompletedTime() + new Date().getTime() - historyTotalTimeElapsed);
+                        ((BBeatApp) getApplicationContext()).getDbHelper().fillObject(HistoryModel.class, historyModel);
+                    }
+                    historyTotalTimeElapsed = 0;
+                    currentHistoryId = -1;
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
                 break;
             case INPROGRAM:
                 _track_screen("INPROGRAM");
@@ -709,6 +739,17 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
 
                 // JENLA managed state of pause button mPlayPause.setChecked(true);
                 pause_time = -1;
+
+                try {
+                    HistoryModel historyModel = new HistoryModel();
+                    historyModel.setProgramName(historyProgramName);
+                    historyModel.setCompletedTime(0);
+                    historyModel.setDateMillis(new Date().getTime());
+                    currentHistoryId = ((BBeatApp) getApplicationContext()).getDbHelper().insertObject(HistoryModel.class, historyModel);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+                historyTotalTimeElapsed = new Date().getTime();
                 break;
         }
         invalidateOptionsMenu(); // Force re-evaluation of option menu
@@ -736,10 +777,21 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
                 long delta = _getClock() - pause_time;
                 programFSM.catchUpAfterPause(delta);
                 pause_time = -1;
+                historyTotalTimeElapsed = new Date().getTime();
                 unmuteAll();
             } else {
                 /* This is a pause time */
                 pause_time = _getClock();
+                try {
+                    if (currentHistoryId != -1) {
+                        ArrayList<HistoryModel> arrayList = (ArrayList<HistoryModel>) ((BBeatApp) getApplicationContext()).getDbHelper().get(HistoryModel.class, "" + currentHistoryId);
+                        HistoryModel historyModel = arrayList.get(0);
+                        historyModel.setCompletedTime(historyModel.getCompletedTime() + new Date().getTime() - historyTotalTimeElapsed);
+                        ((BBeatApp) getApplicationContext()).getDbHelper().fillObject(HistoryModel.class, historyModel);
+                    }
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
                 muteAll();
             }
         }
@@ -790,8 +842,21 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
     protected void onDestroy() {
         panic();
         _cancel_all_notifications();
+        try {
+            if (currentHistoryId != -1) {
+                ArrayList<HistoryModel> arrayList = (ArrayList<HistoryModel>) ((BBeatApp) getApplicationContext()).getDbHelper().get(HistoryModel.class, "" + currentHistoryId);
+                HistoryModel historyModel = arrayList.get(0);
+                historyModel.setCompletedTime(historyModel.getCompletedTime() + new Date().getTime() - historyTotalTimeElapsed);
+                ((BBeatApp) getApplicationContext()).getDbHelper().fillObject(HistoryModel.class, historyModel);
+            }
+            historyTotalTimeElapsed = 0;
+            currentHistoryId = -1;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
         super.onDestroy();
+
     }
 
     @Override
@@ -870,7 +935,7 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
             }
 
             case DIALOG_PROGRAM_PREVIEW:
-                Program p = _tmp_program_holder;
+                final Program p = _tmp_program_holder;
                 if (p == null) {
                     return null;
                 }
@@ -898,6 +963,7 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
 
                     @Override
                     public void onClick(View v) {
+                        historyProgramName = p.getName();
                         StartPreviouslySelectedProgram();
                         removeDialog(DIALOG_PROGRAM_PREVIEW);
                     }
@@ -1033,6 +1099,7 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
         mToolbar.setTitle(getString(R.string.app_name));
 
         goToState(appState.SETUP);
+
     }
 
     int play(int soundID, float leftVolume, float rightVolume, int priority, int loop, float rate) {

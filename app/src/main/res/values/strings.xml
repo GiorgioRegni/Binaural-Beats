@@ -27,6 +27,7 @@
     <string name="blog">Blog</string>
     <string name="rate_on_market">Rate on market</string>
     <string name="donate">Donate</string>
+    <string name="history">History</string>
     <string name="donate_text">This application is free and will stay free.\n\n
         Developing Binaural Beat Therapy,
         researching and staying up to date on binaural beats and mind science takes time and a lot of efforts.\n\n
@@ -37,7 +38,7 @@
     <string name="voices">Voices</string>
     <string name="background">Background</string>
     <string name="volume">Volume</string>
-    
+
     <string name="welcome_text">Welcome to Binaural Beats Therapy! This app is free and open source, have fun and join the community! 
     Headphones and a safe environment are required.</string>
 
@@ -121,4 +122,10 @@
     <string name="DONATION_ALREADY_OWNED">Already donated at that level, thank you!</string>
     <string name="DONATION_OTHER_ERROR">Donation error, please try again later</string>
     <string name="DONATION_CONNECTION_ERROR">Could\'t connect to Google Play Store</string>
+
+    <string name="title_activity_history">History</string>
+    <string name="program_name">Program Name : </string>
+    <string name="date_history">Date : </string>
+    <string name="total_time">Total Time : </string>
+    <string name="no_history_data">No History Data Available</string>
 </resources>

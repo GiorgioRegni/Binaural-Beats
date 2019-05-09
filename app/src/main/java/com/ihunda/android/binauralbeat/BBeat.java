@@ -271,10 +271,10 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
         FacebookSdk.sdkInitialize(getApplicationContext());
 
         setContentView(R.layout.main);
-        
-	/* Initialize Fabric and Crashlytics */
-	Fabric.with(this, new Crashlytics());
-	    
+
+        /* Initialize Fabric and Crashlytics */
+        Fabric.with(this, new Crashlytics());
+
         /* Init sounds */
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
 
@@ -489,6 +489,13 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
         b.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
                 showDialog(DIALOG_DONATE);
+            }
+        });
+
+        b = (Button) findViewById((R.id.NDPresetBuilderButton));
+        b.setOnClickListener(new OnClickListener() {
+            public void onClick(View v) {
+                gotoPresetBuilder();
             }
         });
 
@@ -1567,6 +1574,11 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
 
     private void gotoMarket() {
         gotoURL("market://details?id=com.ihunda.android.binauralbeat");
+    }
+
+    private void gotoPresetBuilder() {
+        Intent i = new Intent(this, PresetBuilderActivity.class);
+        startActivity(i);
     }
 
     private void gotoURL(String URL) {

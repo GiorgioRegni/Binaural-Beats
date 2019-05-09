@@ -45,6 +45,16 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"></activity>
         <activity
+            android:name=".PresetBuilderActivity"
+            android:exported="true"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".AddPresetActivity"
+            android:exported="true"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"></activity>
+        <activity
             android:name=".Comments"
             android:label="@string/comments_title" />
 

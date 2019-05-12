@@ -1,221 +1,337 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
+    android:layout_height="wrap_content"
     android:layout_gravity="center"
     android:background="#FFF"
     android:orientation="vertical"
-    android:padding="@dimen/dp_5">
+    android:padding="@dimen/dp_15">
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="@dimen/dp_5"
+        android:text="@string/add_bbv"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="@android:color/black"
+        android:textStyle="bold" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp_30"
+        android:layout_weight="1"
+        android:gravity="center|left"
+        android:padding="@dimen/dp_5"
+        android:text="@string/freq_start"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@android:color/black"
+        android:textStyle="bold" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/dp_10"
+        android:layout_marginTop="@dimen/dp_5"
+        android:layout_marginBottom="@dimen/dp_15"
         android:gravity="center"
         android:orientation="horizontal"
-        android:weightSum="3">
+        android:weightSum="1">
 
-        <TextView
+
+        <RelativeLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="left"
-            android:padding="@dimen/dp_5"
-            android:text="@string/freq_start"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="@android:color/black"
-            android:textStyle="bold" />
+            android:layout_weight="0.6"
+            android:background="@drawable/background_spinner">
 
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/tvFreqStart"
+            <Spinner
+                android:id="@+id/spinnerStart"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="10"
-                android:textAppearance="?android:attr/textAppearance"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@+id/ivArrowStart"
+                android:background="@android:color/transparent"
+                android:gravity="left"
+                android:padding="@dimen/dp_10"
+                android:popupBackground="@drawable/background_spinner_dropdown"
+                android:spinnerMode="dropdown"
+                android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textColor="@android:color/black" />
 
-            <ProgressBar
-                android:id="@+id/pgbarFreqStart"
-                style="@android:style/Widget.ProgressBar.Horizontal"
-                android:layout_width="match_parent"
+            <ImageView
+                android:id="@+id/ivArrowStart"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dp_5"
-                android:max="150"
-                android:min="0"
-                android:progressBackgroundTint="@color/primary_dark"
-                android:progressTint="@color/accent" />
-        </LinearLayout>
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_margin="@dimen/dp_5"
+                android:src="@drawable/ic_arrow_down" />
+        </RelativeLayout>
 
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="0.05" />
+
+        <EditText
+            android:id="@+id/etFreqStart"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.35"
+            android:gravity="center"
+            android:inputType="number"
+            android:padding="@dimen/dp_5"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@android:color/black" />
     </LinearLayout>
 
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp_15"
+        android:layout_weight="1"
+        android:gravity="center|left"
+        android:padding="@dimen/dp_5"
+        android:text="@string/freq_end"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@android:color/black"
+        android:textStyle="bold" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/dp_10"
+        android:layout_marginTop="@dimen/dp_5"
+        android:layout_marginBottom="@dimen/dp_15"
         android:gravity="center"
         android:orientation="horizontal"
-        android:weightSum="3">
+        android:weightSum="1">
 
-        <TextView
+
+        <RelativeLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="left"
-            android:padding="@dimen/dp_5"
-            android:text="@string/freq_end"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="@android:color/black"
-            android:textStyle="bold" />
+            android:layout_weight="0.6"
+            android:background="@drawable/background_spinner">
 
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/tvFreqEnd"
+            <Spinner
+                android:id="@+id/spinnerEnd"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="10"
-                android:textAppearance="?android:attr/textAppearance"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@+id/ivArrowEnd"
+                android:background="@android:color/transparent"
+                android:gravity="left"
+                android:padding="@dimen/dp_10"
+                android:popupBackground="@drawable/background_spinner_dropdown"
+                android:spinnerMode="dropdown"
+                android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textColor="@android:color/black" />
 
-            <ProgressBar
-                android:id="@+id/pgbarFreqEnd"
-                style="@android:style/Widget.ProgressBar.Horizontal"
-                android:layout_width="match_parent"
+            <ImageView
+                android:id="@+id/ivArrowEnd"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dp_5"
-                android:max="150"
-                android:min="0"
-                android:progressBackgroundTint="@color/primary_dark"
-                android:progressTint="@color/accent" />
-        </LinearLayout>
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_margin="@dimen/dp_5"
+                android:src="@drawable/ic_arrow_down" />
+        </RelativeLayout>
 
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="0.05" />
+
+        <EditText
+            android:id="@+id/etFreqEnd"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.35"
+            android:gravity="center"
+            android:inputType="number"
+            android:padding="@dimen/dp_5"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@android:color/black" />
     </LinearLayout>
 
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp_15"
+        android:gravity="center"
+        android:padding="@dimen/dp_5"
+        android:text="@string/volume"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@android:color/black"
+        android:textStyle="bold" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/dp_10"
         android:gravity="center"
-        android:orientation="horizontal"
-        android:weightSum="3">
+        android:orientation="vertical">
 
         <TextView
-            android:layout_width="0dp"
+            android:id="@+id/tvVolume"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="left"
-            android:padding="@dimen/dp_5"
-            android:text="@string/volume"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="@android:color/black"
-            android:textStyle="bold" />
+            android:gravity="center"
+            android:text="10"
+            android:textAppearance="?android:attr/textAppearance"
+            android:textColor="@android:color/black" />
+
 
         <LinearLayout
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:orientation="vertical">
+            android:gravity="center"
+            android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/tvVolume"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="10"
+                android:text="0"
                 android:textAppearance="?android:attr/textAppearance"
                 android:textColor="@android:color/black" />
 
-            <ProgressBar
-                android:id="@+id/pgbarVolume"
+            <SeekBar
+                android:id="@+id/seekbarVolume"
                 style="@android:style/Widget.ProgressBar.Horizontal"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dp_5"
+                android:layout_weight="1"
                 android:max="100"
                 android:min="0"
+                android:padding="@dimen/dp_10"
                 android:progressBackgroundTint="@color/primary_dark"
                 android:progressTint="@color/accent" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="2"
+                android:gravity="center"
+                android:text="100"
+                android:textAppearance="?android:attr/textAppearance"
+                android:textColor="@android:color/black" />
         </LinearLayout>
 
+
     </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp_15"
+        android:gravity="center"
+        android:padding="@dimen/dp_5"
+        android:text="@string/pitch"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@android:color/black"
+        android:textStyle="bold" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/dp_10"
         android:gravity="center"
-        android:orientation="horizontal"
-        android:weightSum="3">
+        android:orientation="vertical">
 
         <TextView
-            android:layout_width="0dp"
+            android:id="@+id/tvPitch"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="left"
-            android:padding="@dimen/dp_5"
-            android:text="@string/pitch"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="@android:color/black"
-            android:textStyle="bold" />
+            android:gravity="center"
+            android:text="10"
+            android:textAppearance="?android:attr/textAppearance"
+            android:textColor="@android:color/black" />
 
         <LinearLayout
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:orientation="vertical">
+            android:gravity="center"
+            android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/tvPitch"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="10"
+                android:text="0"
                 android:textAppearance="?android:attr/textAppearance"
                 android:textColor="@android:color/black" />
 
-            <ProgressBar
-                android:id="@+id/pgbarPitch"
+            <SeekBar
+                android:id="@+id/seekbarPitch"
                 style="@android:style/Widget.ProgressBar.Horizontal"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dp_5"
-                android:max="1000"
+                android:layout_weight="1"
+                android:max="100"
                 android:min="0"
+                android:padding="@dimen/dp_10"
                 android:progressBackgroundTint="@color/primary_dark"
                 android:progressTint="@color/accent" />
-        </LinearLayout>
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="1000"
+                android:textAppearance="?android:attr/textAppearance"
+                android:textColor="@android:color/black" />
+        </LinearLayout>
     </LinearLayout>
+
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/dp_30"
         android:gravity="center"
-        android:orientation="vertical">
+        android:orientation="horizontal">
 
-        <Button
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:backgroundTint="@color/primary_dark"
-            android:text="@string/add"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="@color/white" />
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="horizontal">
 
+            <Button
+                android:id="@+id/btnAdd"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/primary_dark"
+                android:padding="@dimen/dp_10"
+                android:text="@string/add"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@color/white" />
+        </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btnCancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/primary_dark"
+                android:padding="@dimen/dp_10"
+                android:text="@string/cancel"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@color/white" />
+        </LinearLayout>
     </LinearLayout>
 
 

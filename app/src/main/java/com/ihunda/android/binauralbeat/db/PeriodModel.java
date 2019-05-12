@@ -22,6 +22,16 @@ public class PeriodModel extends RecyclerViewItem {
     @DatabaseField
     private ArrayList<VoiceModel> voiceModelArrayList;
 
+    public int getLocalPosition() {
+        return localPosition;
+    }
+
+    public void setLocalPosition(int localPosition) {
+        this.localPosition = localPosition;
+    }
+
+    private int localPosition;
+
     public PeriodModel(int level) {
         super(level);
     }

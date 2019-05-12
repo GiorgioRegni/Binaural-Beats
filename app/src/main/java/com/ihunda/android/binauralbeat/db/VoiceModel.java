@@ -18,6 +18,16 @@ public class VoiceModel extends RecyclerViewItem {
     @DatabaseField
     private int pitch;
 
+    public int getLocalPosition() {
+        return localPosition;
+    }
+
+    public void setLocalPosition(int localPosition) {
+        this.localPosition = localPosition;
+    }
+
+    private int localPosition;
+
     public VoiceModel(int level) {
         super(level);
     }

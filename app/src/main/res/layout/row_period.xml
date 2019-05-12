@@ -112,6 +112,24 @@
                 android:src="@drawable/ic_edit" />
 
             <ImageView
+                android:id="@+id/ivDelete"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dp_10"
+                android:contentDescription="@null"
+                android:padding="@dimen/dp_5"
+                android:src="@drawable/ic_delete" />
+
+            <ImageView
+                android:id="@+id/ivAdd"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dp_10"
+                android:contentDescription="@null"
+                android:padding="@dimen/dp_5"
+                android:src="@drawable/ic_add" />
+
+            <ImageView
                 android:id="@+id/ivArrow"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

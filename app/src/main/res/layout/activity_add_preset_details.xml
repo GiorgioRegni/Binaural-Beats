@@ -20,33 +20,8 @@
         android:padding="@dimen/dp_10">
 
         <TextView
-            android:id="@+id/tvPresetName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="left"
-            android:padding="@dimen/dp_5"
-            android:text="@string/name_of_preset"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="@android:color/black"
-            android:textStyle="bold" />
-
-        <EditText
-            android:id="@+id/etPresetName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dp_5"
-            android:background="@drawable/edittext_bg_preset"
-            android:gravity="left"
-            android:maxLines="1"
-            android:padding="@dimen/dp_5"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="@android:color/black" />
-
-        <TextView
-            android:id="@+id/tvPresetDescription"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dp_10"
             android:gravity="left"
             android:padding="@dimen/dp_5"
             android:text="@string/description_of_preset"
@@ -68,7 +43,6 @@
             android:textColor="@android:color/black" />
 
         <TextView
-            android:id="@+id/tvPresetAuthor"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dp_10"
@@ -99,12 +73,12 @@
             android:orientation="vertical">
 
             <Button
-                android:id="@+id/btnNext"
+                android:id="@+id/btnDone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:backgroundTint="@color/primary_dark"
                 android:padding="@dimen/dp_10"
-                android:text="@string/next"
+                android:text="@string/done"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textColor="@color/white" />
 

@@ -71,16 +71,10 @@ public class AddPresetAdapter extends MultiLevelAdapter {
         if (holder instanceof PeriodHolder) {
             periodHolder = (PeriodHolder) holder;
             periodModel = (PeriodModel) arrayList.get(position);
-
-//            int count = 0;
-//            for (int i = 0; i <= position; i++) {
-//                if (arrayList.get(i) instanceof PeriodModel) {
-//                    count++;
-//                }
-//            }
             periodHolder.tvPeriod.setText(mContext.getString(R.string.period) + " " + periodModel.getLocalPosition());
             periodHolder.tvDuration.setText(formatTime(periodModel.getDuration()));
             periodHolder.tvBackground.setText("" + periodModel.getBackground());
+            periodHolder.tvVisualizer.setText("" + periodModel.getVisualizer());
             periodHolder.tvVolume.setText("" + periodModel.getBackgroundVolume());
 
             if (periodModel.getVoiceModelArrayList() != null && periodModel.getVoiceModelArrayList().size() > 0) {
@@ -115,6 +109,7 @@ public class AddPresetAdapter extends MultiLevelAdapter {
         TextView tvDuration;
         TextView tvVolume;
         TextView tvBackground;
+        TextView tvVisualizer;
         ImageView ivExpand;
         ImageView ivEdit;
         ImageView ivAdd;
@@ -127,6 +122,7 @@ public class AddPresetAdapter extends MultiLevelAdapter {
             tvDuration = (TextView) itemView.findViewById(R.id.tvDuration);
             tvVolume = (TextView) itemView.findViewById(R.id.tvVolume);
             tvBackground = (TextView) itemView.findViewById(R.id.tvBackground);
+            tvVisualizer = (TextView) itemView.findViewById(R.id.tvVisualizer);
             ivExpand = (ImageView) itemView.findViewById(R.id.ivArrow);
             ivEdit = (ImageView) itemView.findViewById(R.id.ivEdit);
             ivDelete = (ImageView) itemView.findViewById(R.id.ivDelete);

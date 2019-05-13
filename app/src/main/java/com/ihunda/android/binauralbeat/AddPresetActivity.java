@@ -1,6 +1,7 @@
 package com.ihunda.android.binauralbeat;
 
 import android.app.Dialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -33,6 +34,7 @@ public class AddPresetActivity extends AppCompatActivity implements View.OnClick
     private TextView tvDuration;
     private ArrayList<RecyclerViewItem> arrayList;
     private Button btnAddPeriod;
+    private Button btnDone;
     private int durationSeconds = 0;
     private int totalDurationSeconds = 0;
     private AddPresetAdapter addPresetAdapter;
@@ -45,12 +47,17 @@ public class AddPresetActivity extends AppCompatActivity implements View.OnClick
         setContentView(R.layout.add_preset_activity);
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
-        getSupportActionBar().setDisplayShowHomeEnabled(false);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         tvTitle = mToolbar.findViewById(R.id.tvTitle);
         tvDuration = mToolbar.findViewById(R.id.tvDuration);
         if (getIntent().getExtras() != null) {
             tvTitle.setText(getIntent().getStringExtra("name"));
+            if (getIntent().getExtras().containsKey("data")) {
+                ArrayList<PeriodModel> periodModels = (ArrayList<PeriodModel>) getIntent().getSerializableExtra("data");
+                arrayList = new ArrayList<>();
+                arrayList.addAll(periodModels);
+            }
         }
         if (totalDurationSeconds == 0) {
             tvDuration.setText(getString(R.string.duration) + " " + formatTime(totalDurationSeconds));
@@ -58,145 +65,13 @@ public class AddPresetActivity extends AppCompatActivity implements View.OnClick
         btnAddPeriod = findViewById(R.id.btnAddPeriod);
         btnAddPeriod.setOnClickListener(this);
 
+        btnDone = findViewById(R.id.btnDone);
+        btnDone.setOnClickListener(this);
+
         multiLevelRecyclerView = (MultiLevelRecyclerView) findViewById(R.id.rv_list);
         multiLevelRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-//        List<Item> itemList = (List<Item>) recursivePopulateFakeData(0, 12);
         arrayList = new ArrayList<>();
-
-      /*  PeriodModel periodModel = new PeriodModel(1);
-        periodModel.setBackground("bg");
-        periodModel.setDuration(10);
-        periodModel.setBackgroundVolume(11);
-        periodModel.setViz("voz");
-
-        VoiceModel voiceModel = new VoiceModel(2);
-        voiceModel.setFreqEnd(10);
-        voiceModel.setFreqStart(1);
-        voiceModel.setPitch(11);
-        voiceModel.setVolume(50);
-
-        List<RecyclerViewItem> voiceModels1 = new ArrayList<>();
-        ArrayList<VoiceModel> voiceModels = new ArrayList<>();
-        voiceModels.add(voiceModel);
-        voiceModels.add(voiceModel);
-        voiceModels.add(voiceModel);
-        voiceModels.add(voiceModel);
-        voiceModels1.add(voiceModel);
-        voiceModels1.add(voiceModel);
-        voiceModels1.add(voiceModel);
-        voiceModels1.add(voiceModel);
-
-//        PeriodModel periodModel1 = new PeriodModel();
-//        periodModel1.setBackground("bg");
-//        periodModel1.setDuration(10);
-//        periodModel1.setBackgroundVolume(11);
-//        periodModel1.setViz("voz");
-//        List<RecyclerViewItem> voiceModels = new ArrayList<>();
-//        List<PeriodModel> voiceModelsA = new ArrayList<>();
-//        voiceModels.add(periodModel1);
-//        voiceModels.add(periodModel1);
-//        voiceModels.add(periodModel1);
-//        voiceModelsA.add(periodModel1);
-//        voiceModelsA.add(periodModel1);
-//        voiceModelsA.add(periodModel1);
-
-        periodModel.setVoiceModelArrayList(voiceModels);
-        periodModel.addChildren((List<RecyclerViewItem>) voiceModels1);
-        arrayList.add(periodModel);
-        periodModel = new PeriodModel(3);
-        periodModel.setBackground("bg");
-        periodModel.setDuration(10);
-        periodModel.setBackgroundVolume(11);
-        periodModel.setViz("voz");
-        voiceModel = new VoiceModel(4);
-        voiceModel.setFreqEnd(10);
-        voiceModel.setFreqStart(1);
-        voiceModel.setPitch(11);
-        voiceModel.setVolume(50);
-        voiceModels1 = new ArrayList<>();
-        voiceModels = new ArrayList<>();
-        voiceModels.add(voiceModel);
-        voiceModels.add(voiceModel);
-        voiceModels.add(voiceModel);
-        voiceModels.add(voiceModel);
-        voiceModels1.add(voiceModel);
-        voiceModels1.add(voiceModel);
-        voiceModels1.add(voiceModel);
-        voiceModels1.add(voiceModel);
-        periodModel.setVoiceModelArrayList(voiceModels);
-        periodModel.addChildren((List<RecyclerViewItem>) voiceModels1);
-        arrayList.add(periodModel);
-
-        periodModel = new PeriodModel(5);
-        periodModel.setBackground("bg");
-        periodModel.setDuration(10);
-        periodModel.setBackgroundVolume(11);
-        periodModel.setViz("voz");
-        voiceModel = new VoiceModel(6);
-        voiceModel.setFreqEnd(10);
-        voiceModel.setFreqStart(1);
-        voiceModel.setPitch(11);
-        voiceModel.setVolume(50);
-        voiceModels1 = new ArrayList<>();
-        voiceModels = new ArrayList<>();
-        voiceModels.add(voiceModel);
-        voiceModels.add(voiceModel);
-        voiceModels.add(voiceModel);
-        voiceModels.add(voiceModel);
-        voiceModels1.add(voiceModel);
-        voiceModels1.add(voiceModel);
-        voiceModels1.add(voiceModel);
-        voiceModels1.add(voiceModel);
-        periodModel.setVoiceModelArrayList(voiceModels);
-        periodModel.addChildren((List<RecyclerViewItem>) voiceModels1);
-        arrayList.add(periodModel);
-        periodModel = new PeriodModel(7);
-        periodModel.setBackground("bg");
-        periodModel.setDuration(10);
-        periodModel.setBackgroundVolume(11);
-        periodModel.setViz("voz");
-        voiceModel = new VoiceModel(8);
-        voiceModel.setFreqEnd(10);
-        voiceModel.setFreqStart(1);
-        voiceModel.setPitch(11);
-        voiceModel.setVolume(50);
-        voiceModels1 = new ArrayList<>();
-        voiceModels = new ArrayList<>();
-        voiceModels.add(voiceModel);
-        voiceModels.add(voiceModel);
-        voiceModels.add(voiceModel);
-        voiceModels.add(voiceModel);
-        voiceModels1.add(voiceModel);
-        voiceModels1.add(voiceModel);
-        voiceModels1.add(voiceModel);
-        voiceModels1.add(voiceModel);
-        periodModel.setVoiceModelArrayList(voiceModels);
-        periodModel.addChildren((List<RecyclerViewItem>) voiceModels1);
-        arrayList.add(periodModel);
-        periodModel = new PeriodModel(9);
-        periodModel.setBackground("bg");
-        periodModel.setDuration(10);
-        periodModel.setBackgroundVolume(11);
-        periodModel.setViz("voz");
-        voiceModel = new VoiceModel(10);
-        voiceModel.setFreqEnd(10);
-        voiceModel.setFreqStart(1);
-        voiceModel.setPitch(11);
-        voiceModel.setVolume(50);
-        voiceModels1 = new ArrayList<>();
-        voiceModels = new ArrayList<>();
-        voiceModels.add(voiceModel);
-        voiceModels.add(voiceModel);
-        voiceModels.add(voiceModel);
-        voiceModels.add(voiceModel);
-        voiceModels1.add(voiceModel);
-        voiceModels1.add(voiceModel);
-        voiceModels1.add(voiceModel);
-        voiceModels1.add(voiceModel);
-        periodModel.setVoiceModelArrayList(voiceModels);
-        periodModel.addChildren((List<RecyclerViewItem>) voiceModels1);
-        arrayList.add(periodModel); */
         refreshAdapter();
         //If you are handling the click on your own then you can
         // multiLevelRecyclerView.removeItemClickListeners();
@@ -266,6 +141,21 @@ public class AddPresetActivity extends AppCompatActivity implements View.OnClick
     public void onClick(View view) {
         if (view == btnAddPeriod) {
             showAddEditPeriodDialog(-1);
+        } else if (view == btnDone) {
+            if (arrayList != null && arrayList.size() > 0) {
+                Intent intent = new Intent(AddPresetActivity.this, AddPresetDetailActivity.class);
+                intent.putExtra("name", tvTitle.getText().toString().trim());
+                for (int i = 0; i < arrayList.size(); i++) {
+                    if (arrayList.get(i).isExpanded()) {
+                        multiLevelRecyclerView.toggleItemsGroup(i);
+                    }
+                }
+                intent.putExtra("data", arrayList);
+                startActivity(intent);
+            } else {
+                Toast.makeText(AddPresetActivity.this, getString(R.string.preset_error), Toast.LENGTH_SHORT).show();
+
+            }
         }
     }
 
@@ -329,6 +219,36 @@ public class AddPresetActivity extends AppCompatActivity implements View.OnClick
                 spinner.performClick();
             }
         });
+        final Spinner spinnerVisualizer = dialog.findViewById(R.id.spinnerVisualizer);
+        List<String> listVisualizer = new ArrayList<String>();
+        listVisualizer.add("Aurora");
+        listVisualizer.add("Black");
+        listVisualizer.add("Flash");
+        listVisualizer.add("GL Black");
+        listVisualizer.add("Hiit");
+        listVisualizer.add("Hypno Flash");
+        listVisualizer.add("Hypnotic Spiral");
+        listVisualizer.add("Image");
+        listVisualizer.add("Leds");
+        listVisualizer.add("LSD");
+        listVisualizer.add("Mandelbrot");
+        listVisualizer.add("Morphine");
+        listVisualizer.add("None");
+        listVisualizer.add("Plasma");
+        listVisualizer.add("Spiral Dots");
+        listVisualizer.add("Star Field");
+        listVisualizer.add("Star Field 3D");
+        ArrayAdapter<String> dataAdapterVisualizer = new ArrayAdapter<String>(this,
+                R.layout.row_spinner, listVisualizer);
+        dataAdapterVisualizer.setDropDownViewResource(R.layout.row_spinner_dropdown);
+        spinnerVisualizer.setAdapter(dataAdapterVisualizer);
+        ImageView ivArrowVisualizer = dialog.findViewById(R.id.ivArrowVisualizer);
+        ivArrowVisualizer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                spinnerVisualizer.performClick();
+            }
+        });
         final TextView tvVolume = dialog.findViewById(R.id.tvVolume);
         final SeekBar seekBar = dialog.findViewById(R.id.seekbar);
         tvVolume.setText("" + seekBar.getProgress());
@@ -366,33 +286,15 @@ public class AddPresetActivity extends AppCompatActivity implements View.OnClick
                 if (position == -1) {
                     PeriodModel periodModel = new PeriodModel(1);
                     periodModel.setBackground(spinner.getSelectedItem().toString());
+                    periodModel.setVisualizer(spinnerVisualizer.getSelectedItem().toString());
                     periodModel.setDuration(durationSeconds);
                     periodModel.setBackgroundVolume(tvVolume.getText().toString());
-//                    if (level == 1) {
-//                        VoiceModel voiceModel = new VoiceModel(2);
-//                        voiceModel.setFreqEnd(10);
-//                        voiceModel.setFreqStart(1);
-//                        voiceModel.setPitch(11);
-//                        voiceModel.setVolume(50);
-//
-//                        List<RecyclerViewItem> voiceModels1 = new ArrayList<>();
-//                        ArrayList<VoiceModel> voiceModels = new ArrayList<>();
-//                        voiceModels.add(voiceModel);
-//                        voiceModels.add(voiceModel);
-//                        voiceModels.add(voiceModel);
-//                        voiceModels.add(voiceModel);
-//                        voiceModels1.add(voiceModel);
-//                        voiceModels1.add(voiceModel);
-//                        voiceModels1.add(voiceModel);
-//                        voiceModels1.add(voiceModel);
-//                        periodModel.setVoiceModelArrayList(voiceModels);
-//                        periodModel.addChildren((List<RecyclerViewItem>) voiceModels1);
-//                    }
                     arrayList.add(periodModel);
                     refreshAdapter();
                     dialog.dismiss();
                 } else {
                     ((PeriodModel) arrayList.get(position)).setBackground(spinner.getSelectedItem().toString());
+                    ((PeriodModel) arrayList.get(position)).setVisualizer(spinnerVisualizer.getSelectedItem().toString());
                     ((PeriodModel) arrayList.get(position)).setDuration(durationSeconds);
                     ((PeriodModel) arrayList.get(position)).setBackgroundVolume(tvVolume.getText().toString());
                     refreshAdapter();
@@ -400,8 +302,6 @@ public class AddPresetActivity extends AppCompatActivity implements View.OnClick
                 }
             }
         });
-        // Number of lead in time
-
         final EditText etDuration = (EditText) dialog.findViewById(R.id.etDuration);
         etDuration.setOnFocusChangeListener(new OnEditTextFocusChange() {
             @Override
@@ -451,6 +351,41 @@ public class AddPresetActivity extends AppCompatActivity implements View.OnClick
                 spinner.setSelection(1);
             } else if (periodModel.getBackground().equalsIgnoreCase("Unity")) {
                 spinner.setSelection(2);
+            }
+            if (periodModel.getVisualizer().equalsIgnoreCase("Aurora")) {
+                spinnerVisualizer.setSelection(0);
+            } else if (periodModel.getVisualizer().equalsIgnoreCase("Black")) {
+                spinnerVisualizer.setSelection(1);
+            } else if (periodModel.getVisualizer().equalsIgnoreCase("Flash")) {
+                spinnerVisualizer.setSelection(2);
+            } else if (periodModel.getVisualizer().equalsIgnoreCase("GL Black")) {
+                spinnerVisualizer.setSelection(3);
+            } else if (periodModel.getVisualizer().equalsIgnoreCase("Hiit")) {
+                spinnerVisualizer.setSelection(4);
+            } else if (periodModel.getVisualizer().equalsIgnoreCase("Hypno Flash")) {
+                spinnerVisualizer.setSelection(5);
+            } else if (periodModel.getVisualizer().equalsIgnoreCase("Hypnotic Spiral")) {
+                spinnerVisualizer.setSelection(6);
+            } else if (periodModel.getVisualizer().equalsIgnoreCase("Image")) {
+                spinnerVisualizer.setSelection(7);
+            } else if (periodModel.getVisualizer().equalsIgnoreCase("Leds")) {
+                spinnerVisualizer.setSelection(8);
+            } else if (periodModel.getVisualizer().equalsIgnoreCase("LSD")) {
+                spinnerVisualizer.setSelection(9);
+            } else if (periodModel.getVisualizer().equalsIgnoreCase("Mandelbrot")) {
+                spinnerVisualizer.setSelection(10);
+            } else if (periodModel.getVisualizer().equalsIgnoreCase("Morphine")) {
+                spinnerVisualizer.setSelection(11);
+            } else if (periodModel.getVisualizer().equalsIgnoreCase("None")) {
+                spinnerVisualizer.setSelection(12);
+            } else if (periodModel.getVisualizer().equalsIgnoreCase("Plasma")) {
+                spinnerVisualizer.setSelection(13);
+            } else if (periodModel.getVisualizer().equalsIgnoreCase("Spiral Dots")) {
+                spinnerVisualizer.setSelection(14);
+            } else if (periodModel.getVisualizer().equalsIgnoreCase("Star Field")) {
+                spinnerVisualizer.setSelection(15);
+            } else if (periodModel.getVisualizer().equalsIgnoreCase("Star Field 3D")) {
+                spinnerVisualizer.setSelection(16);
             }
             tvVolume.setText("" + periodModel.getBackgroundVolume());
             seekBar.setProgress(Integer.valueOf(periodModel.getBackgroundVolume()));
@@ -506,7 +441,7 @@ public class AddPresetActivity extends AppCompatActivity implements View.OnClick
         final Spinner spinnerEnd = dialog.findViewById(R.id.spinnerEnd);
         ArrayAdapter<String> dataAdapterEnd = new ArrayAdapter<String>(this,
                 R.layout.row_spinner, list);
-        dataAdapter.setDropDownViewResource(R.layout.row_spinner_dropdown);
+        dataAdapterEnd.setDropDownViewResource(R.layout.row_spinner_dropdown);
         spinnerEnd.setAdapter(dataAdapterEnd);
         spinnerEnd.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -592,7 +527,9 @@ public class AddPresetActivity extends AppCompatActivity implements View.OnClick
                     return;
                 }
                 if (arrayList.get(parentPosition) instanceof PeriodModel) {
-                    multiLevelRecyclerView.toggleItemsGroup(parentPosition);
+                    if (arrayList.get(parentPosition).isExpanded()) {
+                        multiLevelRecyclerView.toggleItemsGroup(parentPosition);
+                    }
                     PeriodModel periodModel = (PeriodModel) arrayList.get(parentPosition);
                     VoiceModel voiceModel = new VoiceModel(1);
                     voiceModel.setFreqEnd(Integer.parseInt(etEnd.getText().toString().trim()));
@@ -603,8 +540,10 @@ public class AddPresetActivity extends AppCompatActivity implements View.OnClick
                     List<RecyclerViewItem> voiceModels1 = new ArrayList<>();
                     ArrayList<VoiceModel> voiceModels = new ArrayList<>();
                     if (periodModel.getVoiceModelArrayList() != null) {
-                        voiceModels1 = periodModel.getChildren();
                         voiceModels = periodModel.getVoiceModelArrayList();
+                    }
+                    if (periodModel.getChildren() != null) {
+                        voiceModels1 = periodModel.getChildren();
                     }
                     voiceModels.add(voiceModel);
                     voiceModels1.add(voiceModel);
@@ -612,7 +551,9 @@ public class AddPresetActivity extends AppCompatActivity implements View.OnClick
                     periodModel.addChildren(voiceModels1);
                     arrayList.set(parentPosition, periodModel);
                     refreshAdapter();
-                    multiLevelRecyclerView.toggleItemsGroup(parentPosition);
+                    if (!arrayList.get(parentPosition).isExpanded()) {
+                        multiLevelRecyclerView.toggleItemsGroup(parentPosition);
+                    }
                     dialog.dismiss();
                 } else {
                     ((VoiceModel) arrayList.get(parentPosition)).setFreqEnd(Integer.parseInt(etEnd.getText().toString().trim()));

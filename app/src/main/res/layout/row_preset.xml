@@ -18,13 +18,13 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/tvPeriod"
+            android:id="@+id/tvPreset"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="left"
             android:maxLines="1"
             android:padding="5dp"
-            android:text="@string/period"
+            android:text="@string/preset"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="@android:color/black"
             android:textStyle="bold" />
@@ -40,13 +40,13 @@
                 android:layout_height="wrap_content"
                 android:gravity="left"
                 android:maxLines="1"
-                android:text="@string/duration"
+                android:text="@string/name"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textColor="@android:color/black"
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/tvDuration"
+                android:id="@+id/tvName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/dp_5"
@@ -64,13 +64,13 @@
                 android:layout_marginLeft="@dimen/dp_10"
                 android:gravity="left"
                 android:maxLines="1"
-                android:text="@string/background_volume"
+                android:text="@string/author"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textColor="@android:color/black"
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/tvVolume"
+                android:id="@+id/tvAuthor"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/dp_5"
@@ -86,57 +86,31 @@
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
             android:orientation="horizontal"
             android:padding="5dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="left"
+                android:gravity="left|top"
                 android:maxLines="1"
-                android:text="@string/background"
+                android:text="@string/description"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textColor="@android:color/black"
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/tvBackground"
+                android:id="@+id/tvDescription"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/dp_5"
                 android:layout_weight="1"
                 android:ellipsize="end"
                 android:gravity="left"
-                android:maxLines="1"
-                android:text="adfasdf"
+                android:maxLines="3"
+                android:text="adf"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textColor="@android:color/black" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/dp_10"
-                android:gravity="left"
-                android:maxLines="1"
-                android:text="@string/visualizer"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="@android:color/black"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/tvVisualizer"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/dp_5"
-                android:layout_weight="1"
-                android:ellipsize="end"
-                android:gravity="left"
-                android:maxLines="1"
-                android:text="adfasdf"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="@android:color/black" />
-
 
         </LinearLayout>
 
@@ -146,6 +120,11 @@
             android:gravity="center"
             android:orientation="horizontal"
             android:padding="5dp">
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="2" />
 
             <ImageView
                 android:id="@+id/ivEdit"
@@ -165,27 +144,6 @@
                 android:contentDescription="@null"
                 android:padding="@dimen/dp_5"
                 android:src="@drawable/ic_delete" />
-
-            <ImageView
-                android:id="@+id/ivAdd"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/dp_10"
-                android:layout_weight="1"
-                android:contentDescription="@null"
-                android:padding="@dimen/dp_5"
-                android:src="@drawable/ic_add" />
-
-            <ImageView
-                android:id="@+id/ivArrow"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/dp_10"
-                android:layout_weight="1"
-                android:contentDescription="@null"
-                android:padding="@dimen/dp_5"
-                android:src="@drawable/ic_arrow_up"
-                android:tint="#3F51B5" />
 
         </LinearLayout>
     </LinearLayout>

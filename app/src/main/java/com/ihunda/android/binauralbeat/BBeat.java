@@ -46,6 +46,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -261,6 +262,7 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
     private int currentHistoryId = -1;
     private long historyTotalTimeElapsed = 0;
     private String historyProgramName = "";
+    private DrawerLayout drawerLayout;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -452,8 +454,9 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-        NavigationDrawerFragment drawerFragment = (NavigationDrawerFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_nav_drawer);
-        drawerFragment.setUp((DrawerLayout) findViewById(R.id.drawer_layout), mToolbar);
+        final NavigationDrawerFragment drawerFragment = (NavigationDrawerFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_nav_drawer);
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawerFragment.setUp(drawerLayout, mToolbar);
 
         // Wire Navigation Drawer Buttons
 
@@ -495,7 +498,13 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
         b = (Button) findViewById((R.id.NDPresetBuilderButton));
         b.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
-                gotoPresetBuilder();
+                drawerLayout.closeDrawer(Gravity.LEFT);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        gotoPresetBuilder();
+                    }
+                }, 300);
             }
         });
 
@@ -1577,7 +1586,7 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
     }
 
     private void gotoPresetBuilder() {
-        Intent i = new Intent(this, PresetBuilderActivity.class);
+        Intent i = new Intent(this, PresetListActivity.class);
         startActivity(i);
     }
 

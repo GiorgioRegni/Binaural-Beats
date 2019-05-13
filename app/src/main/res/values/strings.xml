@@ -149,4 +149,17 @@
     <string name="create_preset">Create Preset - </string>
     <string name="add_bbv">Add Binaural Beat Voice</string>
     <string name="voice">Voice</string>
+    <string name="soundloop">SoundLoop</string>
+    <string name="visualizer">Visualizer</string>
+    <string name="done">Done</string>
+    <string name="preset_error">Please add alteast one period</string>
+    <string name="description_error">Please enter description</string>
+    <string name="author_error">Please enter author</string>
+    <string name="preset_saved">Preset Saved Sucessfully!</string>
+    <string name="preset_list">Preset List</string>
+    <string name="preset">Preset</string>
+    <string name="name">name</string>
+    <string name="author">Author</string>
+    <string name="description">Description</string>
+    <string name="no_presets_created">No Presets Created</string>
 </resources>

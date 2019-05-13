@@ -45,12 +45,17 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"></activity>
         <activity
-            android:name=".PresetBuilderActivity"
+            android:name=".PresetListActivity"
             android:exported="true"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"></activity>
         <activity
             android:name=".AddPresetActivity"
+            android:exported="true"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".AddPresetDetailActivity"
             android:exported="true"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"></activity>

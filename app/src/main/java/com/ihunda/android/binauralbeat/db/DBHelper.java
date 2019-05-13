@@ -29,7 +29,7 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
     // Fields
     // //////////////////////////////////////////////////////////////////////
     private static final String TAG = DBHelper.class.getSimpleName();
-    private static final int DB_VERSION = 1;
+    private static final int DB_VERSION = 2;
 
     private Context mContext;
 
@@ -66,7 +66,9 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
          */
         if (oldVersion == 1 && newVersion == 2) {
             try {
-                TableUtils.createTable(cs, HistoryModel.class);
+                TableUtils.createTable(cs, VoiceModel.class);
+                TableUtils.createTable(cs, PeriodModel.class);
+                TableUtils.createTable(cs, PresetModel.class);
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }

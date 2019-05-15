@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -15,8 +16,15 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonParser;
+import com.google.gson.reflect.TypeToken;
+import com.ihunda.android.binauralbeat.db.PeriodModel;
 import com.ihunda.android.binauralbeat.db.PresetModel;
+import com.ihunda.android.binauralbeat.db.VoiceModel;
 
+import java.lang.reflect.Type;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
@@ -54,6 +62,30 @@ public class PresetListActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         if (arrayList != null && arrayList.size() > 0) {
+            for (int i = 0; i < arrayList.size(); i++) {
+                if (arrayList.get(i).getPeriodModelArray() != null && !TextUtils.isEmpty(arrayList.get(i).getPeriodModelArray())) {
+                    JsonParser parser = new JsonParser();
+                    JsonArray jsonArray = parser.parse(arrayList.get(i).getPeriodModelArray()).getAsJsonArray();
+                    Type listType = new TypeToken<ArrayList<PeriodModel>>() {
+                    }.getType();
+
+                    ArrayList<PeriodModel> periodModelArrayList = new Gson().fromJson(jsonArray, listType);
+                    if (periodModelArrayList != null && periodModelArrayList.size() > 0) {
+                        for (int j = 0; j < periodModelArrayList.size(); j++) {
+                            if (periodModelArrayList.get(j).getVoiceModelArray() != null && !TextUtils.isEmpty(periodModelArrayList.get(j).getVoiceModelArray())) {
+                                JsonParser parser1 = new JsonParser();
+                                JsonArray jsonArray1 = parser1.parse(periodModelArrayList.get(j).getVoiceModelArray()).getAsJsonArray();
+                                Type listType1 = new TypeToken<ArrayList<VoiceModel>>() {
+                                }.getType();
+
+                                ArrayList<VoiceModel> voiceModelArrayList = new Gson().fromJson(jsonArray1, listType1);
+                                periodModelArrayList.get(j).setVoiceModelArrayList(voiceModelArrayList);
+                            }
+                        }
+                    }
+                    arrayList.get(i).setPeriodModelArrayList(periodModelArrayList);
+                }
+            }
             emptyTv.setVisibility(View.GONE);
             adapter = new PresetListAdapter(arrayList, this);
             recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -94,10 +126,10 @@ public class PresetListActivity extends AppCompatActivity {
     }
 
     public void edit(int adapterPosition) {
-//        Intent intent = new Intent(PresetListActivity.this, AddPresetActivity.class);
-//        intent.putExtra("data", arrayList.get(adapterPosition).getPeriodModelArrayList());
+        Intent intent = new Intent(PresetListActivity.this, AddPresetActivity.class);
+        intent.putExtra("data", arrayList.get(adapterPosition));
 //        intent.putExtra("name", arrayList.get(adapterPosition).getName());
-//        startActivity(intent);
+        startActivity(intent);
     }
 
     public void delete(int adapterPosition) {

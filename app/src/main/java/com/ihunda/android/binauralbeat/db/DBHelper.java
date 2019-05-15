@@ -66,8 +66,6 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
          */
         if (oldVersion == 1 && newVersion == 2) {
             try {
-                TableUtils.createTable(cs, VoiceModel.class);
-                TableUtils.createTable(cs, PeriodModel.class);
                 TableUtils.createTable(cs, PresetModel.class);
             } catch (SQLException e) {
                 throw new RuntimeException(e);

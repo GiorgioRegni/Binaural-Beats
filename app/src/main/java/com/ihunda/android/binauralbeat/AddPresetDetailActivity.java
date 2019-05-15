@@ -9,8 +9,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.reflect.TypeToken;
 import com.ihunda.android.binauralbeat.db.PeriodModel;
 import com.ihunda.android.binauralbeat.db.PresetModel;
+import com.ihunda.android.binauralbeat.db.VoiceModel;
 
 import java.util.ArrayList;
 
@@ -21,7 +25,7 @@ public class AddPresetDetailActivity extends AppCompatActivity {
     private EditText etAuthor;
     private Button btnDone;
     private String name;
-    private ArrayList<PeriodModel> arrayList;
+    private PresetModel presetModel;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -32,15 +36,22 @@ public class AddPresetDetailActivity extends AppCompatActivity {
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-        if (getIntent().getExtras() != null) {
-            name = getIntent().getStringExtra("name");
-            arrayList = (ArrayList<PeriodModel>) getIntent().getSerializableExtra("data");
-        }
-        getSupportActionBar().setTitle(name);
-
         etDescription = findViewById(R.id.etPresetDescription);
         etAuthor = findViewById(R.id.etPresetAuthor);
         btnDone = findViewById(R.id.btnDone);
+
+        if (getIntent().getExtras() != null) {
+            if (getIntent().getExtras().containsKey("data")) {
+                presetModel = getIntent().getParcelableExtra("data");
+                if (presetModel != null) {
+                    name = presetModel.getName();
+                    etAuthor.setText(presetModel.getAuthor());
+                    etDescription.setText(presetModel.getDescription());
+                }
+            }
+        }
+        getSupportActionBar().setTitle(name);
+
 
         btnDone.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -48,11 +59,25 @@ public class AddPresetDetailActivity extends AppCompatActivity {
                 if (etDescription.getText().toString().trim().length() > 0) {
                     if (etAuthor.getText().toString().trim().length() > 0) {
                         try {
-                            PresetModel presetModel = new PresetModel();
+                            if (presetModel == null) {
+                                presetModel = new PresetModel();
+                            }
                             presetModel.setAuthor(etAuthor.getText().toString().trim());
                             presetModel.setDescription(etDescription.getText().toString().trim());
                             presetModel.setName(name);
-                            presetModel.setPeriodModelArrayList(arrayList);
+                            ArrayList<PeriodModel> arrayList = presetModel.getPeriodModelArrayList();
+                            if (arrayList != null && arrayList.size() > 0) {
+                                for (int i = 0; i < arrayList.size(); i++) {
+                                    JsonArray result = (JsonArray) new Gson().toJsonTree(arrayList.get(i).getVoiceModelArrayList(),
+                                            new TypeToken<ArrayList<VoiceModel>>() {
+                                            }.getType());
+                                    arrayList.get(i).setVoiceModelArray(result.toString());
+                                }
+                                JsonArray result = (JsonArray) new Gson().toJsonTree(arrayList,
+                                        new TypeToken<ArrayList<PeriodModel>>() {
+                                        }.getType());
+                                presetModel.setPeriodModelArray(result.toString());
+                            }
                             ((BBeatApp) getApplicationContext()).getDbHelper().fillObject(PresetModel.class, presetModel);
                             Toast.makeText(AddPresetDetailActivity.this, getString(R.string.preset_saved), Toast.LENGTH_SHORT).show();
                             Intent intent = new Intent(AddPresetDetailActivity.this, BBeat.class);
@@ -66,7 +91,6 @@ public class AddPresetDetailActivity extends AppCompatActivity {
                     }
                 } else {
                     Toast.makeText(AddPresetDetailActivity.this, getString(R.string.description_error), Toast.LENGTH_SHORT).show();
-
                 }
             }
         });

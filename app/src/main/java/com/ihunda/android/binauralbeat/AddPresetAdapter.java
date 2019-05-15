@@ -1,6 +1,7 @@
 package com.ihunda.android.binauralbeat;
 
 import android.content.Context;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -80,8 +81,20 @@ public class AddPresetAdapter extends MultiLevelAdapter {
             if (periodModel.getVoiceModelArrayList() != null && periodModel.getVoiceModelArrayList().size() > 0) {
                 setExpandButton(periodHolder.ivExpand, periodModel.isExpanded());
                 periodHolder.ivExpand.setVisibility(View.VISIBLE);
+                LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(
+                        0,
+                        LinearLayout.LayoutParams.WRAP_CONTENT,
+                        2.0f
+                );
+                periodHolder.llVoice.setLayoutParams(param);
             } else {
                 periodHolder.ivExpand.setVisibility(View.GONE);
+                LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(
+                        0,
+                        LinearLayout.LayoutParams.WRAP_CONTENT,
+                        1.5f
+                );
+                periodHolder.llVoice.setLayoutParams(param);
             }
             Log.e("MuditLog", periodModel.getLevel() + " " + periodModel.getPosition() + " " + periodModel.isExpanded() + "");
 //            float density = mContext.getResources().getDisplayMetrics().density;
@@ -91,6 +104,11 @@ public class AddPresetAdapter extends MultiLevelAdapter {
         if (holder instanceof VoiceHolder) {
             voiceHolder = (VoiceHolder) holder;
             voiceModel = (VoiceModel) arrayList.get(position);
+            if (voiceModel.getLocalPosition() == 1) {
+                voiceHolder.tvVoiceHeading.setVisibility(View.VISIBLE);
+            } else {
+                voiceHolder.tvVoiceHeading.setVisibility(View.GONE);
+            }
             voiceHolder.tvVoice.setText(mContext.getString(R.string.voice) + " " + voiceModel.getLocalPosition());
             voiceHolder.tvFreqEnd.setText("" + voiceModel.getFreqEnd());
             voiceHolder.tvFreqStart.setText("" + voiceModel.getFreqStart());
@@ -100,7 +118,6 @@ public class AddPresetAdapter extends MultiLevelAdapter {
             float density = mContext.getResources().getDisplayMetrics().density;
             ((ViewGroup.MarginLayoutParams) voiceHolder.llParent.getLayoutParams()).leftMargin = (int) ((getItemViewType(position) * 20) * density + 0.5f);
         }
-
     }
 
     private class PeriodHolder extends RecyclerView.ViewHolder {
@@ -112,9 +129,10 @@ public class AddPresetAdapter extends MultiLevelAdapter {
         TextView tvVisualizer;
         ImageView ivExpand;
         ImageView ivEdit;
-        ImageView ivAdd;
+        TextView tvAdd;
         ImageView ivDelete;
         LinearLayout llParent;
+        LinearLayout llVoice;
 
         PeriodHolder(View itemView) {
             super(itemView);
@@ -126,8 +144,9 @@ public class AddPresetAdapter extends MultiLevelAdapter {
             ivExpand = (ImageView) itemView.findViewById(R.id.ivArrow);
             ivEdit = (ImageView) itemView.findViewById(R.id.ivEdit);
             ivDelete = (ImageView) itemView.findViewById(R.id.ivDelete);
-            ivAdd = (ImageView) itemView.findViewById(R.id.ivAdd);
+            tvAdd = (TextView) itemView.findViewById(R.id.tvAdd);
             llParent = itemView.findViewById(R.id.llParent);
+            llVoice = itemView.findViewById(R.id.llVoice);
             // The following code snippets are only necessary if you set multiLevelRecyclerView.removeItemClickListeners(); in MainActivity.java
             // this enables more than one click event on an item (e.g. Click Event on the item itself and click event on the expand button)
             itemView.setOnClickListener(new View.OnClickListener() {
@@ -158,7 +177,7 @@ public class AddPresetAdapter extends MultiLevelAdapter {
                 }
             });
 
-            ivAdd.setOnClickListener(new View.OnClickListener() {
+            tvAdd.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     addPresetActivity.showAddToPeriodDialog(getAdapterPosition());
@@ -170,17 +189,19 @@ public class AddPresetAdapter extends MultiLevelAdapter {
     private class VoiceHolder extends RecyclerView.ViewHolder {
 
         TextView tvVoice;
+        TextView tvVoiceHeading;
         TextView tvFreqStart;
         TextView tvFreqEnd;
         TextView tvVolume;
         TextView tvPitch;
         ImageView ivEdit;
         ImageView ivDelete;
-        LinearLayout llParent;
+        CardView llParent;
 
         VoiceHolder(View itemView) {
             super(itemView);
             tvVoice = (TextView) itemView.findViewById(R.id.tvVoice);
+            tvVoiceHeading = (TextView) itemView.findViewById(R.id.tvVoiceHeading);
             tvFreqStart = (TextView) itemView.findViewById(R.id.tvFreqStart);
             tvFreqEnd = (TextView) itemView.findViewById(R.id.tvFreqEnd);
             tvVolume = (TextView) itemView.findViewById(R.id.tvVolume);

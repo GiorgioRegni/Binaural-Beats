@@ -86,6 +86,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-core:16.0.1'
     implementation 'com.crashlytics.sdk.android:crashlytics:2.9.9'
     implementation 'com.muditsen.multilevelrecyclerview:multilevelview:1.0.0'
+    implementation 'com.google.code.gson:gson:2.8.5'
 }
 
 

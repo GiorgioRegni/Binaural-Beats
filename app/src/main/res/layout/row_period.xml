@@ -23,7 +23,7 @@
             android:layout_height="wrap_content"
             android:gravity="left"
             android:maxLines="1"
-            android:padding="5dp"
+            android:padding="@dimen/dp_5"
             android:text="@string/period"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="@android:color/black"
@@ -33,7 +33,7 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:padding="5dp">
+            android:padding="@dimen/dp_5">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -88,7 +88,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:orientation="horizontal"
-            android:padding="5dp">
+            android:padding="@dimen/dp_5">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -145,7 +145,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:orientation="horizontal"
-            android:padding="5dp">
+            android:padding="@dimen/dp_5">
 
             <ImageView
                 android:id="@+id/ivEdit"
@@ -160,27 +160,47 @@
                 android:id="@+id/ivDelete"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/dp_10"
                 android:layout_weight="1"
                 android:contentDescription="@null"
                 android:padding="@dimen/dp_5"
                 android:src="@drawable/ic_delete" />
 
-            <ImageView
-                android:id="@+id/ivAdd"
+            <!--<ImageView-->
+            <!--android:id="@+id/ivAdd"-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginLeft="@dimen/dp_10"-->
+            <!--android:layout_weight="1"-->
+            <!--android:contentDescription="@null"-->
+            <!--android:padding="@dimen/dp_5"-->
+            <!--android:src="@drawable/ic_add" />-->
+            <LinearLayout
+                android:id="@+id/llVoice"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/dp_10"
-                android:layout_weight="1"
-                android:contentDescription="@null"
-                android:padding="@dimen/dp_5"
-                android:src="@drawable/ic_add" />
+                android:layout_weight="2"
+                android:gravity="center">
+
+                <TextView
+                    android:id="@+id/tvAdd"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_add_voice"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:paddingLeft="@dimen/dp_10"
+                    android:paddingTop="@dimen/dp_5"
+                    android:paddingRight="@dimen/dp_10"
+                    android:paddingBottom="@dimen/dp_5"
+                    android:text="@string/add_voice"
+                    android:textAppearance="?android:attr/textAppearance"
+                    android:textColor="@android:color/white" />
+            </LinearLayout>
 
             <ImageView
                 android:id="@+id/ivArrow"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/dp_10"
                 android:layout_weight="1"
                 android:contentDescription="@null"
                 android:padding="@dimen/dp_5"

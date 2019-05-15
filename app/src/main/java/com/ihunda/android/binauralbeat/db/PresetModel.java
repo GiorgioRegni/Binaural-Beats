@@ -4,17 +4,14 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.j256.ormlite.field.DatabaseField;
-import com.j256.ormlite.field.ForeignCollectionField;
 
-import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 /**
  * Created by kalpit on 9/04/19.
  */
-public class PresetModel implements Serializable, Parcelable {
+public class PresetModel implements Parcelable {
     @DatabaseField(generatedId = true)
     private int id;
     @DatabaseField
@@ -23,8 +20,18 @@ public class PresetModel implements Serializable, Parcelable {
     private String description;
     @DatabaseField
     private String author;
-    @ForeignCollectionField
-    private Collection<PeriodModel> periodModelArrayList = new ArrayList<PeriodModel>();
+    @DatabaseField
+    private String periodModelArray;
+    private ArrayList<PeriodModel> periodModelArrayList = new ArrayList<PeriodModel>();
+
+    public String getPeriodModelArray() {
+        return periodModelArray;
+    }
+
+    public void setPeriodModelArray(String periodModelArray) {
+        this.periodModelArray = periodModelArray;
+    }
+
 
     public int getId() {
         return id;
@@ -59,7 +66,7 @@ public class PresetModel implements Serializable, Parcelable {
     }
 
     public ArrayList<PeriodModel> getPeriodModelArrayList() {
-        return (ArrayList<PeriodModel>) periodModelArrayList;
+        return periodModelArrayList;
     }
 
     public void setPeriodModelArrayList(ArrayList<PeriodModel> periodModelArrayList) {
@@ -81,6 +88,7 @@ public class PresetModel implements Serializable, Parcelable {
         parcel.writeString(name);
         parcel.writeString(description);
         parcel.writeString(author);
+        parcel.writeString(periodModelArray);
         parcel.writeList((List) periodModelArrayList);
     }
 
@@ -90,6 +98,7 @@ public class PresetModel implements Serializable, Parcelable {
         name = in.readString();
         description = in.readString();
         author = in.readString();
+        periodModelArray = in.readString();
         periodModelArrayList = new ArrayList<>();
         in.readList((List) periodModelArrayList, PeriodModel.class.getClassLoader());
     }

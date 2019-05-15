@@ -18,7 +18,7 @@
             android:layout_height="wrap_content"
             android:background="@android:color/black"
             android:gravity="center"
-            android:padding="5dp"
+            android:padding="@dimen/dp_5"
             android:text="@string/history"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textColor="@android:color/white"

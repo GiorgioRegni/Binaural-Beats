@@ -20,6 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ihunda.android.binauralbeat.db.PeriodModel;
+import com.ihunda.android.binauralbeat.db.PresetModel;
 import com.ihunda.android.binauralbeat.db.VoiceModel;
 import com.multilevelview.MultiLevelRecyclerView;
 import com.multilevelview.models.RecyclerViewItem;
@@ -40,6 +41,7 @@ public class AddPresetActivity extends AppCompatActivity implements View.OnClick
     private AddPresetAdapter addPresetAdapter;
     private int level = 1;
     private MultiLevelRecyclerView multiLevelRecyclerView;
+    private PresetModel presetModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,15 +50,32 @@ public class AddPresetActivity extends AppCompatActivity implements View.OnClick
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+        arrayList = new ArrayList<>();
 
         tvTitle = mToolbar.findViewById(R.id.tvTitle);
         tvDuration = mToolbar.findViewById(R.id.tvDuration);
         if (getIntent().getExtras() != null) {
-            tvTitle.setText(getIntent().getStringExtra("name"));
+            if (getIntent().getExtras().containsKey("name")) {
+                tvTitle.setText(getIntent().getStringExtra("name"));
+            }
             if (getIntent().getExtras().containsKey("data")) {
-                ArrayList<PeriodModel> periodModels = (ArrayList<PeriodModel>) getIntent().getSerializableExtra("data");
-                arrayList = new ArrayList<>();
-                arrayList.addAll(periodModels);
+                presetModel = getIntent().getParcelableExtra("data");
+                if (presetModel != null) {
+                    tvTitle.setText(presetModel.getName());
+                    arrayList.addAll(presetModel.getPeriodModelArrayList());
+                    if (arrayList != null && arrayList.size() > 0) {
+                        for (int i = 0; i < arrayList.size(); i++) {
+                            PeriodModel periodModel = (PeriodModel) arrayList.get(i);
+                            if (periodModel.getVoiceModelArrayList() != null && periodModel.getVoiceModelArrayList().size() > 0) {
+                                List<RecyclerViewItem> voiceModels = new ArrayList<>();
+                                for (int j = 0; j < periodModel.getVoiceModelArrayList().size(); j++) {
+                                    voiceModels.add(periodModel.getVoiceModelArrayList().get(j));
+                                }
+                                periodModel.addChildren(voiceModels);
+                            }
+                        }
+                    }
+                }
             }
         }
         if (totalDurationSeconds == 0) {
@@ -71,7 +90,6 @@ public class AddPresetActivity extends AppCompatActivity implements View.OnClick
         multiLevelRecyclerView = (MultiLevelRecyclerView) findViewById(R.id.rv_list);
         multiLevelRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        arrayList = new ArrayList<>();
         refreshAdapter();
         //If you are handling the click on your own then you can
         // multiLevelRecyclerView.removeItemClickListeners();
@@ -143,18 +161,25 @@ public class AddPresetActivity extends AppCompatActivity implements View.OnClick
             showAddEditPeriodDialog(-1);
         } else if (view == btnDone) {
             if (arrayList != null && arrayList.size() > 0) {
-                Intent intent = new Intent(AddPresetActivity.this, AddPresetDetailActivity.class);
-                intent.putExtra("name", tvTitle.getText().toString().trim());
                 for (int i = 0; i < arrayList.size(); i++) {
                     if (arrayList.get(i).isExpanded()) {
                         multiLevelRecyclerView.toggleItemsGroup(i);
                     }
                 }
-                intent.putExtra("data", arrayList);
+                if (presetModel == null) {
+                    presetModel = new PresetModel();
+                    presetModel.setName(tvTitle.getText().toString());
+                }
+                ArrayList<PeriodModel> periodModelArrayList = new ArrayList<>();
+                for (int i = 0; i < arrayList.size(); i++) {
+                    periodModelArrayList.add((PeriodModel) arrayList.get(i));
+                }
+                presetModel.setPeriodModelArrayList(periodModelArrayList);
+                Intent intent = new Intent(AddPresetActivity.this, AddPresetDetailActivity.class);
+                intent.putExtra("data", presetModel);
                 startActivity(intent);
             } else {
                 Toast.makeText(AddPresetActivity.this, getString(R.string.preset_error), Toast.LENGTH_SHORT).show();
-
             }
         }
     }
@@ -327,7 +352,6 @@ public class AddPresetActivity extends AppCompatActivity implements View.OnClick
         ivPlus.setOnTouchListener(new OnTouchContinuousListener() {
             @Override
             public void onTouchRepeat(View view, boolean longpress) {
-
                 durationSeconds += longpress ? LONGPRESS_INC : 1;
                 etDuration.setText(formatTime(durationSeconds));
             }

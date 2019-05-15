@@ -3,7 +3,6 @@ package com.ihunda.android.binauralbeat.db;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.j256.ormlite.field.DatabaseField;
 import com.multilevelview.models.RecyclerViewItem;
 
 import java.io.Serializable;
@@ -12,17 +11,9 @@ import java.io.Serializable;
  * Created by kalpit on 9/04/19.
  */
 public class VoiceModel extends RecyclerViewItem implements Serializable, Parcelable {
-    @DatabaseField(canBeNull = true, foreign = true)
-    private PeriodModel periodModel;
-    @DatabaseField(generatedId = true)
-    private int id;
-    @DatabaseField
     private int freqStart;
-    @DatabaseField
     private int freqEnd;
-    @DatabaseField
     private int volume;
-    @DatabaseField
     private int pitch;
 
     public int getLocalPosition() {
@@ -39,13 +30,6 @@ public class VoiceModel extends RecyclerViewItem implements Serializable, Parcel
         super(level);
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public int getFreqStart() {
         return freqStart;
@@ -90,7 +74,6 @@ public class VoiceModel extends RecyclerViewItem implements Serializable, Parcel
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeInt(id);
         parcel.writeInt(freqStart);
         parcel.writeInt(freqEnd);
         parcel.writeInt(volume);
@@ -99,7 +82,6 @@ public class VoiceModel extends RecyclerViewItem implements Serializable, Parcel
 
     protected VoiceModel(Parcel in) {
         super(1);
-        id = in.readInt();
         freqStart = in.readInt();
         freqEnd = in.readInt();
         volume = in.readInt();

@@ -3,35 +3,31 @@ package com.ihunda.android.binauralbeat.db;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.j256.ormlite.field.DatabaseField;
-import com.j256.ormlite.field.ForeignCollectionField;
 import com.multilevelview.models.RecyclerViewItem;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 /**
  * Created by kalpit on 9/04/19.
  */
 public class PeriodModel extends RecyclerViewItem implements Serializable, Parcelable {
-    @DatabaseField(canBeNull = true, foreign = true)
-    private PresetModel presetModel;
-    @DatabaseField(generatedId = true)
-    private int id;
-    @DatabaseField
     private int duration;
-    @DatabaseField
     private String background;
-    @DatabaseField
     private String Visualizer;
-    @DatabaseField
     private String backgroundVolume;
-    @ForeignCollectionField
-    private Collection<VoiceModel> voiceModelArrayList = new ArrayList<VoiceModel>();
-
+    private String voiceModelArray;
+    private ArrayList<VoiceModel> voiceModelArrayList = new ArrayList<VoiceModel>();
     private int localPosition;
+
+    public String getVoiceModelArray() {
+        return voiceModelArray;
+    }
+
+    public void setVoiceModelArray(String voiceModelArray) {
+        this.voiceModelArray = voiceModelArray;
+    }
 
     public int getLocalPosition() {
         return localPosition;
@@ -46,13 +42,6 @@ public class PeriodModel extends RecyclerViewItem implements Serializable, Parce
         super(level);
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public int getDuration() {
         return duration;
@@ -79,7 +68,7 @@ public class PeriodModel extends RecyclerViewItem implements Serializable, Parce
     }
 
     public ArrayList<VoiceModel> getVoiceModelArrayList() {
-        return (ArrayList<VoiceModel>) voiceModelArrayList;
+        return voiceModelArrayList;
     }
 
     public void setVoiceModelArrayList(ArrayList<VoiceModel> voiceModelArrayList) {
@@ -105,21 +94,21 @@ public class PeriodModel extends RecyclerViewItem implements Serializable, Parce
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeInt(id);
         parcel.writeInt(duration);
         parcel.writeString(background);
         parcel.writeString(Visualizer);
         parcel.writeString(backgroundVolume);
+        parcel.writeString(voiceModelArray);
         parcel.writeList((List) voiceModelArrayList);
     }
 
     protected PeriodModel(Parcel in) {
         super(1);
-        id = in.readInt();
         duration = in.readInt();
         background = in.readString();
         Visualizer = in.readString();
         backgroundVolume = in.readString();
+        voiceModelArray = in.readString();
         voiceModelArrayList = new ArrayList<>();
         in.readList((List) voiceModelArrayList, VoiceModel.class.getClassLoader());
     }

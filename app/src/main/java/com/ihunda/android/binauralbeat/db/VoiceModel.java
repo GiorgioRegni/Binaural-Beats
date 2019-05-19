@@ -5,16 +5,14 @@ import android.os.Parcelable;
 
 import com.multilevelview.models.RecyclerViewItem;
 
-import java.io.Serializable;
-
 /**
  * Created by kalpit on 9/04/19.
  */
-public class VoiceModel extends RecyclerViewItem implements Serializable, Parcelable {
+public class VoiceModel extends RecyclerViewItem implements Parcelable {
     private int freqStart;
     private int freqEnd;
     private int volume;
-    private int pitch;
+    private int note;
 
     public int getLocalPosition() {
         return localPosition;
@@ -55,12 +53,12 @@ public class VoiceModel extends RecyclerViewItem implements Serializable, Parcel
         this.volume = volume;
     }
 
-    public int getPitch() {
-        return pitch;
+    public int getNote() {
+        return note;
     }
 
-    public void setPitch(int pitch) {
-        this.pitch = pitch;
+    public void setNote(int note) {
+        this.note = note;
     }
 
     VoiceModel() {
@@ -77,7 +75,7 @@ public class VoiceModel extends RecyclerViewItem implements Serializable, Parcel
         parcel.writeInt(freqStart);
         parcel.writeInt(freqEnd);
         parcel.writeInt(volume);
-        parcel.writeInt(pitch);
+        parcel.writeInt(note);
     }
 
     protected VoiceModel(Parcel in) {
@@ -85,7 +83,7 @@ public class VoiceModel extends RecyclerViewItem implements Serializable, Parcel
         freqStart = in.readInt();
         freqEnd = in.readInt();
         volume = in.readInt();
-        pitch = in.readInt();
+        note = in.readInt();
     }
 
     @SuppressWarnings("unused")

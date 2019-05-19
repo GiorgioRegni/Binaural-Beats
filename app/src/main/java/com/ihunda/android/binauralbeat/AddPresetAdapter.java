@@ -113,7 +113,7 @@ public class AddPresetAdapter extends MultiLevelAdapter {
             voiceHolder.tvFreqEnd.setText("" + voiceModel.getFreqEnd());
             voiceHolder.tvFreqStart.setText("" + voiceModel.getFreqStart());
             voiceHolder.tvVolume.setText("" + voiceModel.getVolume());
-            voiceHolder.tvPitch.setText("" + voiceModel.getPitch());
+            voiceHolder.tvPitch.setText("" + voiceModel.getNote());
 
             float density = mContext.getResources().getDisplayMetrics().density;
             ((ViewGroup.MarginLayoutParams) voiceHolder.llParent.getLayoutParams()).leftMargin = (int) ((getItemViewType(position) * 20) * density + 0.5f);

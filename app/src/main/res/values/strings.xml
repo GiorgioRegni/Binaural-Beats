@@ -139,7 +139,7 @@
     <string name="freq_start">Frequency Start</string>
     <string name="freq_end">Frequency End</string>
     <string name="add">Add</string>
-    <string name="pitch">Pitch</string>
+    <string name="note">Note</string>
     <string name="period">Period</string>
     <string name="save">Save</string>
     <string name="duration_error">Please set duration greater than 00:00 seconds</string>

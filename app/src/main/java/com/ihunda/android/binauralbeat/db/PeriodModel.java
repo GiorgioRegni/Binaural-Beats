@@ -5,14 +5,13 @@ import android.os.Parcelable;
 
 import com.multilevelview.models.RecyclerViewItem;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by kalpit on 9/04/19.
  */
-public class PeriodModel extends RecyclerViewItem implements Serializable, Parcelable {
+public class PeriodModel extends RecyclerViewItem implements Parcelable {
     private int duration;
     private String background;
     private String Visualizer;

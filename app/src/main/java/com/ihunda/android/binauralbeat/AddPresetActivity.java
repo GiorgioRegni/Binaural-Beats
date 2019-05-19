@@ -426,6 +426,7 @@ public class AddPresetActivity extends AppCompatActivity implements View.OnClick
         dialog.setContentView(R.layout.dialog_add_bbv);
         final EditText etStart = dialog.findViewById(R.id.etFreqStart);
         final EditText etEnd = dialog.findViewById(R.id.etFreqEnd);
+        final EditText etNote = dialog.findViewById(R.id.etNote);
         final Spinner spinnerStart = dialog.findViewById(R.id.spinnerStart);
         List<String> list = new ArrayList<String>();
         list.add("Beta = 20 Hz");
@@ -512,25 +513,79 @@ public class AddPresetActivity extends AppCompatActivity implements View.OnClick
 
             }
         });
-        final TextView tvPitch = dialog.findViewById(R.id.tvPitch);
-        final SeekBar seekBarPitch = dialog.findViewById(R.id.seekbarPitch);
-        tvPitch.setText("" + seekBarPitch.getProgress());
-        seekBarPitch.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+
+        final Spinner spinnerNote = dialog.findViewById(R.id.spinnerNote);
+        List<String> listNote = new ArrayList<String>();
+        listNote.add("A (4)");
+        listNote.add("A# (4)");
+        listNote.add("B (4)");
+        listNote.add("C (4)");
+        listNote.add("C# (4)");
+        listNote.add("D (4)");
+        listNote.add("D# (4)");
+        listNote.add("E (4)");
+        listNote.add("F (4)");
+        listNote.add("F# (4)");
+        listNote.add("G (4)");
+        listNote.add("G# (4)");
+        listNote.add("A (4)");
+        listNote.add("A# (5)");
+        listNote.add("B (5)");
+        listNote.add("C (5)");
+        ArrayAdapter<String> dataAdapterNote = new ArrayAdapter<String>(this, R.layout.row_spinner, listNote);
+        dataAdapterNote.setDropDownViewResource(R.layout.row_spinner_dropdown);
+        spinnerNote.setAdapter(dataAdapterNote);
+        spinnerNote.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                tvPitch.setText("" + i);
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                if (i == 0) {
+                    etNote.setText("432");
+                } else if (i == 1) {
+                    etNote.setText("458");
+                } else if (i == 2) {
+                    etNote.setText("485");
+                } else if (i == 3) {
+                    etNote.setText("514");
+                } else if (i == 4) {
+                    etNote.setText("544");
+                } else if (i == 5) {
+                    etNote.setText("577");
+                } else if (i == 6) {
+                    etNote.setText("611");
+                } else if (i == 7) {
+                    etNote.setText("647");
+                } else if (i == 8) {
+                    etNote.setText("686");
+                } else if (i == 9) {
+                    etNote.setText("727");
+                } else if (i == 10) {
+                    etNote.setText("770");
+                } else if (i == 11) {
+                    etNote.setText("816");
+                } else if (i == 12) {
+                    etNote.setText("864");
+                } else if (i == 13) {
+                    etNote.setText("915");
+                } else if (i == 14) {
+                    etNote.setText("970");
+                } else if (i == 15) {
+                    etNote.setText("1027");
+                }
             }
 
             @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
+            public void onNothingSelected(AdapterView<?> adapterView) {
 
             }
         });
+        ImageView ivArrowNote = dialog.findViewById(R.id.ivArrowNote);
+        ivArrowNote.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                spinnerNote.performClick();
+            }
+        });
+
         Button btnCancel = dialog.findViewById(R.id.btnCancel);
         btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -558,7 +613,7 @@ public class AddPresetActivity extends AppCompatActivity implements View.OnClick
                     VoiceModel voiceModel = new VoiceModel(1);
                     voiceModel.setFreqEnd(Integer.parseInt(etEnd.getText().toString().trim()));
                     voiceModel.setFreqStart(Integer.parseInt(etStart.getText().toString().trim()));
-                    voiceModel.setPitch(Integer.parseInt(tvPitch.getText().toString()));
+                    voiceModel.setNote(Integer.parseInt(etNote.getText().toString().trim()));
                     voiceModel.setVolume(Integer.parseInt(tvVolume.getText().toString()));
 
                     List<RecyclerViewItem> voiceModels1 = new ArrayList<>();
@@ -582,7 +637,7 @@ public class AddPresetActivity extends AppCompatActivity implements View.OnClick
                 } else {
                     ((VoiceModel) arrayList.get(parentPosition)).setFreqEnd(Integer.parseInt(etEnd.getText().toString().trim()));
                     ((VoiceModel) arrayList.get(parentPosition)).setFreqStart(Integer.parseInt(etStart.getText().toString().trim()));
-                    ((VoiceModel) arrayList.get(parentPosition)).setPitch(Integer.parseInt(tvPitch.getText().toString()));
+                    ((VoiceModel) arrayList.get(parentPosition)).setNote(Integer.parseInt(etNote.getText().toString().trim()));
                     ((VoiceModel) arrayList.get(parentPosition)).setVolume(Integer.parseInt(tvVolume.getText().toString()));
                     refreshAdapter();
                     dialog.dismiss();
@@ -611,10 +666,41 @@ public class AddPresetActivity extends AppCompatActivity implements View.OnClick
             } else if (voiceModel.getFreqEnd() >= 1) {
                 spinnerEnd.setSelection(3);
             }
+            if (voiceModel.getNote() >= 1027) {
+                spinnerNote.setSelection(15);
+            } else if (voiceModel.getNote() >= 970) {
+                spinnerNote.setSelection(14);
+            } else if (voiceModel.getNote() >= 915) {
+                spinnerNote.setSelection(13);
+            } else if (voiceModel.getNote() >= 864) {
+                spinnerNote.setSelection(12);
+            } else if (voiceModel.getNote() >= 816) {
+                spinnerNote.setSelection(11);
+            } else if (voiceModel.getNote() >= 770) {
+                spinnerNote.setSelection(10);
+            } else if (voiceModel.getNote() >= 727) {
+                spinnerNote.setSelection(9);
+            } else if (voiceModel.getNote() >= 686) {
+                spinnerNote.setSelection(8);
+            } else if (voiceModel.getNote() >= 647) {
+                spinnerNote.setSelection(7);
+            } else if (voiceModel.getNote() >= 611) {
+                spinnerNote.setSelection(6);
+            } else if (voiceModel.getNote() >= 577) {
+                spinnerNote.setSelection(5);
+            } else if (voiceModel.getNote() >= 544) {
+                spinnerNote.setSelection(4);
+            } else if (voiceModel.getNote() >= 514) {
+                spinnerNote.setSelection(3);
+            } else if (voiceModel.getNote() >= 485) {
+                spinnerNote.setSelection(2);
+            } else if (voiceModel.getNote() >= 458) {
+                spinnerNote.setSelection(1);
+            } else {
+                spinnerNote.setSelection(0);
+            }
             tvVolume.setText("" + voiceModel.getVolume());
             seekBarVolume.setProgress(voiceModel.getVolume());
-            tvPitch.setText("" + voiceModel.getPitch());
-            seekBarPitch.setProgress(voiceModel.getPitch());
             btnAdd.setText(getString(R.string.save));
         }
         dialog.show();

@@ -129,7 +129,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="left"
-                    android:text="@string/pitch"
+                    android:text="@string/note"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:textColor="@android:color/black"
                     android:textStyle="bold" />

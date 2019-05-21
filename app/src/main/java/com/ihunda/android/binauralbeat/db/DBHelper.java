@@ -1,6 +1,7 @@
 package com.ihunda.android.binauralbeat.db;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Environment;
 import android.widget.Toast;
@@ -66,12 +67,38 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
          */
         if (oldVersion == 1 && newVersion == 2) {
             try {
-                TableUtils.createTable(cs, PresetModel.class);
+                if (!doesTableExist(db, "presetmodel")) {
+                    TableUtils.createTable(cs, PresetModel.class);
+                }
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
         }
 
+    }
+
+    public boolean doesTableExist(SQLiteDatabase db, String tableName) {
+        Cursor cursor = db.rawQuery("select DISTINCT tbl_name from sqlite_master where tbl_name = '" + tableName + "'", null);
+
+        if (cursor != null) {
+            if (cursor.getCount() > 0) {
+                cursor.close();
+                return true;
+            }
+            cursor.close();
+        }
+        return false;
+    }
+
+    @Override
+    public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        if (newVersion == 1) {
+            db.beginTransaction();
+            db.execSQL("DROP TABLE IF EXISTS '" + "presetmodel" + "'");
+            db.setVersion(newVersion);
+            db.setTransactionSuccessful();
+            db.endTransaction();
+        }
     }
 
     public <T> List<T> getAll(Class<T> clazz) throws SQLException {

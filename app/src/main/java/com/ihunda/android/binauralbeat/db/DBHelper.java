@@ -59,19 +59,18 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, ConnectionSource cs, int oldVersion, int newVersion) {
-        /*
-         * try { if(oldVersion < 2) { // no alter table exists
-         * TableUtils.alterTable(); } } catch (SQLException e) { LogTag.e(
-         * e.getMessage()); throw new RuntimeException(e); }
-         */
-        if (oldVersion == 1 && newVersion == 2) {
-            try {
-                TableUtils.createTable(cs, HistoryModel.class);
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
-        }
 
+    }
+
+    @Override
+    public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        if (newVersion == 1) {
+            db.beginTransaction();
+            db.execSQL("DROP TABLE IF EXISTS '" + "presetmodel" + "'");
+            db.setVersion(newVersion);
+            db.setTransactionSuccessful();
+            db.endTransaction();
+        }
     }
 
     public <T> List<T> getAll(Class<T> clazz) throws SQLException {

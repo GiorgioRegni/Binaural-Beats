@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "863047954030",
+    "firebase_url": "https://bbt-app-20fef.firebaseio.com",
+    "project_id": "bbt-app-20fef",
+    "storage_bucket": "bbt-app-20fef.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:863047954030:android:31f7c798f64dedc3",
+        "android_client_info": {
+          "package_name": "com.ihunda.android.binauralbeat"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "863047954030-vitn90m6a4no745h938qpus73vmc822k.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB755vulnBTgA7zR16AZlrfQx7hqQLZueY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "863047954030-vitn90m6a4no745h938qpus73vmc822k.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

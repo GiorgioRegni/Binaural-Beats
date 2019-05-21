@@ -64,7 +64,7 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
 
     @Override
     public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        if (oldVersion == 2 & newVersion == 1) {
+        if (newVersion == 1) {
             db.beginTransaction();
             db.execSQL("DROP TABLE IF EXISTS '" + "presetmodel" + "'");
             db.setVersion(newVersion);

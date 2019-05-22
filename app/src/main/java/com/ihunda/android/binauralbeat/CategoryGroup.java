@@ -3,44 +3,53 @@ package com.ihunda.android.binauralbeat;
 import java.util.ArrayList;
 
 public class CategoryGroup {
-	private String groupName;
-	private String niceName;
-	private ArrayList<ProgramMeta> objets;
+    private String groupName;
+    private String niceName;
+    private ArrayList<ProgramMeta> objets;
 
-	public CategoryGroup(String name) {
-		super();
-		this.groupName = name;
-		this.objets = new ArrayList<ProgramMeta>();
-	}
+    public ArrayList<Program> getProgram() {
+        return program;
+    }
 
-	public String getName() {
-		return groupName;
-	}
 
-	public void setName(String nom) {
-		this.groupName = nom;
-	}
+    private ArrayList<Program> program;
 
-	public ArrayList<ProgramMeta> getObjets() {
-		return objets;
-	}
-	
-	public void add(ProgramMeta m) {
-		m.setGroup(this);
-		objets.add(m);
-	}
+    public CategoryGroup(String name) {
+        super();
+        this.groupName = name;
+        this.objets = new ArrayList<ProgramMeta>();
+        this.program = new ArrayList<Program>();
+    }
 
-	public void setObjets(ArrayList<ProgramMeta> objets) {
-		this.objets = objets;
-	}
+    public String getName() {
+        return groupName;
+    }
 
-	public String getNiceName() {
-		if (niceName == null)
-			niceName = WordUtils.capitalize(groupName.toLowerCase());
-		return niceName;
-	}
+    public void setName(String nom) {
+        this.groupName = nom;
+    }
 
-	public void setNiceName(String niceName) {
-		this.niceName = niceName;
-	}
+    public ArrayList<ProgramMeta> getObjets() {
+        return objets;
+    }
+
+    public void add(ProgramMeta m, Program p) {
+        m.setGroup(this);
+        objets.add(m);
+        program.add(p);
+    }
+
+    public void setObjets(ArrayList<ProgramMeta> objets) {
+        this.objets = objets;
+    }
+
+    public String getNiceName() {
+        if (niceName == null)
+            niceName = WordUtils.capitalize(groupName.toLowerCase());
+        return niceName;
+    }
+
+    public void setNiceName(String niceName) {
+        this.niceName = niceName;
+    }
 }

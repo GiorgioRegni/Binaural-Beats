@@ -28,6 +28,7 @@ import android.app.Dialog;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -36,6 +37,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.PowerManager;
@@ -114,7 +116,7 @@ import java.util.Vector;
 
 import io.fabric.sdk.android.Fabric;
 
-public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener, BillingClientStateListener {
+public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener {
 
     enum eState {
         START,
@@ -256,6 +258,9 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
      * In app purchase objects declaration
      */
     BillingClient mBillingClient;
+    boolean mIsBillingServiceConnected = false;
+    int mBillingClientResponseCode = 0;
+
     List<SkuDetails> mProductSkuList;
     SharedPref mSharedPref = SharedPref.getInstance();
     String mDonationLevel = null;
@@ -285,6 +290,7 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
         mSharedPref.initialize(this);
         //in app purchase billing client initialization
         mBillingClient = BillingClient.newBuilder(this).setListener(this).build();
+        mIsBillingServiceConnected = false;
 
         /*
          * Sets up power management, device should not go to sleep during a program
@@ -388,34 +394,7 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
         programs = DefaultProgramsBuilder.getProgramMethods(this);
         groups = new ArrayList<CategoryGroup>();
 
-        for (String pname : programs.keySet()) {
-
-            ProgramMeta pm = programs.get(pname);
-            String catname = pm.getCat().toString();
-            CategoryGroup g = null;
-
-            /* Check if I already have a group with that name */
-            for (CategoryGroup g2 : groups) {
-                if (g2.getName().equals(catname)) {
-                    g = g2;
-                }
-            }
-            if (g == null) {
-                g = new CategoryGroup(catname);
-
-                try {
-                    g.setNiceName(getString(R.string.class.getField("group_" + catname.toLowerCase()).getInt(null)));
-                } catch (Exception e) {
-                    // pass
-                }
-
-                groups.add(g);
-            }
-
-            g.add(pm);
-        }
-
-        ProgramListAdapter adapter = new ProgramListAdapter(this, groups);
+        new LoadAdapter().execute();
 
         mPresetList.setOnGroupClickListener(new OnGroupClickListener() {
 
@@ -440,14 +419,6 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
         LayoutInflater inflater = getLayoutInflater();
 
         mPresetList.setGroupIndicator(getResources().getDrawable(R.drawable.empty));
-        mPresetList.setAdapter(adapter);
-
-        // Expand all
-        for (int groupPosition = 0; groupPosition < adapter.getGroupCount(); groupPosition++) {
-            if (mPresetList.isGroupExpanded(groupPosition) == false) {
-                mPresetList.expandGroup(groupPosition);
-            }
-        }
 
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -529,10 +500,11 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
 
         initSounds();
 
-        mBillingClient.startConnection(BBeat.this);
+        _updateDonationLevel();
 
         state = appState.NONE;
         goToState(appState.SETUP);
+
     }
 
     private void _show_tutorial() {
@@ -998,7 +970,6 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
                         .setCancelable(true)
                         .setPositiveButton(R.string.donate, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
-                                //start billing client connection
                                 getAllProductsList();
 
                             }
@@ -1779,24 +1750,38 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
     }
 
     private void _updateDonationLevel() {
+        _updateDonationLevel(false);
+    }
+    private void _updateDonationLevel(boolean noNetwork) {
         mDonationLevel = null;
 
         String sku = mSharedPref.getString(AppConstants.DONATIONPURCHASESKU);
 
-        if (sku == "" || sku == null) {
-            // try to sync up purchase history of that user
-            Purchase.PurchasesResult purchasesRes = mBillingClient.queryPurchases(BillingClient.SkuType.INAPP);
-            if (purchasesRes.getResponseCode() == BillingClient.BillingResponse.OK) {
-                List<Purchase> purchasesList = purchasesRes.getPurchasesList();
+        if (noNetwork == false && (sku == "" || sku == null)) {
 
-                for (Purchase purchase : purchasesList) {
-                    //String purchaseToken = purchase.getPurchaseToken();
-                    String purchaseSku = purchase.getSku();
-                    //long purchaseTime = purchase.getPurchaseTime();
-                    mSharedPref.putData(AppConstants.DONATIONPURCHASESKU, purchaseSku);
-                    sku = purchaseSku;
+            executeBillingServiceRequest(new Runnable() {
+                @Override
+                public void run() {
+                    // try to sync up purchase history of that user
+                    Purchase.PurchasesResult purchasesRes = mBillingClient.queryPurchases(BillingClient.SkuType.INAPP);
+                    if (purchasesRes.getResponseCode() == BillingClient.BillingResponse.OK) {
+                        List<Purchase> purchasesList = purchasesRes.getPurchasesList();
+                        boolean hasAPurchase = false;
+                        for (Purchase purchase : purchasesList) {
+                            //String purchaseToken = purchase.getPurchaseToken();
+                            String purchaseSku = purchase.getSku();
+                            //long purchaseTime = purchase.getPurchaseTime();
+                            mSharedPref.putData(AppConstants.DONATIONPURCHASESKU, purchaseSku);
+                            hasAPurchase = true;
+                        }
+                        // This recovers a purchase when an user switch phone
+                        // or reinstall the app
+                        if (hasAPurchase)
+                            _updateDonationLevel(true);
+                    }
                 }
-            }
+            }, false);
+
         }
 
         switch (sku) {
@@ -1844,45 +1829,80 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
         }
     }
 
-    @Override
-    public void onBillingSetupFinished(int responseCode) {
-        //billing client is ready
-        if (responseCode == BillingClient.BillingResponse.OK) {
-            _updateDonationLevel();
+    private void startBillingServiceConnection(final Runnable executeOnSuccess, final boolean toastOnError) {
+        mBillingClient.startConnection(new BillingClientStateListener() {
+            @Override
+            public void onBillingSetupFinished(int billingResponseCode) {
+                Log.d(LOGBBEAT, "Billing Setup finished. Response code: " + billingResponseCode);
+
+                if (billingResponseCode == BillingClient.BillingResponse.OK) {
+                    mIsBillingServiceConnected = true;
+                    if (executeOnSuccess != null) {
+                        synchronized (BBeat.this) {
+                            executeOnSuccess.run();
+                        }
+                    }
+                } else {
+                    if (toastOnError == true)
+                        ToastText(R.string.DONATION_CONNECTION_ERROR);
+                }
+                mBillingClientResponseCode = billingResponseCode;
+            }
+
+            @Override
+            public void onBillingServiceDisconnected() {
+                mIsBillingServiceConnected = false;
+            }
+        });
+    }
+
+    private void executeBillingServiceRequest(Runnable runnable) {
+        executeBillingServiceRequest(runnable, true);
+    }
+
+    private void executeBillingServiceRequest(Runnable runnable, boolean toastOnError) {
+        if (mIsBillingServiceConnected) {
+            synchronized (BBeat.this) {
+                runnable.run();
+            }
+        } else {
+            // If billing service was disconnected, we try to reconnect 1 time.
+            // (feel free to introduce your retry policy here).
+            startBillingServiceConnection(runnable, toastOnError);
         }
     }
-
-    @Override
-    public void onBillingServiceDisconnected() {
-        //if client is disconnected restart it
-        mBillingClient.startConnection(this);
-    }
-
     public void getAllProductsList() {
-        List<String> skuList = new ArrayList<>();
-        skuList.add("don_10");
-        skuList.add("don_50");
-        skuList.add("don_100");
-        SkuDetailsParams.Builder params = SkuDetailsParams.newBuilder();
-        params.setSkusList(skuList).setType(BillingClient.SkuType.INAPP);
-        mBillingClient.querySkuDetailsAsync(params.build(), new SkuDetailsResponseListener() {
+        executeBillingServiceRequest(new Runnable() {
             @Override
-            public void onSkuDetailsResponse(int responseCode, List<SkuDetails> skuDetailsList) {
-                if (responseCode == BillingClient.BillingResponse.OK && skuDetailsList != null) {
-                    mProductSkuList = new ArrayList<>();
-                    for (SkuDetails skuDetails : skuDetailsList) {
-                        mProductSkuList.add(skuDetails);
-                    }
+            public void run() {
 
-                    Collections.sort(mProductSkuList, new Comparator<SkuDetails>() {
-                        @Override
-                        public int compare(SkuDetails lhs, SkuDetails rhs) {
-                            return (int) (lhs.getPriceAmountMicros() - rhs.getPriceAmountMicros());
+                List<String> skuList = new ArrayList<>();
+                skuList.add("don_10");
+                skuList.add("don_50");
+                skuList.add("don_100");
+                SkuDetailsParams.Builder params = SkuDetailsParams.newBuilder();
+                params.setSkusList(skuList).setType(BillingClient.SkuType.INAPP);
+                mBillingClient.querySkuDetailsAsync(params.build(), new SkuDetailsResponseListener() {
+                    @Override
+                    public void onSkuDetailsResponse(int responseCode, List<SkuDetails> skuDetailsList) {
+                        if (responseCode == BillingClient.BillingResponse.OK && skuDetailsList != null) {
+                            mProductSkuList = new ArrayList<>();
+                            for (SkuDetails skuDetails : skuDetailsList) {
+                                mProductSkuList.add(skuDetails);
+                            }
+
+                            Collections.sort(mProductSkuList, new Comparator<SkuDetails>() {
+                                @Override
+                                public int compare(SkuDetails lhs, SkuDetails rhs) {
+                                    return (int) (lhs.getPriceAmountMicros() - rhs.getPriceAmountMicros());
+                                }
+                            });
+
+                            showDialogWithAllProducts(mProductSkuList);
                         }
-                    });
+                    }
+                });
 
-                    showDialogWithAllProducts(mProductSkuList);
-                }
             }
         });
     }
@@ -1934,8 +1954,78 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
     }
 
     public void startBillingFlow(SkuDetails skuDetails) {
-        BillingFlowParams billingFlowParams = BillingFlowParams.newBuilder().setSkuDetails(skuDetails).build();
-        mBillingClient.launchBillingFlow(BBeat.this, billingFlowParams);
+        final BillingFlowParams billingFlowParams = BillingFlowParams.newBuilder().setSkuDetails(skuDetails).build();
+
+        executeBillingServiceRequest(new Runnable() {
+                                         @Override
+                                         public void run() {
+                                             mBillingClient.launchBillingFlow(BBeat.this, billingFlowParams);
+                                         }
+                                     });
     }
 
+    private class LoadAdapter extends AsyncTask<Void, Void, Void> {
+        ProgressDialog dialog;
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            for (String pname : programs.keySet()) {
+
+                ProgramMeta pm = programs.get(pname);
+                String catname = pm.getCat().toString();
+                CategoryGroup g = null;
+
+                /* Check if I already have a group with that name */
+                for (CategoryGroup g2 : groups) {
+                    if (g2.getName().equals(catname)) {
+                        g = g2;
+                    }
+                }
+                if (g == null) {
+                    g = new CategoryGroup(catname);
+
+                    try {
+                        g.setNiceName(getString(R.string.class.getField("group_" + catname.toLowerCase()).getInt(null)));
+                    } catch (Exception e) {
+                        // pass
+                    }
+
+                    groups.add(g);
+                }
+
+                g.add(pm, DefaultProgramsBuilder.getProgram(pm));
+//            g.setProgram();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            ProgramListAdapter adapter = new ProgramListAdapter(BBeat.this, groups);
+
+            mPresetList.setAdapter(adapter);
+
+            // Expand all
+            for (int groupPosition = 0; groupPosition < adapter.getGroupCount(); groupPosition++) {
+                if (mPresetList.isGroupExpanded(groupPosition) == false) {
+                    mPresetList.expandGroup(groupPosition);
+                }
+            }
+            dialog.dismiss();
+        }
+
+        @Override
+        protected void onPreExecute() {
+            dialog = new ProgressDialog(BBeat.this); // this = YourActivity
+            dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            dialog.setMessage("Loading...");
+            dialog.setIndeterminate(true);
+            dialog.setCanceledOnTouchOutside(false);
+            dialog.show();
+        }
+
+        @Override
+        protected void onProgressUpdate(Void... values) {
+        }
+    }
 }

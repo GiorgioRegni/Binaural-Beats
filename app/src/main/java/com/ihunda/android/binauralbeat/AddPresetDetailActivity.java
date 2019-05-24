@@ -81,6 +81,7 @@ public class AddPresetDetailActivity extends AppCompatActivity {
                             ((BBeatApp) getApplicationContext()).getDbHelper().fillObject(PresetModel.class, presetModel);
                             Toast.makeText(AddPresetDetailActivity.this, getString(R.string.preset_saved), Toast.LENGTH_SHORT).show();
                             Intent intent = new Intent(AddPresetDetailActivity.this, BBeat.class);
+                            intent.putExtra("refresh", true);
                             intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                             startActivity(intent);
                         } catch (Exception e) {

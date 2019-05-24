@@ -588,7 +588,7 @@ public class DefaultProgramsBuilder {
         p2.name = p.name;
         return p2;
     }
-	
+
 	/*
 	public static Program STIMULATION_HYPERBOLICCONCSHARP(Program p) {
 		Program p2 = Program.fromGnauralFactory(readRawTextFile(R.raw.hyperbolicconciousnesssharpened));

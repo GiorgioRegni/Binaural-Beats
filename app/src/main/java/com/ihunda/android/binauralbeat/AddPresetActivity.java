@@ -253,7 +253,7 @@ public class AddPresetActivity extends AppCompatActivity implements View.OnClick
         listVisualizer.add("Hiit");
         listVisualizer.add("Hypno Flash");
         listVisualizer.add("Hypnotic Spiral");
-        listVisualizer.add("Image");
+//        listVisualizer.add("Image");
         listVisualizer.add("Leds");
         listVisualizer.add("LSD");
         listVisualizer.add("Mandelbrot");
@@ -276,6 +276,7 @@ public class AddPresetActivity extends AppCompatActivity implements View.OnClick
         });
         final TextView tvVolume = dialog.findViewById(R.id.tvVolume);
         final SeekBar seekBar = dialog.findViewById(R.id.seekbar);
+        final EditText etDuration = (EditText) dialog.findViewById(R.id.etDuration);
         tvVolume.setText("" + seekBar.getProgress());
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -304,6 +305,9 @@ public class AddPresetActivity extends AppCompatActivity implements View.OnClick
         btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                int i = utils_EditTextTimeToInt(etDuration.getText().toString());
+                durationSeconds = i;
+                etDuration.setText(formatTime(durationSeconds));
                 if (durationSeconds == 0) {
                     Toast.makeText(AddPresetActivity.this, getString(R.string.duration_error), Toast.LENGTH_SHORT).show();
                     return;
@@ -327,7 +331,6 @@ public class AddPresetActivity extends AppCompatActivity implements View.OnClick
                 }
             }
         });
-        final EditText etDuration = (EditText) dialog.findViewById(R.id.etDuration);
         etDuration.setOnFocusChangeListener(new OnEditTextFocusChange() {
             @Override
             void onTextChange(EditText v, String text) {
@@ -602,6 +605,10 @@ public class AddPresetActivity extends AppCompatActivity implements View.OnClick
                     return;
                 }
                 if (etEnd.getText().toString().trim().length() == 0) {
+                    Toast.makeText(AddPresetActivity.this, getString(R.string.end_freq_error), Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (etNote.getText().toString().trim().length() == 0) {
                     Toast.makeText(AddPresetActivity.this, getString(R.string.end_freq_error), Toast.LENGTH_SHORT).show();
                     return;
                 }

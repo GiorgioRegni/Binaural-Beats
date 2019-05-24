@@ -146,6 +146,7 @@
     <string name="duration_error">Please set duration greater than 00:00 seconds</string>
     <string name="start_freq_error">Please set start frequency</string>
     <string name="end_freq_error">Please set end frequency</string>
+    <string name="note_error">Please set note frequency</string>
     <string name="name_error">Please enter name of preset</string>
     <string name="create_preset">Create Preset - </string>
     <string name="add_bbv">Add Binaural Beat Voice</string>
@@ -164,4 +165,5 @@
     <string name="description">Description</string>
     <string name="no_presets_created">No Presets Created</string>
     <string name="add_voice">Add Voice</string>
+    <string name="custom_preset">Custom Preset</string>
 </resources>

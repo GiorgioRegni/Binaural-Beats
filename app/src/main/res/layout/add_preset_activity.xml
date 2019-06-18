@@ -33,6 +33,7 @@
                 android:padding="@dimen/dp_5"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textColor="@android:color/white"
+                android:textSize="@dimen/dp_16"
                 android:textStyle="bold" />
 
             <TextView
@@ -44,6 +45,7 @@
                 android:text="@string/duration"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textColor="@android:color/white"
+                android:textSize="@dimen/dp_16"
                 android:textStyle="bold" />
         </LinearLayout>
     </android.support.v7.widget.Toolbar>
@@ -89,7 +91,8 @@
                     android:paddingBottom="@dimen/dp_10"
                     android:text="@string/add_period"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textColor="@color/white" />
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/dp_16" />
             </LinearLayout>
 
             <LinearLayout
@@ -104,10 +107,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:backgroundTint="@color/primary_dark"
-                    android:padding="@dimen/dp_10"
+                    android:paddingLeft="@dimen/dp_25"
+                    android:paddingTop="@dimen/dp_10"
+                    android:paddingRight="@dimen/dp_25"
+                    android:paddingBottom="@dimen/dp_10"
                     android:text="@string/next"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textColor="@color/white" />
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/dp_16" />
             </LinearLayout>
         </LinearLayout>
 

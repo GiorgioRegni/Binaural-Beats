@@ -27,6 +27,7 @@
             android:text="@string/preset"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="@android:color/black"
+            android:textSize="@dimen/dp_20"
             android:textStyle="bold" />
 
         <LinearLayout
@@ -44,6 +45,7 @@
                 android:text="@string/name"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textColor="@android:color/black"
+                android:textSize="@dimen/dp_16"
                 android:textStyle="bold" />
 
             <TextView
@@ -57,7 +59,8 @@
                 android:maxLines="1"
                 android:text="adfasdf"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="@android:color/black" />
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/dp_16" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -68,6 +71,7 @@
                 android:text="@string/author"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textColor="@android:color/black"
+                android:textSize="@dimen/dp_16"
                 android:textStyle="bold" />
 
             <TextView
@@ -81,7 +85,8 @@
                 android:maxLines="1"
                 android:text="adfasdf"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="@android:color/black" />
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/dp_16" />
         </LinearLayout>
 
         <LinearLayout
@@ -98,6 +103,7 @@
                 android:text="@string/description"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textColor="@android:color/black"
+                android:textSize="@dimen/dp_16"
                 android:textStyle="bold" />
 
             <TextView
@@ -111,7 +117,8 @@
                 android:maxLines="3"
                 android:text="adf"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="@android:color/black" />
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/dp_16" />
 
         </LinearLayout>
 
@@ -122,6 +129,22 @@
             android:orientation="horizontal"
             android:padding="@dimen/dp_5">
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_add_voice"
+                android:gravity="center"
+                android:maxLines="1"
+                android:paddingLeft="@dimen/dp_10"
+                android:paddingTop="@dimen/dp_5"
+                android:paddingRight="@dimen/dp_10"
+                android:paddingBottom="@dimen/dp_5"
+                android:text="@string/add_voice"
+                android:textAppearance="?android:attr/textAppearance"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/dp_16"
+                android:visibility="invisible" />
+
             <View
                 android:layout_width="0dp"
                 android:layout_height="1dp"
@@ -130,7 +153,7 @@
             <ImageView
                 android:id="@+id/ivEdit"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:contentDescription="@null"
                 android:padding="@dimen/dp_5"
@@ -139,7 +162,7 @@
             <ImageView
                 android:id="@+id/ivDelete"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_marginLeft="@dimen/dp_10"
                 android:layout_weight="1"
                 android:contentDescription="@null"

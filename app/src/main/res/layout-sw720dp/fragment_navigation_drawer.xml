@@ -19,83 +19,90 @@
     <Button
         android:id="@+id/NDUserGuide"
         style="@style/Widget.AppCompat.Button.Borderless"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/dp_5"
         android:drawableLeft="@drawable/ic_help_outline_black_36dp"
         android:drawablePadding="@dimen/dp_10"
+        android:gravity="left|center_vertical"
         android:text="@string/user_guide"
         android:textSize="@dimen/dp_12" />
 
     <Button
         android:id="@+id/NDCommunityButton"
         style="@style/Widget.AppCompat.Button.Borderless"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/dp_5"
         android:layout_marginTop="@dimen/dp_4"
         android:drawableLeft="@drawable/ic_people_black_36px"
         android:drawablePadding="@dimen/dp_10"
+        android:gravity="left|center_vertical"
         android:text="@string/user_community"
         android:textSize="@dimen/dp_12" />
 
     <Button
         android:id="@+id/NDFacebookLikeButton"
         style="@style/Widget.AppCompat.Button.Borderless"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/dp_5"
         android:layout_marginTop="@dimen/dp_4"
         android:drawableLeft="@drawable/facebooksmall"
         android:drawablePadding="@dimen/dp_10"
+        android:gravity="left|center_vertical"
         android:text="@string/like_facebook"
         android:textSize="@dimen/dp_12" />
 
     <Button
         android:id="@+id/NDRateButton"
         style="@style/Widget.AppCompat.Button.Borderless"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/dp_5"
         android:layout_marginTop="@dimen/dp_4"
         android:drawableLeft="@drawable/ic_stars_black"
         android:drawablePadding="@dimen/dp_10"
+        android:gravity="left|center_vertical"
         android:text="@string/rate_on_market"
         android:textSize="@dimen/dp_12" />
 
     <Button
         android:id="@+id/NDGettingInvolved"
         style="@style/Widget.AppCompat.Button.Borderless"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/dp_5"
         android:layout_marginTop="@dimen/dp_4"
         android:drawableLeft="@drawable/ic_language_black_36dp"
         android:drawablePadding="@dimen/dp_10"
+        android:gravity="left|center_vertical"
         android:text="@string/getting_involved"
         android:textSize="@dimen/dp_12" />
 
     <Button
         android:id="@+id/NDDonateButton"
         style="@style/Widget.AppCompat.Button.Borderless"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/dp_5"
         android:layout_marginTop="@dimen/dp_4"
         android:drawableLeft="@drawable/ic_card_giftcard_black_36dp"
         android:drawablePadding="@dimen/dp_10"
+        android:gravity="left|center_vertical"
         android:text="@string/donate"
         android:textSize="@dimen/dp_12" />
 
     <Button
         android:id="@+id/NDPresetBuilderButton"
         style="@style/Widget.AppCompat.Button.Borderless"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/dp_5"
         android:layout_marginTop="@dimen/dp_4"
         android:drawableLeft="@drawable/ic_build"
         android:drawablePadding="@dimen/dp_10"
+        android:gravity="left|center_vertical"
         android:text="@string/preset_builder"
         android:textSize="@dimen/dp_12" />
 

@@ -31,9 +31,10 @@
             android:background="@android:color/white"
             android:gravity="center"
             android:text="@string/no_presets_created"
-            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textAppearance="@android:style/TextAppearance.Medium"
             android:textColor="@android:color/black"
-            android:visibility="gone" />
+            android:textSize="@dimen/dp_18"
+            android:visibility="visible" />
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/fab"

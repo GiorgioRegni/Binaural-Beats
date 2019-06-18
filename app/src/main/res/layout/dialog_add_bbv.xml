@@ -17,6 +17,7 @@
         android:text="@string/add_bbv"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textColor="@android:color/black"
+        android:textSize="@dimen/dp_20"
         android:textStyle="bold" />
 
     <!--<include-->
@@ -46,6 +47,7 @@
                 android:text="@string/freq_start"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textColor="@android:color/black"
+                android:textSize="@dimen/dp_16"
                 android:textStyle="bold" />
 
             <LinearLayout
@@ -76,12 +78,15 @@
                         android:popupBackground="@drawable/background_spinner_dropdown"
                         android:spinnerMode="dropdown"
                         android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:textColor="@android:color/black" />
+                        android:textColor="@android:color/black"
+                        android:textSize="@dimen/dp_16" />
 
                     <ImageView
                         android:id="@+id/ivArrowStart"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_alignTop="@id/spinnerStart"
+                        android:layout_alignBottom="@id/spinnerStart"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
                         android:layout_margin="@dimen/dp_5"
@@ -96,14 +101,15 @@
                 <EditText
                     android:id="@+id/etFreqStart"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_weight="0.35"
                     android:background="@drawable/edittext_bg_preset"
                     android:gravity="center"
                     android:inputType="number"
                     android:padding="@dimen/dp_5"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textColor="@android:color/black" />
+                    android:textColor="@android:color/black"
+                    android:textSize="@dimen/dp_16" />
             </LinearLayout>
 
 
@@ -116,6 +122,7 @@
                 android:text="@string/freq_end"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textColor="@android:color/black"
+                android:textSize="@dimen/dp_16"
                 android:textStyle="bold" />
 
             <LinearLayout
@@ -147,12 +154,15 @@
                         android:popupBackground="@drawable/background_spinner_dropdown"
                         android:spinnerMode="dropdown"
                         android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:textColor="@android:color/black" />
+                        android:textColor="@android:color/black"
+                        android:textSize="@dimen/dp_16" />
 
                     <ImageView
                         android:id="@+id/ivArrowEnd"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_alignTop="@id/spinnerEnd"
+                        android:layout_alignBottom="@id/spinnerEnd"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
                         android:layout_margin="@dimen/dp_5"
@@ -167,14 +177,15 @@
                 <EditText
                     android:id="@+id/etFreqEnd"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_weight="0.35"
                     android:background="@drawable/edittext_bg_preset"
                     android:gravity="center"
                     android:inputType="number"
                     android:padding="@dimen/dp_5"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textColor="@android:color/black" />
+                    android:textColor="@android:color/black"
+                    android:textSize="@dimen/dp_16" />
             </LinearLayout>
 
 
@@ -187,6 +198,7 @@
                 android:text="@string/note"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textColor="@android:color/black"
+                android:textSize="@dimen/dp_16"
                 android:textStyle="bold" />
 
             <LinearLayout
@@ -218,12 +230,15 @@
                         android:popupBackground="@drawable/background_spinner_dropdown"
                         android:spinnerMode="dropdown"
                         android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:textColor="@android:color/black" />
+                        android:textColor="@android:color/black"
+                        android:textSize="@dimen/dp_16" />
 
                     <ImageView
                         android:id="@+id/ivArrowNote"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_alignTop="@id/spinnerNote"
+                        android:layout_alignBottom="@id/spinnerNote"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
                         android:layout_margin="@dimen/dp_5"
@@ -238,14 +253,15 @@
                 <EditText
                     android:id="@+id/etNote"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_weight="0.35"
                     android:background="@drawable/edittext_bg_preset"
                     android:gravity="center"
                     android:inputType="number"
                     android:padding="@dimen/dp_5"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textColor="@android:color/black" />
+                    android:textColor="@android:color/black"
+                    android:textSize="@dimen/dp_16" />
             </LinearLayout>
 
             <TextView
@@ -257,6 +273,7 @@
                 android:text="@string/volume"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textColor="@android:color/black"
+                android:textSize="@dimen/dp_16"
                 android:textStyle="bold" />
 
             <LinearLayout
@@ -273,7 +290,8 @@
                     android:gravity="center"
                     android:text="70"
                     android:textAppearance="?android:attr/textAppearance"
-                    android:textColor="@android:color/black" />
+                    android:textColor="@android:color/black"
+                    android:textSize="@dimen/dp_16" />
 
 
                 <LinearLayout
@@ -288,7 +306,8 @@
                         android:gravity="center"
                         android:text="0"
                         android:textAppearance="?android:attr/textAppearance"
-                        android:textColor="@android:color/black" />
+                        android:textColor="@android:color/black"
+                        android:textSize="@dimen/dp_16" />
 
                     <SeekBar
                         android:id="@+id/seekbarVolume"
@@ -301,7 +320,8 @@
                         android:padding="@dimen/dp_10"
                         android:progress="70"
                         android:progressBackgroundTint="@color/primary_dark"
-                        android:progressTint="@color/accent" />
+                        android:progressTint="@color/accent"
+                        android:textSize="@dimen/dp_16" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -310,7 +330,8 @@
                         android:gravity="center"
                         android:text="100"
                         android:textAppearance="?android:attr/textAppearance"
-                        android:textColor="@android:color/black" />
+                        android:textColor="@android:color/black"
+                        android:textSize="@dimen/dp_16" />
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
@@ -337,10 +358,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:backgroundTint="@color/primary_dark"
-                android:padding="@dimen/dp_10"
+                android:paddingLeft="@dimen/dp_25"
+                android:paddingTop="@dimen/dp_10"
+                android:paddingRight="@dimen/dp_25"
+                android:paddingBottom="@dimen/dp_10"
                 android:text="@string/add"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textColor="@color/white" />
+                android:textColor="@color/white"
+                android:textSize="@dimen/dp_16" />
         </LinearLayout>
 
         <LinearLayout
@@ -358,7 +383,8 @@
                 android:padding="@dimen/dp_10"
                 android:text="@string/cancel"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textColor="@color/white" />
+                android:textColor="@color/white"
+                android:textSize="@dimen/dp_16" />
         </LinearLayout>
     </LinearLayout>
 

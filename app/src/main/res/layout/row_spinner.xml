@@ -6,7 +6,8 @@
     android:background="@android:color/white"
     android:gravity="left"
     android:textAppearance="?android:attr/textAppearanceMedium"
-    android:textColor="@android:color/black" />
+    android:textColor="@android:color/black"
+    android:textSize="@dimen/dp_16" />
 
 
 

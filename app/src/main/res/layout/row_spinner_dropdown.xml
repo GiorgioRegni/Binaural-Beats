@@ -7,7 +7,8 @@
     android:gravity="left"
     android:padding="@dimen/dp_10"
     android:textAppearance="?android:attr/textAppearanceMedium"
-    android:textColor="@android:color/black" />
+    android:textColor="@android:color/black"
+    android:textSize="@dimen/dp_16" />
 
 
 

@@ -7,7 +7,8 @@
     android:layout_height="wrap_content"
     android:background="@color/primary"
     app:popupTheme="@style/Theme.AppCompat.Light"
-    app:theme="@style/Theme.AppCompat">
+    app:theme="@style/Theme.AppCompat"
+    app:titleTextAppearance="@style/Toolbar.TitleText">
 
 </android.support.v7.widget.Toolbar>
 

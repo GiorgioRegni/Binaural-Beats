@@ -27,6 +27,7 @@
             android:text="@string/period"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="@android:color/black"
+            android:textSize="@dimen/dp_20"
             android:textStyle="bold" />
 
         <LinearLayout
@@ -43,6 +44,7 @@
                 android:text="@string/duration"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textColor="@android:color/black"
+                android:textSize="@dimen/dp_16"
                 android:textStyle="bold" />
 
             <TextView
@@ -56,7 +58,8 @@
                 android:maxLines="1"
                 android:text="adfasdf"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="@android:color/black" />
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/dp_16" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -67,6 +70,7 @@
                 android:text="@string/background_volume"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textColor="@android:color/black"
+                android:textSize="@dimen/dp_16"
                 android:textStyle="bold" />
 
             <TextView
@@ -80,7 +84,8 @@
                 android:maxLines="1"
                 android:text="adfasdf"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="@android:color/black" />
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/dp_16" />
         </LinearLayout>
 
         <LinearLayout
@@ -98,6 +103,7 @@
                 android:text="@string/background"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textColor="@android:color/black"
+                android:textSize="@dimen/dp_16"
                 android:textStyle="bold" />
 
             <TextView
@@ -111,7 +117,8 @@
                 android:maxLines="1"
                 android:text="adfasdf"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="@android:color/black" />
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/dp_16" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -122,6 +129,7 @@
                 android:text="@string/visualizer"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textColor="@android:color/black"
+                android:textSize="@dimen/dp_16"
                 android:textStyle="bold" />
 
             <TextView
@@ -135,7 +143,8 @@
                 android:maxLines="1"
                 android:text="adfasdf"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="@android:color/black" />
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/dp_16" />
 
 
         </LinearLayout>
@@ -150,7 +159,7 @@
             <ImageView
                 android:id="@+id/ivEdit"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:contentDescription="@null"
                 android:padding="@dimen/dp_5"
@@ -159,7 +168,7 @@
             <ImageView
                 android:id="@+id/ivDelete"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:contentDescription="@null"
                 android:padding="@dimen/dp_5"
@@ -194,13 +203,14 @@
                     android:paddingBottom="@dimen/dp_5"
                     android:text="@string/add_voice"
                     android:textAppearance="?android:attr/textAppearance"
-                    android:textColor="@android:color/white" />
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/dp_16" />
             </LinearLayout>
 
             <ImageView
                 android:id="@+id/ivArrow"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:contentDescription="@null"
                 android:padding="@dimen/dp_5"

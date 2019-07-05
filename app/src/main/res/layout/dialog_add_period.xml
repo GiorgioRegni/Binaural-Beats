@@ -79,21 +79,6 @@
                         android:layout_weight="0.5" />
 
                     <ImageView
-                        android:id="@+id/ivPlus"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:clickable="true"
-                        android:scaleType="fitCenter"
-                        android:src="@drawable/ic_add_circle" />
-
-
-                    <View
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="0.5" />
-
-                    <ImageView
                         android:id="@+id/ivMinus"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
@@ -101,6 +86,20 @@
                         android:clickable="true"
                         android:scaleType="fitCenter"
                         android:src="@drawable/ic_remove_circle" />
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.5" />
+
+                    <ImageView
+                        android:id="@+id/ivPlus"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:clickable="true"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/ic_add_circle" />
                 </LinearLayout>
             </LinearLayout>
 

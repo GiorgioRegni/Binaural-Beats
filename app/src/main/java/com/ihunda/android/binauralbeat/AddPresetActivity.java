@@ -43,6 +43,9 @@ public class AddPresetActivity extends AppCompatActivity implements View.OnClick
     private MultiLevelRecyclerView multiLevelRecyclerView;
     private PresetModel presetModel;
 
+    private final int DEFAULT_PRESET_BUILDER_PERIOD_DURATION = 300;
+    private final int DEFAULT_PRESET_BUILDER_PERIOD_VOLUME = 90;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -223,7 +226,7 @@ public class AddPresetActivity extends AppCompatActivity implements View.OnClick
 
 
     public void showAddEditPeriodDialog(final int position) {
-        durationSeconds = 0;
+        durationSeconds = DEFAULT_PRESET_BUILDER_PERIOD_DURATION;
         final Dialog dialog = new Dialog(AddPresetActivity.this, android.R.style.Theme_DeviceDefault_Dialog_MinWidth);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(false);
@@ -277,6 +280,10 @@ public class AddPresetActivity extends AppCompatActivity implements View.OnClick
         final TextView tvVolume = dialog.findViewById(R.id.tvVolume);
         final SeekBar seekBar = dialog.findViewById(R.id.seekbar);
         final EditText etDuration = (EditText) dialog.findViewById(R.id.etDuration);
+        etDuration.setText(formatTime(durationSeconds));
+
+        seekBar.setProgress(DEFAULT_PRESET_BUILDER_PERIOD_VOLUME);
+
         tvVolume.setText("" + seekBar.getProgress());
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override

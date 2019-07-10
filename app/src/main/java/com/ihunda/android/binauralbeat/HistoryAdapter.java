@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.github.vipulasri.timelineview.TimelineView;
 import com.ihunda.android.binauralbeat.db.HistoryModel;
 
 import java.text.SimpleDateFormat;
@@ -36,7 +37,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 //            return headerHolder;
 //        } else {
         View listItem = layoutInflater.inflate(R.layout.row_history, parent, false);
-        ViewHolder viewHolder = new ViewHolder(listItem);
+        ViewHolder viewHolder = new ViewHolder(listItem,viewType);
         return viewHolder;
 //        }
     }
@@ -58,11 +59,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     @Override
     public int getItemViewType(int position) {
-//        if (position == 0) {
-//            return TYPE_HEADER;
-//        } else {
-        return TYPE_ITEM;
-//        }
+        return TimelineView.getTimeLineViewType(position, getItemCount());
     }
 
     @Override
@@ -72,9 +69,12 @@ public class HistoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     class ViewHolder extends RecyclerView.ViewHolder {
         public TextView tvDate, tvTotal, tvPresetName;
+        public TimelineView mTimelineView;
 
-        public ViewHolder(View itemView) {
+        public ViewHolder(View itemView, int viewType) {
             super(itemView);
+            mTimelineView = (TimelineView) itemView.findViewById(R.id.time_marker);
+            mTimelineView.initLine(viewType);
             this.tvDate = (TextView) itemView.findViewById(R.id.tvDate);
             this.tvTotal = (TextView) itemView.findViewById(R.id.tvTotalTime);
             this.tvPresetName = (TextView) itemView.findViewById(R.id.tvProgramName);

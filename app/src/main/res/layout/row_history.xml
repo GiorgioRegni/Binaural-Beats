@@ -70,7 +70,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:padding="5dp"
-                android:text="Program Name : "
+                android:text=""
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textColor="@android:color/black"
                 android:textSize="@dimen/dp_14" />

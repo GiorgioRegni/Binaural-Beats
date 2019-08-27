@@ -31,15 +31,10 @@ public class HistoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
-//        if (viewType == TYPE_HEADER) {
-//            View listItem = layoutInflater.inflate(R.layout.row_history_header, parent, false);
-//            HeaderHolder headerHolder = new HeaderHolder(listItem);
-//            return headerHolder;
-//        } else {
+
         View listItem = layoutInflater.inflate(R.layout.row_history, parent, false);
         ViewHolder viewHolder = new ViewHolder(listItem,viewType);
         return viewHolder;
-//        }
     }
 
     @Override
@@ -52,7 +47,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 ((ViewHolder) holder).tvPresetName.setVisibility(View.GONE);
             } else {
                 ((ViewHolder) holder).tvPresetName.setVisibility(View.VISIBLE);
-                ((ViewHolder) holder).tvPresetName.setText(context.getText(R.string.program_name) + " " + historyArrayList.get(position).getProgramName());
+                ((ViewHolder) holder).tvPresetName.setText(historyArrayList.get(position).getProgramName());
             }
         }
     }

@@ -47,7 +47,9 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -91,9 +93,30 @@ import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.plus.PlusShare;
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonParser;
+import com.google.gson.reflect.TypeToken;
 import com.ihunda.android.binauralbeat.db.HistoryModel;
+import com.ihunda.android.binauralbeat.db.PeriodModel;
+import com.ihunda.android.binauralbeat.db.PresetModel;
+import com.ihunda.android.binauralbeat.db.VoiceModel;
+import com.ihunda.android.binauralbeat.viz.Aurora;
 import com.ihunda.android.binauralbeat.viz.Black;
+import com.ihunda.android.binauralbeat.viz.Flash;
 import com.ihunda.android.binauralbeat.viz.GLBlack;
+import com.ihunda.android.binauralbeat.viz.Hiit;
+import com.ihunda.android.binauralbeat.viz.HypnoFlash;
+import com.ihunda.android.binauralbeat.viz.HypnoticSpiral;
+import com.ihunda.android.binauralbeat.viz.LSD;
+import com.ihunda.android.binauralbeat.viz.Leds;
+import com.ihunda.android.binauralbeat.viz.Mandelbrot;
+import com.ihunda.android.binauralbeat.viz.Morphine;
+import com.ihunda.android.binauralbeat.viz.None;
+import com.ihunda.android.binauralbeat.viz.Plasma;
+import com.ihunda.android.binauralbeat.viz.SpiralDots;
+import com.ihunda.android.binauralbeat.viz.Starfield;
+import com.ihunda.android.binauralbeat.viz.Starfield3D;
 import com.jjoe64.graphview.GraphView.GraphViewData;
 import com.jjoe64.graphview.GraphView.GraphViewSeries;
 import com.jjoe64.graphview.LineGraphView;
@@ -102,6 +125,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.Type;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -266,6 +290,7 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
     private int currentHistoryId = -1;
     private long historyTotalTimeElapsed = 0;
     private String historyProgramName = "";
+    private DrawerLayout drawerLayout;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -276,10 +301,10 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
         FacebookSdk.sdkInitialize(getApplicationContext());
 
         setContentView(R.layout.main);
-        
-	      /* Initialize Fabric and Crashlytics */
-	      Fabric.with(this, new Crashlytics());
-      
+
+        /* Initialize Fabric and Crashlytics */
+        Fabric.with(this, new Crashlytics());
+
         /* Init sounds */
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
 
@@ -409,7 +434,11 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
             @Override
             public boolean onChildClick(ExpandableListView parent, View v,
                                         int groupPosition, int childPosition, long id) {
-                selectProgram(groups.get(groupPosition).getObjets().get(childPosition));
+                if (groups.get(groupPosition).getObjets().get(childPosition).getMethod() != null) {
+                    selectProgram(groups.get(groupPosition).getObjets().get(childPosition));
+                } else {
+                    selectCreateProgram(groups.get(groupPosition).getProgram().get(childPosition));
+                }
                 return true;
             }
         });
@@ -423,8 +452,9 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-        NavigationDrawerFragment drawerFragment = (NavigationDrawerFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_nav_drawer);
-        drawerFragment.setUp((DrawerLayout) findViewById(R.id.drawer_layout), mToolbar);
+        final NavigationDrawerFragment drawerFragment = (NavigationDrawerFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_nav_drawer);
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawerFragment.setUp(drawerLayout, mToolbar);
 
         // Wire Navigation Drawer Buttons
 
@@ -460,6 +490,19 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
         b.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
                 showDialog(DIALOG_DONATE);
+            }
+        });
+
+        b = (Button) findViewById((R.id.NDPresetBuilderButton));
+        b.setOnClickListener(new OnClickListener() {
+            public void onClick(View v) {
+                drawerLayout.closeDrawer(Gravity.LEFT);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        gotoPresetBuilder();
+                    }
+                }, 300);
             }
         });
 
@@ -1045,6 +1088,19 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
         showDialog(DIALOG_PROGRAM_PREVIEW);
     }
 
+    private void selectCreateProgram(Program program) {
+        if (programFSM != null) {
+            programFSM.stopProgram();
+        }
+
+        Program p = program;
+        _tmp_program_holder = p;
+
+        _track_ui_click(p.getName(), "select");
+
+        showDialog(DIALOG_PROGRAM_PREVIEW);
+    }
+
     private void StartPreviouslySelectedProgram() {
         Program p = _tmp_program_holder;
         _tmp_program_holder = null;
@@ -1540,6 +1596,11 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
         gotoURL("market://details?id=com.ihunda.android.binauralbeat");
     }
 
+    private void gotoPresetBuilder() {
+        Intent i = new Intent(this, PresetListActivity.class);
+        startActivity(i);
+    }
+
     private void gotoURL(String URL) {
         try {
             Intent i = new Intent(Intent.ACTION_VIEW);
@@ -1731,6 +1792,7 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
     private void _updateDonationLevel() {
         _updateDonationLevel(false);
     }
+
     private void _updateDonationLevel(boolean noNetwork) {
         mDonationLevel = null;
 
@@ -1850,6 +1912,7 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
             startBillingServiceConnection(runnable, toastOnError);
         }
     }
+
     public void getAllProductsList() {
         executeBillingServiceRequest(new Runnable() {
             @Override
@@ -1936,11 +1999,11 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
         final BillingFlowParams billingFlowParams = BillingFlowParams.newBuilder().setSkuDetails(skuDetails).build();
 
         executeBillingServiceRequest(new Runnable() {
-                                         @Override
-                                         public void run() {
-                                             mBillingClient.launchBillingFlow(BBeat.this, billingFlowParams);
-                                         }
-                                     });
+            @Override
+            public void run() {
+                mBillingClient.launchBillingFlow(BBeat.this, billingFlowParams);
+            }
+        });
     }
 
     private class LoadAdapter extends AsyncTask<Void, Void, Void> {
@@ -1980,10 +2043,119 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
 
         @Override
         protected void onPostExecute(Void result) {
+            try {
+                ArrayList<PresetModel> arrayList = (ArrayList<PresetModel>) ((BBeatApp) getApplicationContext()).getDbHelper().getAll(PresetModel.class);
+                if (arrayList != null && arrayList.size() > 0) {
+                    CategoryGroup categoryGroup = new CategoryGroup("CP");
+                    categoryGroup.setNiceName(BBeat.this.getString(R.string.custom_preset));
+                    ArrayList<Program> programArrayList = new ArrayList<>();
+                    for (int i = 0; i < arrayList.size(); i++) {
+                        Program program = new Program(arrayList.get(i).getName());
+                        program.setAuthor(arrayList.get(i).getAuthor());
+                        program.setDescription(arrayList.get(i).getDescription());
+                        if (arrayList.get(i).getPeriodModelArray() != null && !TextUtils.isEmpty(arrayList.get(i).getPeriodModelArray())) {
+                            JsonParser parser = new JsonParser();
+                            JsonArray jsonArray = parser.parse(arrayList.get(i).getPeriodModelArray()).getAsJsonArray();
+                            Type listType = new TypeToken<ArrayList<PeriodModel>>() {
+                            }.getType();
+
+                            ArrayList<PeriodModel> periodModelArrayList = new Gson().fromJson(jsonArray, listType);
+                            if (periodModelArrayList != null && periodModelArrayList.size() > 0) {
+                                for (int j = 0; j < periodModelArrayList.size(); j++) {
+                                    if (periodModelArrayList.get(j).getVoiceModelArray() != null && !TextUtils.isEmpty(periodModelArrayList.get(j).getVoiceModelArray())) {
+                                        JsonParser parser1 = new JsonParser();
+                                        JsonArray jsonArray1 = parser1.parse(periodModelArrayList.get(j).getVoiceModelArray()).getAsJsonArray();
+                                        Type listType1 = new TypeToken<ArrayList<VoiceModel>>() {
+                                        }.getType();
+
+                                        ArrayList<VoiceModel> voiceModelArrayList = new Gson().fromJson(jsonArray1, listType1);
+                                        periodModelArrayList.get(j).setVoiceModelArrayList(voiceModelArrayList);
+                                    }
+                                }
+                            }
+                            arrayList.get(i).setPeriodModelArrayList(periodModelArrayList);
+                        }
+                        if (arrayList.get(i).getPeriodModelArrayList() != null && arrayList.get(i).getPeriodModelArrayList().size() > 0) {
+                            for (int a = 0; a < arrayList.get(i).getPeriodModelArrayList().size(); a++) {
+                                PeriodModel periodModel = arrayList.get(i).getPeriodModelArrayList().get(a);
+                                SoundLoop soundLoop = SoundLoop.NONE;
+                                if (periodModel.getBackground() != null && !TextUtils.isEmpty(periodModel.getBackground())) {
+                                    if (periodModel.getBackground().equalsIgnoreCase("None")) {
+                                        soundLoop = SoundLoop.NONE;
+                                    } else if (periodModel.getBackground().equalsIgnoreCase("White Noise")) {
+                                        soundLoop = SoundLoop.WHITE_NOISE;
+                                    } else if (periodModel.getBackground().equalsIgnoreCase("Unity")) {
+                                        soundLoop = SoundLoop.UNITY;
+                                    }
+                                }
+                                Visualization visualization = null;
+                                if (periodModel.getVisualizer() != null && !TextUtils.isEmpty(periodModel.getVisualizer())) {
+                                    if (periodModel.getVisualizer().equalsIgnoreCase("Aurora")) {
+                                        visualization = new Aurora();
+                                    } else if (periodModel.getVisualizer().equalsIgnoreCase("Black")) {
+                                        visualization = new Black();
+                                    } else if (periodModel.getVisualizer().equalsIgnoreCase("Flash")) {
+                                        visualization = new Flash();
+                                    } else if (periodModel.getVisualizer().equalsIgnoreCase("GL Black")) {
+                                        visualization = new GLBlack();
+                                    } else if (periodModel.getVisualizer().equalsIgnoreCase("Hiit")) {
+                                        visualization = new Hiit();
+                                    } else if (periodModel.getVisualizer().equalsIgnoreCase("Hypno Flash")) {
+                                        visualization = new HypnoFlash();
+                                    } else if (periodModel.getVisualizer().equalsIgnoreCase("Hypnotic Spiral")) {
+                                        visualization = new HypnoticSpiral();
+//                                    } else if (periodModel.getVisualizer().equalsIgnoreCase("Image")) {
+//                                        visualization = new Image();
+                                    } else if (periodModel.getVisualizer().equalsIgnoreCase("Leds")) {
+                                        visualization = new Leds();
+                                    } else if (periodModel.getVisualizer().equalsIgnoreCase("LSD")) {
+                                        visualization = new LSD();
+                                    } else if (periodModel.getVisualizer().equalsIgnoreCase("Mandelbrot")) {
+                                        visualization = new Mandelbrot();
+                                    } else if (periodModel.getVisualizer().equalsIgnoreCase("Morphine")) {
+                                        visualization = new Morphine();
+                                    } else if (periodModel.getVisualizer().equalsIgnoreCase("None")) {
+                                        visualization = new None();
+                                    } else if (periodModel.getVisualizer().equalsIgnoreCase("Plasma")) {
+                                        visualization = new Plasma();
+                                    } else if (periodModel.getVisualizer().equalsIgnoreCase("Spiral Dots")) {
+                                        visualization = new SpiralDots();
+                                    } else if (periodModel.getVisualizer().equalsIgnoreCase("Star Field")) {
+                                        visualization = new Starfield();
+                                    } else if (periodModel.getVisualizer().equalsIgnoreCase("Star Field 3D")) {
+                                        visualization = new Starfield3D();
+                                    }
+                                }
+                                Period period = new Period(periodModel.getDuration(), soundLoop, Float.valueOf(periodModel.getBackgroundVolume()) / 100f, null);
+                                if (periodModel.getVoiceModelArrayList() != null && periodModel.getVoiceModelArrayList().size() > 0) {
+                                    for (int b = 0; b < periodModel.getVoiceModelArrayList().size(); b++) {
+                                        VoiceModel voiceModel = periodModel.getVoiceModelArrayList().get(b);
+                                        period.addVoice(new BinauralBeatVoice(voiceModel.getFreqStart(), voiceModel.getFreqEnd(), voiceModel.getVolume() / 100f));
+                                    }
+                                }
+                                period.setV(visualization);
+                                program.addPeriod(period);
+                            }
+                        }
+//
+                        try {
+                            ProgramMeta.Category cat = ProgramMeta.Category.CP;
+                            String nice_name = BBeat.this.getString(R.string.custom_preset);
+                            ProgramMeta meta = new ProgramMeta(null, nice_name, cat);
+                            categoryGroup.add(meta, program);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        groups.add(categoryGroup);
+                        programArrayList.add(program);
+                    }
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
             ProgramListAdapter adapter = new ProgramListAdapter(BBeat.this, groups);
-
             mPresetList.setAdapter(adapter);
-
             // Expand all
             for (int groupPosition = 0; groupPosition < adapter.getGroupCount(); groupPosition++) {
                 if (mPresetList.isGroupExpanded(groupPosition) == false) {
@@ -2005,6 +2177,20 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
 
         @Override
         protected void onProgressUpdate(Void... values) {
+        }
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        if (intent.getExtras() != null) {
+            if (intent.getExtras().getBoolean("refresh")) {
+                programs = DefaultProgramsBuilder.getProgramMethods(this);
+                groups = new ArrayList<CategoryGroup>();
+
+                new LoadAdapter().execute();
+
+            }
         }
     }
 }

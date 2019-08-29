@@ -60,7 +60,7 @@ public class ProgramListAdapter extends BaseExpandableListAdapter {
         }
 
 
-        childViewHolder.textViewChild.setText(objet.getName());
+        childViewHolder.textViewChild.setText(p.getName());
         childViewHolder.textViewChildDescription.setText(p.getDescription());
         childViewHolder.textViewChildTime.setText(String.format("%sH%s",
                 formatTimeNumberwithLeadingZero(p.getLength() / 60 / 60),

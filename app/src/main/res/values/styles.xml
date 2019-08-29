@@ -1,7 +1,6 @@
 <resources>
-    <style
-        name="Theme.BBT"
-        parent="Theme.AppCompat.Light.NoActionBar">
+
+    <style name="Theme.BBT" parent="Theme.AppCompat.Light.NoActionBar">
         <!--<item name="android:background">@android:color/black</item>  This line is changing the actionbar color -->
         <!--<item name="android:windowBackground">@android:color/black</item>-->
         <!-- Main theme colors -->
@@ -13,4 +12,7 @@
         <item name="colorAccent">@color/accent</item>
     </style>
 
+    <style name="Toolbar.TitleText" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <item name="android:textSize">@dimen/dp_16</item>
+    </style>
 </resources>

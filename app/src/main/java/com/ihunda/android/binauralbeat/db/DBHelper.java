@@ -1,6 +1,7 @@
 package com.ihunda.android.binauralbeat.db;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Environment;
 import android.widget.Toast;
@@ -29,7 +30,7 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
     // Fields
     // //////////////////////////////////////////////////////////////////////
     private static final String TAG = DBHelper.class.getSimpleName();
-    private static final int DB_VERSION = 1;
+    private static final int DB_VERSION = 2;
 
     private Context mContext;
 
@@ -52,6 +53,7 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
     public void onCreate(SQLiteDatabase db, ConnectionSource cs) {
         try {
             TableUtils.createTable(cs, HistoryModel.class);
+            TableUtils.createTable(cs, PresetModel.class);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -59,7 +61,34 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, ConnectionSource cs, int oldVersion, int newVersion) {
+        /*
+         * try { if(oldVersion < 2) { // no alter table exists
+         * TableUtils.alterTable(); } } catch (SQLException e) { LogTag.e(
+         * e.getMessage()); throw new RuntimeException(e); }
+         */
+        if (oldVersion == 1 && newVersion == 2) {
+            try {
+                if (!doesTableExist(db, "presetmodel")) {
+                    TableUtils.createTable(cs, PresetModel.class);
+                }
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
 
+    }
+
+    public boolean doesTableExist(SQLiteDatabase db, String tableName) {
+        Cursor cursor = db.rawQuery("select DISTINCT tbl_name from sqlite_master where tbl_name = '" + tableName + "'", null);
+
+        if (cursor != null) {
+            if (cursor.getCount() > 0) {
+                cursor.close();
+                return true;
+            }
+            cursor.close();
+        }
+        return false;
     }
 
     @Override

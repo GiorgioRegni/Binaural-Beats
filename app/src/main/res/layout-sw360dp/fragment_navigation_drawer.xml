@@ -1,92 +1,119 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="@dimen/dp_280"
     android:layout_height="match_parent"
     android:background="#FFF"
-    android:orientation="vertical"
     android:clickable="true"
+    android:orientation="vertical"
     tools:context="com.ihunda.android.binauralbeat.NavigationDrawerFragment">
 
     <!-- TODO: Update blank fragment layout -->
     <ImageView
-        style="@style/Widget.AppCompat.Button.Borderless"
         android:id="@+id/NDLogo"
+        style="@style/Widget.AppCompat.Button.Borderless"
         android:layout_width="@dimen/dp_280"
         android:layout_height="@dimen/dp_130"
-        android:src="@drawable/icon"
-        android:layout_gravity="center"/>
+        android:layout_gravity="center"
+        android:src="@drawable/icon" />
 
-    <Button
-        style="@style/Widget.AppCompat.Button.Borderless"
-        android:id="@+id/NDUserGuide"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:drawableLeft="@drawable/ic_help_outline_black_36dp"
-        android:drawablePadding="@dimen/dp_10"
-        android:layout_marginLeft="@dimen/dp_5"
-        android:textSize="@dimen/dp_12"
-        android:text="@string/user_guide" />
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-    <Button
-        style="@style/Widget.AppCompat.Button.Borderless"
-        android:id="@+id/NDCommunityButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:drawableLeft="@drawable/ic_people_black_36px"
-        android:drawablePadding="@dimen/dp_10"
-        android:layout_marginLeft="@dimen/dp_5"
-        android:textSize="@dimen/dp_12"
-        android:layout_marginTop="@dimen/dp_4"
-        android:text="@string/user_community" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-    <Button
-        style="@style/Widget.AppCompat.Button.Borderless"
-        android:id="@+id/NDFacebookLikeButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:drawableLeft="@drawable/facebooksmall"
-        android:drawablePadding="@dimen/dp_10"
-        android:layout_marginLeft="@dimen/dp_5"
-        android:textSize="@dimen/dp_12"
-        android:layout_marginTop="@dimen/dp_4"
-        android:text="@string/like_facebook" />
+            <Button
+                android:id="@+id/NDUserGuide"
+                style="@style/Widget.AppCompat.Button.Borderless"
+                android:layout_width="match_parent"
+                android:gravity="left|center_vertical"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dp_5"
+                android:drawableLeft="@drawable/ic_help_outline_black_36dp"
+                android:drawablePadding="@dimen/dp_10"
+                android:text="@string/user_guide"
+                android:textSize="@dimen/dp_12" />
 
-    <Button
-        style="@style/Widget.AppCompat.Button.Borderless"
-        android:id="@+id/NDRateButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:drawableLeft="@drawable/ic_stars_black"
-        android:drawablePadding="@dimen/dp_10"
-        android:layout_marginLeft="@dimen/dp_5"
-        android:textSize="@dimen/dp_12"
-        android:layout_marginTop="@dimen/dp_4"
-        android:text="@string/rate_on_market" />
+            <Button
+                android:id="@+id/NDCommunityButton"
+                style="@style/Widget.AppCompat.Button.Borderless"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dp_5"
+                android:layout_marginTop="@dimen/dp_4"
+                android:drawableLeft="@drawable/ic_people_black_36px"
+                android:drawablePadding="@dimen/dp_10"
+                android:gravity="left|center_vertical"
+                android:text="@string/user_community"
+                android:textSize="@dimen/dp_12" />
 
-    <Button
-        style="@style/Widget.AppCompat.Button.Borderless"
-        android:id="@+id/NDGettingInvolved"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:drawableLeft="@drawable/ic_language_black_36dp"
-        android:drawablePadding="@dimen/dp_10"
-        android:layout_marginLeft="@dimen/dp_5"
-        android:textSize="@dimen/dp_12"
-        android:layout_marginTop="@dimen/dp_4"
-        android:text="@string/getting_involved" />
+            <Button
+                android:id="@+id/NDFacebookLikeButton"
+                style="@style/Widget.AppCompat.Button.Borderless"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dp_5"
+                android:layout_marginTop="@dimen/dp_4"
+                android:drawableLeft="@drawable/facebooksmall"
+                android:drawablePadding="@dimen/dp_10"
+                android:gravity="left|center_vertical"
+                android:text="@string/like_facebook"
+                android:textSize="@dimen/dp_12" />
 
-    <Button
-        style="@style/Widget.AppCompat.Button.Borderless"
-        android:id="@+id/NDDonateButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:drawableLeft="@drawable/ic_card_giftcard_black_36dp"
-        android:drawablePadding="@dimen/dp_10"
-        android:layout_marginLeft="@dimen/dp_5"
-        android:textSize="@dimen/dp_12"
-        android:layout_marginTop="@dimen/dp_4"
-        android:text="@string/donate" />
+            <Button
+                android:id="@+id/NDRateButton"
+                style="@style/Widget.AppCompat.Button.Borderless"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dp_5"
+                android:layout_marginTop="@dimen/dp_4"
+                android:drawableLeft="@drawable/ic_stars_black"
+                android:drawablePadding="@dimen/dp_10"
+                android:gravity="left|center_vertical"
+                android:text="@string/rate_on_market"
+                android:textSize="@dimen/dp_12" />
 
+            <Button
+                android:id="@+id/NDGettingInvolved"
+                style="@style/Widget.AppCompat.Button.Borderless"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dp_5"
+                android:layout_marginTop="@dimen/dp_4"
+                android:drawableLeft="@drawable/ic_language_black_36dp"
+                android:drawablePadding="@dimen/dp_10"
+                android:gravity="left|center_vertical"
+                android:text="@string/getting_involved"
+                android:textSize="@dimen/dp_12" />
 
+            <Button
+                android:id="@+id/NDDonateButton"
+                style="@style/Widget.AppCompat.Button.Borderless"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dp_5"
+                android:layout_marginTop="@dimen/dp_4"
+                android:drawableLeft="@drawable/ic_card_giftcard_black_36dp"
+                android:drawablePadding="@dimen/dp_10"
+                android:gravity="left|center_vertical"
+                android:text="@string/donate"
+                android:textSize="@dimen/dp_12" />
+
+            <Button
+                android:id="@+id/NDPresetBuilderButton"
+                style="@style/Widget.AppCompat.Button.Borderless"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dp_5"
+                android:layout_marginTop="@dimen/dp_4"
+                android:drawableLeft="@drawable/ic_build"
+                android:drawablePadding="@dimen/dp_10"
+                android:gravity="left|center_vertical"
+                android:text="@string/preset_builder"
+                android:textSize="@dimen/dp_12" />
+        </LinearLayout>
+    </ScrollView>
 </LinearLayout>

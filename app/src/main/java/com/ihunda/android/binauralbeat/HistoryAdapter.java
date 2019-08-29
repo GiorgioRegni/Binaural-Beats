@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.github.vipulasri.timelineview.TimelineView;
 import com.ihunda.android.binauralbeat.db.HistoryModel;
 
 import java.text.SimpleDateFormat;
@@ -30,15 +31,10 @@ public class HistoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
-//        if (viewType == TYPE_HEADER) {
-//            View listItem = layoutInflater.inflate(R.layout.row_history_header, parent, false);
-//            HeaderHolder headerHolder = new HeaderHolder(listItem);
-//            return headerHolder;
-//        } else {
+
         View listItem = layoutInflater.inflate(R.layout.row_history, parent, false);
-        ViewHolder viewHolder = new ViewHolder(listItem);
+        ViewHolder viewHolder = new ViewHolder(listItem,viewType);
         return viewHolder;
-//        }
     }
 
     @Override
@@ -51,18 +47,14 @@ public class HistoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 ((ViewHolder) holder).tvPresetName.setVisibility(View.GONE);
             } else {
                 ((ViewHolder) holder).tvPresetName.setVisibility(View.VISIBLE);
-                ((ViewHolder) holder).tvPresetName.setText(context.getText(R.string.program_name) + " " + historyArrayList.get(position).getProgramName());
+                ((ViewHolder) holder).tvPresetName.setText(historyArrayList.get(position).getProgramName());
             }
         }
     }
 
     @Override
     public int getItemViewType(int position) {
-//        if (position == 0) {
-//            return TYPE_HEADER;
-//        } else {
-        return TYPE_ITEM;
-//        }
+        return TimelineView.getTimeLineViewType(position, getItemCount());
     }
 
     @Override
@@ -72,9 +64,12 @@ public class HistoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     class ViewHolder extends RecyclerView.ViewHolder {
         public TextView tvDate, tvTotal, tvPresetName;
+        public TimelineView mTimelineView;
 
-        public ViewHolder(View itemView) {
+        public ViewHolder(View itemView, int viewType) {
             super(itemView);
+            mTimelineView = (TimelineView) itemView.findViewById(R.id.time_marker);
+            mTimelineView.initLine(viewType);
             this.tvDate = (TextView) itemView.findViewById(R.id.tvDate);
             this.tvTotal = (TextView) itemView.findViewById(R.id.tvTotalTime);
             this.tvPresetName = (TextView) itemView.findViewById(R.id.tvProgramName);

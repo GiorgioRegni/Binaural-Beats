@@ -6,24 +6,17 @@
     android:background="#FFF"
     android:orientation="vertical">
 
-    <LinearLayout
-        android:layout_width="fill_parent"
+    <android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/historyToolbar"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:orientation="vertical">
+        android:background="@color/primary"
+        app:navigationIcon="?attr/homeAsUpIndicator"
+        app:popupTheme="@style/Theme.AppCompat.Light"
+        app:theme="@style/Theme.AppCompat">
 
-        <TextView
-            android:id="@+id/tvDate"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@android:color/black"
-            android:gravity="center"
-            android:padding="@dimen/dp_5"
-            android:text="@string/history"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textColor="@android:color/white"
-            android:textStyle="bold" />
-    </LinearLayout>
+    </android.support.v7.widget.Toolbar>
 
     <RelativeLayout
         android:layout_width="match_parent"

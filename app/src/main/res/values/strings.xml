@@ -166,4 +166,6 @@
     <string name="no_presets_created">No Presets Created</string>
     <string name="add_voice">Add Voice</string>
     <string name="custom_preset">Custom Preset</string>
+    <string name="are_you_sure_delete">Are you sure want to delete  %s?</string>
+    <string name="add_voice_error">Please add atleast one voice per period</string>
 </resources>

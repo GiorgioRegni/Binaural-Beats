@@ -1,6 +1,8 @@
 package com.ihunda.android.binauralbeat;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -132,6 +134,40 @@ public class PresetListActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public void delete(int adapterPosition) {
+    public void delete(final int adapterPosition) {
+        AlertDialog.Builder builder1 = new AlertDialog.Builder(PresetListActivity.this, android.R.style.Theme_DeviceDefault_Dialog_MinWidth);
+        builder1.setMessage(getString(R.string.are_you_sure_delete, arrayList.get(adapterPosition).getName()));
+        builder1.setCancelable(true);
+
+        builder1.setPositiveButton(
+                getString(R.string.yes),
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        ArrayList<PresetModel> deleteArrayList = new ArrayList<>();
+                        deleteArrayList.add(arrayList.get(adapterPosition));
+
+                        try {
+                            ((BBeatApp) getApplicationContext()).getDbHelper().deleteObjects(PresetModel.class, deleteArrayList);
+                        } catch (SQLException e) {
+                            e.printStackTrace();
+                        }
+
+                        arrayList.remove(adapterPosition);
+                        adapter.notifyDataSetChanged();
+                        BBeat.NEED_TO_REFRESH = true;
+                        dialog.cancel();
+                    }
+                });
+
+        builder1.setNegativeButton(
+                getString(R.string.no),
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
+
+        AlertDialog alert11 = builder1.create();
+        alert11.show();
     }
 }

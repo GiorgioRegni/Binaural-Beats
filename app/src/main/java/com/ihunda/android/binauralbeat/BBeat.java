@@ -154,6 +154,7 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
     }
 
     private static final int MAX_STREAMS = 5;
+    public static boolean NEED_TO_REFRESH = false;
 
     public static final float W_DELTA_FREQ = 2.00f;
     public static final float W_THETA_FREQ = 6.00f;
@@ -884,7 +885,12 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
     protected void onResume() {
         Log.v(LOGBBEAT, "onResume");
         super.onResume();
-
+        if (NEED_TO_REFRESH) {
+            NEED_TO_REFRESH = false;
+            programs = DefaultProgramsBuilder.getProgramMethods(this);
+            groups = new ArrayList<CategoryGroup>();
+            new LoadAdapter().execute();
+        }
         // Facebook
         // Logs 'install' and 'app activate' App Events.
         AppEventsLogger.activateApp(this);
@@ -2048,7 +2054,7 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
                 if (arrayList != null && arrayList.size() > 0) {
                     CategoryGroup categoryGroup = new CategoryGroup("CP");
                     categoryGroup.setNiceName(BBeat.this.getString(R.string.custom_preset));
-                    ArrayList<Program> programArrayList = new ArrayList<>();
+//                    ArrayList<Program> programArrayList = new ArrayList<>();
                     for (int i = 0; i < arrayList.size(); i++) {
                         Program program = new Program(arrayList.get(i).getName());
                         program.setAuthor(arrayList.get(i).getAuthor());
@@ -2146,9 +2152,9 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
-                        groups.add(categoryGroup);
-                        programArrayList.add(program);
+//                        programArrayList.add(program);
                     }
+                    groups.add(categoryGroup);
                 }
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -2187,9 +2193,39 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
             if (intent.getExtras().getBoolean("refresh")) {
                 programs = DefaultProgramsBuilder.getProgramMethods(this);
                 groups = new ArrayList<CategoryGroup>();
-
                 new LoadAdapter().execute();
-
+            } else if (intent.getExtras().getBoolean("start")) {
+                int groupPosition = -1;
+                int childPosition = -1;
+                for (int i = 0; i < groups.size(); i++) {
+                    for (int j = 0; j < groups.get(i).getObjets().size(); j++) {
+                        if (groups.get(i).getName().equalsIgnoreCase("CP")) {
+                            if (intent.getExtras().getString("programName").equalsIgnoreCase(groups.get(i).getProgram().get(j).getName())) {
+                                Log.e("tag", groups.get(i).getObjets().get(j).getName());
+                                groupPosition = i;
+                                childPosition = j;
+                                break;
+                            }
+                        } else {
+                            if (intent.getExtras().getString("programName").equalsIgnoreCase(groups.get(i).getObjets().get(j).getName())) {
+                                Log.e("tag", groups.get(i).getObjets().get(j).getName());
+                                groupPosition = i;
+                                childPosition = j;
+                                break;
+                            }
+                        }
+                    }
+                    if (groupPosition != -1 && childPosition != -1) {
+                        break;
+                    }
+                }
+                if (groupPosition != -1 && childPosition != 1) {
+                    if (groups.get(groupPosition).getObjets().get(childPosition).getMethod() != null) {
+                        selectProgram(groups.get(groupPosition).getObjets().get(childPosition));
+                    } else {
+                        selectCreateProgram(groups.get(groupPosition).getProgram().get(childPosition));
+                    }
+                }
             }
         }
     }

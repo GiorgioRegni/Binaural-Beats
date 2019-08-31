@@ -1,6 +1,8 @@
 package com.ihunda.android.binauralbeat;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -173,9 +175,37 @@ public class AddPresetActivity extends AppCompatActivity implements View.OnClick
                     presetModel = new PresetModel();
                     presetModel.setName(tvTitle.getText().toString());
                 }
+
                 ArrayList<PeriodModel> periodModelArrayList = new ArrayList<>();
                 for (int i = 0; i < arrayList.size(); i++) {
                     periodModelArrayList.add((PeriodModel) arrayList.get(i));
+                }
+
+                boolean allVoicesAdded = true;
+                for (int i = 0; i < periodModelArrayList.size(); i++) {
+                    if (periodModelArrayList.get(i).getVoiceModelArrayList() != null && periodModelArrayList.get(i).getVoiceModelArrayList().size() > 0) {
+                    } else {
+                        allVoicesAdded = false;
+                        break;
+                    }
+                }
+
+                if (!allVoicesAdded) {
+                    AlertDialog.Builder builder1 = new AlertDialog.Builder(AddPresetActivity.this, android.R.style.Theme_DeviceDefault_Dialog_MinWidth);
+                    builder1.setMessage(getString(R.string.add_voice_error));
+                    builder1.setCancelable(true);
+
+                    builder1.setPositiveButton(
+                            getString(R.string.ok),
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    dialog.cancel();
+                                }
+                            });
+
+                    AlertDialog alert11 = builder1.create();
+                    alert11.show();
+                    return;
                 }
                 presetModel.setPeriodModelArrayList(periodModelArrayList);
                 Intent intent = new Intent(AddPresetActivity.this, AddPresetDetailActivity.class);
@@ -400,26 +430,26 @@ public class AddPresetActivity extends AppCompatActivity implements View.OnClick
                 spinnerVisualizer.setSelection(5);
             } else if (periodModel.getVisualizer().equalsIgnoreCase("Hypnotic Spiral")) {
                 spinnerVisualizer.setSelection(6);
-            } else if (periodModel.getVisualizer().equalsIgnoreCase("Image")) {
-                spinnerVisualizer.setSelection(7);
+//            } else if (periodModel.getVisualizer().equalsIgnoreCase("Image")) {
+//                spinnerVisualizer.setSelection(7);
             } else if (periodModel.getVisualizer().equalsIgnoreCase("Leds")) {
-                spinnerVisualizer.setSelection(8);
+                spinnerVisualizer.setSelection(7);
             } else if (periodModel.getVisualizer().equalsIgnoreCase("LSD")) {
-                spinnerVisualizer.setSelection(9);
+                spinnerVisualizer.setSelection(8);
             } else if (periodModel.getVisualizer().equalsIgnoreCase("Mandelbrot")) {
-                spinnerVisualizer.setSelection(10);
+                spinnerVisualizer.setSelection(9);
             } else if (periodModel.getVisualizer().equalsIgnoreCase("Morphine")) {
-                spinnerVisualizer.setSelection(11);
+                spinnerVisualizer.setSelection(10);
             } else if (periodModel.getVisualizer().equalsIgnoreCase("None")) {
-                spinnerVisualizer.setSelection(12);
+                spinnerVisualizer.setSelection(11);
             } else if (periodModel.getVisualizer().equalsIgnoreCase("Plasma")) {
-                spinnerVisualizer.setSelection(13);
+                spinnerVisualizer.setSelection(12);
             } else if (periodModel.getVisualizer().equalsIgnoreCase("Spiral Dots")) {
-                spinnerVisualizer.setSelection(14);
+                spinnerVisualizer.setSelection(13);
             } else if (periodModel.getVisualizer().equalsIgnoreCase("Star Field")) {
-                spinnerVisualizer.setSelection(15);
+                spinnerVisualizer.setSelection(14);
             } else if (periodModel.getVisualizer().equalsIgnoreCase("Star Field 3D")) {
-                spinnerVisualizer.setSelection(16);
+                spinnerVisualizer.setSelection(15);
             }
             tvVolume.setText("" + periodModel.getBackgroundVolume());
             seekBar.setProgress(Integer.valueOf(periodModel.getBackgroundVolume()));

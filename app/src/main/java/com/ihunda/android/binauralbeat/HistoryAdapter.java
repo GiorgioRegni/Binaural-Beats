@@ -1,12 +1,14 @@
 package com.ihunda.android.binauralbeat;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.github.vipulasri.timelineview.TimelineView;
@@ -15,12 +17,14 @@ import com.ihunda.android.binauralbeat.db.HistoryModel;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Map;
 
 public class HistoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private ArrayList<HistoryModel> historyArrayList;
     private static final int TYPE_HEADER = 0;
     private static final int TYPE_ITEM = 1;
     private Context context;
+    private Map<String, ProgramMeta> programs;
 
     // RecyclerView recyclerView;
     public HistoryAdapter(ArrayList arrayList, Context context) {
@@ -33,12 +37,12 @@ public class HistoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
 
         View listItem = layoutInflater.inflate(R.layout.row_history, parent, false);
-        ViewHolder viewHolder = new ViewHolder(listItem,viewType);
+        ViewHolder viewHolder = new ViewHolder(listItem, viewType);
         return viewHolder;
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, final int position) {
         if (holder instanceof ViewHolder) {
             ((ViewHolder) holder).tvDate.setText(context.getText(R.string.date_history) + " " + getDate(historyArrayList.get(position).getDateMillis(), "dd/MM/yy HH:mm"));
             ((ViewHolder) holder).tvTotal.setText(context.getText(R.string.total_time) + " " + formatTime((int) (historyArrayList.get(position).getCompletedTime() / 1000)));
@@ -49,6 +53,20 @@ public class HistoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 ((ViewHolder) holder).tvPresetName.setVisibility(View.VISIBLE);
                 ((ViewHolder) holder).tvPresetName.setText(historyArrayList.get(position).getProgramName());
             }
+
+            ((ViewHolder) holder).llParent.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    programs = DefaultProgramsBuilder.getProgramMethods(context);
+                    ProgramMeta pm = programs.get(historyArrayList.get(position).getProgramName());
+
+                    Intent intent = new Intent(context, BBeat.class);
+                    intent.putExtra("start", true);
+                    intent.putExtra("programName", historyArrayList.get(position).getProgramName());
+                    intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    context.startActivity(intent);
+                }
+            });
         }
     }
 
@@ -65,6 +83,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     class ViewHolder extends RecyclerView.ViewHolder {
         public TextView tvDate, tvTotal, tvPresetName;
         public TimelineView mTimelineView;
+        public LinearLayout llParent;
 
         public ViewHolder(View itemView, int viewType) {
             super(itemView);
@@ -73,6 +92,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             this.tvDate = (TextView) itemView.findViewById(R.id.tvDate);
             this.tvTotal = (TextView) itemView.findViewById(R.id.tvTotalTime);
             this.tvPresetName = (TextView) itemView.findViewById(R.id.tvProgramName);
+            this.llParent = itemView.findViewById(R.id.llParent);
         }
     }
 

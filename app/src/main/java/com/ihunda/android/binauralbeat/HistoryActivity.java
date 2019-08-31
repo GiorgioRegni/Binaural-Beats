@@ -13,6 +13,7 @@ import com.ihunda.android.binauralbeat.db.HistoryModel;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class HistoryActivity extends AppCompatActivity {
     private ArrayList<HistoryModel> arrayList;
@@ -34,6 +35,7 @@ public class HistoryActivity extends AppCompatActivity {
         emptyTv = findViewById(R.id.tvEmpty);
         try {
             arrayList = (ArrayList<HistoryModel>) ((BBeatApp) getApplicationContext()).getDbHelper().getAll(HistoryModel.class);
+            Collections.reverse(arrayList);
         } catch (SQLException e) {
             e.printStackTrace();
         }

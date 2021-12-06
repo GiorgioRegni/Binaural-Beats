@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hello">Hello World, Main!</string>
+    <string name="app_name">Binaural Beats Therapy</string>
+    <string name="back">Atras</string>
+    <string name="next">Siguiente</string>
+    <string name="help">Ayuda</string>
+    <string name="create">Crear</string>
+    <string name="setup">Ajustes</string>
+    <string name="start">Iniciar</string>
+    <string name="cancel">Cancelar</string>
+    <string name="pause">Pausar</string>
+    <string name="resume">Resumir</string>
+    <string name="ok">Ok</string>
+    <string name="yes">Si</string>
+    <string name="no">No</string>
+    <string name="confirm_reset">Stop program and go back to Setup screen?</string>
+
+    <string name="getting_involved">¿Quieres participar?</string>
+    <string name="getting_involved_dialog">Esta aplicación es gratuita y de código abierto, cualquiera puede participar y mejorarla.\n\n
+   Estoy buscando personas que me ayuden con gráficos, sonidos, ajustes preestablecidos de tono, documentación, videotutoriales, ideas, etc. ¡y también desarrolladores!\n\n
+    Envíame un correo electrónico para presentarte y podemos empezar.</string>
+    <string name="share">Compartir</string>
+    <string name="share_text">Escribe tu mensaje aqui</string>
+    <string name="close">Cerrar</string>
+    <string name="contact">Contactar</string>
+    <string name="blog">Blog</string>
+    <string name="rate_on_market">Tasa de mercado</string>
+    <string name="donate">Donar</string>
+    <string name="preset_builder">Constructor de preajustes</string>
+    <string name="history">Historial</string>
+    <string name="donate_text">Esta aplicación es gratuita y seguirá siendo gratuita.\n\n
+       Desarrollar la terapia de latido binaural,
+        Investigar y mantenerse actualizado sobre los ritmos binaurales y la ciencia de la mente requiere tiempo y mucho esfuerzo.\n\n
+       Tu donación me ayudará a dedicar más tiempo a la terapia de latido binaural y a continuar entregando actualizaciones y respondiendo solicitudes.!\n\n
+        ¡Gracias por tu ayuda!\n
+        Giorgio Regni</string>
+
+    <string name="voices">Voces</string>
+    <string name="background">Fondo</string>
+    <string name="volume">Volumen</string>
+
+    <string name="welcome_text">¡Bienvenido a la Terapia Binaural Beats! Esta aplicación es gratuita y de código abierto, ¡diviértete y únete a la comunidad!
+    Se requieren auriculares y un entorno seguro.</string>
+
+    <string name="source">Fuente</string>
+    <string name="forum">Foro</string>
+    <string name="like">Me gusta</string>
+    <string name="share_facebook">Compartir en Facebook</string>
+    <string name="jointhecommunity">¡Unete a la communidad!</string>
+
+    <string name="notif_started">Binaural Beats</string>
+    <string name="notif_descr" formatted="false">%s en progreso</string>
+
+    <string name="info_timing" formatted="false">Ritmo principal %.2fHz - %s:%s/</string>
+    <string name="time_format" formatted="false">%s:%s</string>
+    <string name="time_format_min_sec" formatted="false">%sm%s</string>
+
+    <string name="comments_title">Comentarios</string>
+    <string name="menu">Menu</string>
+    <string name="stop_program">Detener</string>
+    <string name="toggle_graphics">Graficos Activados/Desactivados</string>
+    <string name="graphics_on">Graficos activados</string>
+    <string name="graphics_off">Gráficos desactivados, la pantalla se apagará automáticamente</string>
+
+    <string name="group_oobe">Experiencia fuera del cuerpo</string>
+
+
+    <string name="program_self_hypnosis">Auto hipnosis</string>
+    <string name="program_highest_mental_activity">La actividad mental más alta</string>
+    <string name="program_unity">Unidad</string>
+    <string name="program_morphine">Analgésico de morfina</string>
+    <string name="program_learning">Estudio y aprendizaje</string>
+    <string name="program_creativity">Creatividad</string>
+    <string name="program_schumann_resonance">Resonancia Schumann</string>
+    <string name="program_astral_01_relax">Proyección astral - Relajación</string>
+    <string name="program_hallucination">Alucinación</string>
+    <string name="program_sleep_induction">Inducción del sueño</string>
+    <string name="program_lucid_dreams">Sueños lúcidos</string>
+    <string name="program_lucid_dreams_2">Sueños lúcidos - variante</string>
+
+    <string name="program_wakefulrelax">Relajación despierta</string>
+    <string name="program_shamanic_rhythm">Ritmo chamánico</string>
+    <string name="program_smr">Alivio del insomnio</string>
+    <string name="program_powernap">Siesta restauradora</string>
+    <string name="program_airplanetravelaid">Ayuda de viaje en avión</string>
+    <string name="program_oobe">Experiencia fuera del cuerpo</string>
+    <string name="program_hgh">Hormona del crecimiento humano</string>
+    <string name="program_adhd">ADHD</string>
+    <string name="program_hiit">Entrenamiento por intervalos de alta intensidad</string>
+    <string name="program_euphoria">Inducción de euforia</string>
+
+
+    <string name="facebook_app_id">117055728638150</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hola fragmento en blanco</string>
+    <string name="drawer_open">Abrir</string>
+    <string name="drawer_close">cerrar</string>
+    <string name="community">Comunidad</string>
+    <string name="user_guide">Guia de Usuario</string>
+    <string name="user_community">Comunidad de Usuarios</string>
+    <string name="welcome">Bienvenido</string>
+    <string name="tutorial_1_text">Binaural Beats Therapy es una aplicación móvil gratuita y de código abierto.</string>
+    <string name="tutorial_2_title">Binaural beats?</string>
+    <string name="tutorial_2_text">Los latidos binaurales son frecuencias de audio específicas que se envían a través de auriculares para estimular su cerebro.</string>
+    <string name="tutorial_3_title">¿Cómo?</string>
+    <string name="tutorial_3_text">Producen cambios sutiles en el comportamiento mediante el arrastre de la frecuencia de las ondas cerebrales.</string>
+    <string name="tutorial_4_title">¿Por qué?</string>
+    <string name="tutorial_4_text">Pueden ayudar a dejar una adicción, concentrarse mejor, irse a dormir más rápido, ...</string>
+    <string name="tutorial_5_title">Iniciando</string>
+    <string name="tutorial_5_text">Use auriculares, seleccione uno de los ajustes preestablecidos incorporados y relájese.</string>
+    <string name="tutorial_6_title">Seguridad</string>
+    <string name="tutorial_6_text">Por favor asegurate que estas en un  &amp; ambiente seguro y relajado</string>
+    <string name="tutorial_start">Iniciar</string>
+    <string name="like_facebook">Dar me gusta en Facebook</string>
+    <string name="dialog_donate_thank">Gracias por ayudar, de verdad\'s te lo agradezco.</string>
+    <string name="dialog_donation_title">Por favor escoge un nivel de donacion</string>
+    <string name="don_10_level">Seguidor</string>
+    <string name="don_50_level">Embasador</string>
+    <string name="don_100_level">Lider Espiritual</string>
+    <string name="DONATION_USER_CANCELED">Usuario cancelado</string>
+    <string name="DONATION_ALREADY_OWNED">Ya donado a ese nivel, gracias!</string>
+    <string name="DONATION_OTHER_ERROR">Error de donacion, por favor intente mas tarde</string>
+    <string name="DONATION_CONNECTION_ERROR">No se pudo conectar a la tienda de Google</string>
+
+    <string name="title_activity_history">Historial</string>
+    <string name="program_name">Nombre del Programa : </string>
+    <string name="date_history">Fecha : </string>
+    <string name="total_time">Tiempo Total : </string>
+    <string name="no_history_data">No hay datos de historial disponbles/string>
+
+    <string name="name_of_preset">Nombre del estado preestablecido</string>
+    <string name="description_of_preset">Descripcion de el estado preestablecido</string>
+    <string name="author_of_preset">Author del el estado preestablecido</string>
+    <string name="add_period">Agregar periodo</string>
+    <string name="preset_name">Nombre del estado preestablecido</string>
+    <string name="duration">Duracion</string>
+    <string name="background_volume">Volumen del fondo</string>
+    <string name="freq_start">Inicio de frequencia</string>
+    <string name="freq_end">Final de la frequencia</string>
+    <string name="add">Agregar</string>
+    <string name="note">Nota</string>
+    <string name="period">Periodo</string>
+    <string name="save">Guardar</string>
+    <string name="duration_error">Por favor establece la duracion a un numero mayor que 00:00 segundos</string>
+    <string name="start_freq_error">Por favor establece el inicio de la frequencia</string>
+    <string name="end_freq_error">Por favor establece el final de la frequencia</string>
+    <string name="note_error">Por favor establece la nota de la frecuencia</string>
+    <string name="name_error">Por favor introduce el nombre del presente</string>
+    <string name="create_preset">Crear Presente - </string>
+    <string name="add_bbv">Agregar voz de ritmo binaural</string>
+    <string name="voice">Voz</string>
+    <string name="soundloop">SoundLoop</string>
+    <string name="visualizer">Visualizador</string>
+    <string name="done">Listo</string>
+    <string name="preset_error">Por favor agrega al menos un periodo</string>
+    <string name="description_error">Por favor agrega una descripcion</string>
+    <string name="author_error">Por favor agrega el autor</string>
+    <string name="preset_saved">¡Preestablecido guardado con éxito!</string>
+    <string name="preset_list">Lista de Preestablecidos</string>
+    <string name="preset">Preestablecido</string>
+    <string name="name">Nombre</string>
+    <string name="author">Autor</string>
+    <string name="description">Descricion</string>
+    <string name="no_presets_created">No se crearon presentes</string>
+    <string name="add_voice">Agregar voz</string>
+    <string name="custom_preset">Estado preestablecido personalizado</string>
+</resources>

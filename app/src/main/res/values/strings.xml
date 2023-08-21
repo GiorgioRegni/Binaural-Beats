@@ -92,6 +92,7 @@
 
 
     <string name="facebook_app_id">117055728638150</string>
+    <string name="facebook_client_token">ec0f2fb8a8008f6546cd99141b757932</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

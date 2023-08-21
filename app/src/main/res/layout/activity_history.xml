@@ -6,7 +6,7 @@
     android:background="#FFF"
     android:orientation="vertical">
 
-    <android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
+    <androidx.appcompat.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/historyToolbar"
         android:layout_width="match_parent"
@@ -16,18 +16,18 @@
         app:popupTheme="@style/Theme.AppCompat.Light"
         app:theme="@style/Theme.AppCompat">
 
-    </android.support.v7.widget.Toolbar>
+    </androidx.appcompat.widget.Toolbar>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
 
-        <android.support.v7.widget.RecyclerView
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scrollbars="vertical"></android.support.v7.widget.RecyclerView>
+            android:scrollbars="vertical"></androidx.recyclerview.widget.RecyclerView>
 
         <TextView
             android:id="@+id/tvEmpty"

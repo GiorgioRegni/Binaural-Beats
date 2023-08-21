@@ -42,11 +42,11 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.PowerManager;
 import android.os.SystemClock;
-import android.support.annotation.Nullable;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import androidx.annotation.Nullable;
+import androidx.core.app.NotificationCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
@@ -79,12 +79,17 @@ import android.widget.Toast;
 import com.android.billingclient.api.BillingClient;
 import com.android.billingclient.api.BillingClientStateListener;
 import com.android.billingclient.api.BillingFlowParams;
+import com.android.billingclient.api.BillingResult;
 import com.android.billingclient.api.Purchase;
+import com.android.billingclient.api.PurchasesResponseListener;
 import com.android.billingclient.api.PurchasesUpdatedListener;
+import com.android.billingclient.api.QueryPurchasesParams;
 import com.android.billingclient.api.SkuDetails;
 import com.android.billingclient.api.SkuDetailsParams;
 import com.android.billingclient.api.SkuDetailsResponseListener;
-import com.crashlytics.android.Crashlytics;
+// JENLA import com.crashlytics.android.Crashlytics;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
+
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
 import com.facebook.share.model.ShareLinkContent;
@@ -136,8 +141,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
-
-import io.fabric.sdk.android.Fabric;
 
 public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener {
 
@@ -298,12 +301,16 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         /* Facebook */
+        // This is deprecated but I keep it for older devices and android versions
         FacebookSdk.sdkInitialize(getApplicationContext());
+        // Facebook
+        // Logs 'install' and 'app activate' App Events.
+        AppEventsLogger.activateApp(getApplication());
 
         setContentView(R.layout.main);
 
         /* Initialize Fabric and Crashlytics */
-        Fabric.with(this, new Crashlytics());
+        FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(true);
 
         /* Init sounds */
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
@@ -312,7 +319,9 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
 
         mSharedPref.initialize(this);
         //in app purchase billing client initialization
-        mBillingClient = BillingClient.newBuilder(this).setListener(this).build();
+        mBillingClient = BillingClient.newBuilder(this).setListener(this)
+                .enablePendingPurchases()
+                .build();
         mIsBillingServiceConnected = false;
 
         /*
@@ -877,17 +886,16 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
 
         // Facebook
         // Logs 'app deactivate' App Event.
-        AppEventsLogger.deactivateApp(this);
+        // This seems to be unnecessary now, see
+        // https://stackoverflow.com/questions/42649153/appeventslogger-deactivateappcontext-context-deprecated
+        // https://developers.facebook.com/docs/reference/androidsdk/current/facebook/com/facebook/appevents/appeventslogger.html/
+        // AppEventsLogger.deactivateApp(this);
     }
 
     @Override
     protected void onResume() {
         Log.v(LOGBBEAT, "onResume");
         super.onResume();
-
-        // Facebook
-        // Logs 'install' and 'app activate' App Events.
-        AppEventsLogger.activateApp(this);
     }
 
     @Override
@@ -1042,7 +1050,7 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
                 (NotificationCompat.Builder) new NotificationCompat.Builder(this)
                         .setSmallIcon(R.drawable.ic_notification)
                         // Show controls on lock screen even when user hides sensitive content.
-                        .setVisibility(Notification.VISIBILITY_PUBLIC)
+                        .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                         .setContentTitle(getString(R.string.notif_started))
                         .setContentText(getString(R.string.notif_descr, programName))
                         .setOngoing(true);
@@ -1735,10 +1743,11 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
         if (ShareDialog.canShow(ShareLinkContent.class)) {
             ShareDialog shareDialog = new ShareDialog(this);
             ShareLinkContent linkContent = new ShareLinkContent.Builder()
-                    .setContentTitle("Binaural Beats Therapy App")
-                    .setContentDescription("Already approved by hundred thousands of people, a very powerful self-improvement, brain enhancement and stress-relief app.")
+                    // JENLA45
+                    // .setContentTitle("Binaural Beats Therapy App")
+                    //.setContentDescription("Already approved by hundred thousands of people, a very powerful self-improvement, brain enhancement and stress-relief app.")
                     .setContentUrl(Uri.parse(FACEBOOK_INSTALL_URL))
-                    .setImageUrl(Uri.parse(FACEBOOK_SHARE_IMG))
+                    //.setImageUrl(Uri.parse(FACEBOOK_SHARE_IMG))
                     .build();
 
             shareDialog.show(linkContent);
@@ -1756,34 +1765,9 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
         }
     }
 
-    private boolean displayGooglePlusShare() {
-        PlusShare.Builder builder = new PlusShare.Builder(this);
-
-        // Set call-to-action metadata.
-        builder.addCallToAction(
-                "CREATE_ITEM", /** call-to-action button label */
-                Uri.parse("http://plus.google.com/pages/create"), /** call-to-action url (for desktop use) */
-                "/pages/create" /** call to action deep-link ID (for mobile use), 512 characters or fewer */);
-
-        // Set the content url (for desktop use).
-        builder.setContentUrl(Uri.parse(FORUM_URL));
-
-        // Set the target deep-link ID (for mobile use).
-        //builder.setContentDeepLinkId("/pages/",
-        //        null, null, null);
-
-        // Set the share text.
-        builder.setText("Create your Google+ Page too!");
-
-        startActivityForResult(builder.getIntent(), 0);
-
-        return true;
-    }
-
     private long _getClock() {
         return SystemClock.elapsedRealtime();
     }
-
 
     private boolean _isDonated() {
         return (mDonationLevel != null);
@@ -1804,6 +1788,29 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
                 @Override
                 public void run() {
                     // try to sync up purchase history of that user
+                    // JENLA43
+                    mBillingClient.queryPurchasesAsync(QueryPurchasesParams.newBuilder()
+                            .setProductType(BillingClient.ProductType.INAPP)
+                            .build(), new PurchasesResponseListener() {
+                        public void onQueryPurchasesResponse(BillingResult billingResult, List<Purchase> purchases) {
+                            // check billingResult
+                            // process returned purchase list, e.g. display the plans user owns
+                            boolean hasAPurchase = false;
+                            for (Purchase purchase : purchases) {
+                                //String purchaseToken = purchase.getPurchaseToken();
+                                List<String> allSkus = purchase.getSkus();
+                                String purchaseSku = allSkus.get(0); //JENLA
+                                //long purchaseTime = purchase.getPurchaseTime();
+                                mSharedPref.putData(AppConstants.DONATIONPURCHASESKU, purchaseSku);
+                                hasAPurchase = true;
+                            }
+                            // This recovers a purchase when an user switch phone
+                            // or reinstall the app
+                            if (hasAPurchase)
+                                _updateDonationLevel(true);
+                        }
+                    });
+                    /*
                     Purchase.PurchasesResult purchasesRes = mBillingClient.queryPurchases(BillingClient.SkuType.INAPP);
                     if (purchasesRes.getResponseCode() == BillingClient.BillingResponse.OK) {
                         List<Purchase> purchasesList = purchasesRes.getPurchasesList();
@@ -1820,9 +1827,9 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
                         if (hasAPurchase)
                             _updateDonationLevel(true);
                     }
+                    */
                 }
             }, false);
-
         }
 
         switch (sku) {
@@ -1847,21 +1854,23 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
     }
 
     @Override
-    public void onPurchasesUpdated(int responseCode, @Nullable List<Purchase> purchases) {
+    public void onPurchasesUpdated(BillingResult billingResult, @Nullable List<Purchase> purchases) {
         //after payment success
-        if (responseCode == BillingClient.BillingResponse.OK
+        int responseCode = billingResult.getResponseCode();
+        if (responseCode == BillingClient.BillingResponseCode.OK
                 && purchases != null) {
             for (Purchase purchase : purchases) {
                 //String purchaseToken = purchase.getPurchaseToken();
-                String purchaseSku = purchase.getSku();
+
+                String purchaseSku = "JENLA46"; //purchase.getSku();
                 //long purchaseTime = purchase.getPurchaseTime();
                 mSharedPref.putData(AppConstants.DONATIONPURCHASESKU, purchaseSku);
             }
             _updateDonationLevel();
-        } else if (responseCode == BillingClient.BillingResponse.USER_CANCELED) {
+        } else if (responseCode == BillingClient.BillingResponseCode.USER_CANCELED) {
             // Handle an error caused by a user cancelling the purchase flow.
             ToastText(R.string.DONATION_USER_CANCELED);
-        } else if (responseCode == BillingClient.BillingResponse.ITEM_ALREADY_OWNED) {
+        } else if (responseCode == BillingClient.BillingResponseCode.ITEM_ALREADY_OWNED) {
             // Handle an error caused by a user cancelling the purchase flow.
             ToastText(R.string.DONATION_ALREADY_OWNED);
         } else {
@@ -1873,10 +1882,11 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
     private void startBillingServiceConnection(final Runnable executeOnSuccess, final boolean toastOnError) {
         mBillingClient.startConnection(new BillingClientStateListener() {
             @Override
-            public void onBillingSetupFinished(int billingResponseCode) {
+            public void onBillingSetupFinished(BillingResult billingResult) {
+                int billingResponseCode = billingResult.getResponseCode();
                 Log.d(LOGBBEAT, "Billing Setup finished. Response code: " + billingResponseCode);
 
-                if (billingResponseCode == BillingClient.BillingResponse.OK) {
+                if (billingResponseCode == BillingClient.BillingResponseCode.OK) {
                     mIsBillingServiceConnected = true;
                     if (executeOnSuccess != null) {
                         synchronized (BBeat.this) {
@@ -1926,8 +1936,9 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
                 params.setSkusList(skuList).setType(BillingClient.SkuType.INAPP);
                 mBillingClient.querySkuDetailsAsync(params.build(), new SkuDetailsResponseListener() {
                     @Override
-                    public void onSkuDetailsResponse(int responseCode, List<SkuDetails> skuDetailsList) {
-                        if (responseCode == BillingClient.BillingResponse.OK && skuDetailsList != null) {
+                    public void onSkuDetailsResponse(BillingResult br, List<SkuDetails> skuDetailsList) {
+                        int responseCode = br.getResponseCode();
+                        if (responseCode == BillingClient.BillingResponseCode.OK && skuDetailsList != null) {
                             mProductSkuList = new ArrayList<>();
                             for (SkuDetails skuDetails : skuDetailsList) {
                                 mProductSkuList.add(skuDetails);

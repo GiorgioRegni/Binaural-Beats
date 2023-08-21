@@ -1056,7 +1056,7 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
                         .setOngoing(true);
 
         Intent notificationIntent = this.getIntent(); //new Intent(this, hiit.class);
-        PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
+        PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_IMMUTABLE);
 
         mBuilder.setContentIntent(contentIntent);
 
@@ -2022,28 +2022,27 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
 
         @Override
         protected Void doInBackground(Void... params) {
+            /* Creates the list of groups and attach ProgramMeta into each group */
             for (String pname : programs.keySet()) {
 
                 ProgramMeta pm = programs.get(pname);
-                String catname = pm.getCat().toString();
+                String catName = pm.getCat().toString();
                 CategoryGroup g = null;
+                int catGroupIndex = -1;
 
                 /* Check if I already have a group with that name */
-                for (CategoryGroup g2 : groups) {
-                    if (g2.getName().equals(catname)) {
-                        g = g2;
-                    }
-                }
-                if (g == null) {
-                    g = new CategoryGroup(catname);
+                catGroupIndex = groups.indexOf(catName);
+                if (catGroupIndex < 0) {
+                    g = new CategoryGroup(catName);
 
                     try {
-                        g.setNiceName(getString(R.string.class.getField("group_" + catname.toLowerCase()).getInt(null)));
+                        g.setNiceName(getString(R.string.class.getField("group_" + catName.toLowerCase()).getInt(null)));
                     } catch (Exception e) {
                         // pass
                     }
-
                     groups.add(g);
+                } else {
+                    g = groups.get(catGroupIndex);
                 }
 
                 g.add(pm, DefaultProgramsBuilder.getProgram(pm));
@@ -2055,40 +2054,45 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
         @Override
         protected void onPostExecute(Void result) {
             try {
-                ArrayList<PresetModel> arrayList = (ArrayList<PresetModel>) ((BBeatApp) getApplicationContext()).getDbHelper().getAll(PresetModel.class);
-                if (arrayList != null && arrayList.size() > 0) {
+                // Go through all the user presets
+                ArrayList<PresetModel> allUserPresetModels = (ArrayList<PresetModel>) ((BBeatApp) getApplicationContext()).getDbHelper().getAll(PresetModel.class);
+                if (allUserPresetModels != null && allUserPresetModels.size() > 0) {
                     CategoryGroup categoryGroup = new CategoryGroup("CP");
                     categoryGroup.setNiceName(BBeat.this.getString(R.string.custom_preset));
-                    ArrayList<Program> programArrayList = new ArrayList<>();
-                    for (int i = 0; i < arrayList.size(); i++) {
-                        Program program = new Program(arrayList.get(i).getName());
-                        program.setAuthor(arrayList.get(i).getAuthor());
-                        program.setDescription(arrayList.get(i).getDescription());
-                        if (arrayList.get(i).getPeriodModelArray() != null && !TextUtils.isEmpty(arrayList.get(i).getPeriodModelArray())) {
+                    ArrayList<Program> allUserPrograms = new ArrayList<>();
+                    for (int i = 0; i < allUserPresetModels.size(); i++) {
+                        PresetModel presetModel = allUserPresetModels.get(i);
+
+                        Program program = new Program(presetModel.getName());
+                        program.setAuthor(presetModel.getAuthor());
+                        program.setDescription(presetModel.getDescription());
+                        if (presetModel.getPeriodModelArray() != null && !TextUtils.isEmpty(presetModel.getPeriodModelArray())) {
                             JsonParser parser = new JsonParser();
-                            JsonArray jsonArray = parser.parse(arrayList.get(i).getPeriodModelArray()).getAsJsonArray();
+                            JsonArray jsonArray = parser.parse(presetModel.getPeriodModelArray()).getAsJsonArray();
                             Type listType = new TypeToken<ArrayList<PeriodModel>>() {
                             }.getType();
 
-                            ArrayList<PeriodModel> periodModelArrayList = new Gson().fromJson(jsonArray, listType);
-                            if (periodModelArrayList != null && periodModelArrayList.size() > 0) {
-                                for (int j = 0; j < periodModelArrayList.size(); j++) {
-                                    if (periodModelArrayList.get(j).getVoiceModelArray() != null && !TextUtils.isEmpty(periodModelArrayList.get(j).getVoiceModelArray())) {
+                            ArrayList<PeriodModel> allPresetPeriodModels = new Gson().fromJson(jsonArray, listType);
+                            if (allPresetPeriodModels != null && allPresetPeriodModels.size() > 0) {
+                                for (int j = 0; j < allPresetPeriodModels.size(); j++) {
+                                    PeriodModel periodModel = allPresetPeriodModels.get(j);
+
+                                    if (periodModel.getVoiceModelArray() != null && !TextUtils.isEmpty(periodModel.getVoiceModelArray())) {
                                         JsonParser parser1 = new JsonParser();
-                                        JsonArray jsonArray1 = parser1.parse(periodModelArrayList.get(j).getVoiceModelArray()).getAsJsonArray();
+                                        JsonArray jsonArray1 = parser1.parse(periodModel.getVoiceModelArray()).getAsJsonArray();
                                         Type listType1 = new TypeToken<ArrayList<VoiceModel>>() {
                                         }.getType();
 
                                         ArrayList<VoiceModel> voiceModelArrayList = new Gson().fromJson(jsonArray1, listType1);
-                                        periodModelArrayList.get(j).setVoiceModelArrayList(voiceModelArrayList);
+                                        periodModel.setVoiceModelArrayList(voiceModelArrayList);
                                     }
                                 }
                             }
-                            arrayList.get(i).setPeriodModelArrayList(periodModelArrayList);
+                            presetModel.setPeriodModelArrayList(allPresetPeriodModels);
                         }
-                        if (arrayList.get(i).getPeriodModelArrayList() != null && arrayList.get(i).getPeriodModelArrayList().size() > 0) {
-                            for (int a = 0; a < arrayList.get(i).getPeriodModelArrayList().size(); a++) {
-                                PeriodModel periodModel = arrayList.get(i).getPeriodModelArrayList().get(a);
+                        if (presetModel.getPeriodModelArrayList() != null && presetModel.getPeriodModelArrayList().size() > 0) {
+                            for (int a = 0; a < presetModel.getPeriodModelArrayList().size(); a++) {
+                                PeriodModel periodModel = presetModel.getPeriodModelArrayList().get(a);
                                 SoundLoop soundLoop = SoundLoop.NONE;
                                 if (periodModel.getBackground() != null && !TextUtils.isEmpty(periodModel.getBackground())) {
                                     if (periodModel.getBackground().equalsIgnoreCase("None")) {
@@ -2158,7 +2162,7 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
                             e.printStackTrace();
                         }
                         groups.add(categoryGroup);
-                        programArrayList.add(program);
+                        allUserPrograms.add(program);
                     }
                 }
             } catch (SQLException e) {

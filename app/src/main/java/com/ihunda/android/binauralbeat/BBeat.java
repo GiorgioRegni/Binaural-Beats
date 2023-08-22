@@ -25,7 +25,6 @@ package com.ihunda.android.binauralbeat;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.ProgressDialog;
@@ -97,7 +96,6 @@ import com.facebook.share.widget.ShareDialog;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
-import com.google.android.gms.plus.PlusShare;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonParser;
@@ -536,7 +534,7 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
 
         initSounds();
 
-        _updateDonationLevel();
+        _syncDonationLevel();
 
         state = appState.NONE;
         goToState(appState.SETUP);
@@ -1773,17 +1771,12 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
         return (mDonationLevel != null);
     }
 
-    private void _updateDonationLevel() {
-        _updateDonationLevel(false);
-    }
-
-    private void _updateDonationLevel(boolean noNetwork) {
+    private void _syncDonationLevel() {
         mDonationLevel = null;
 
         String sku = mSharedPref.getString(AppConstants.DONATIONPURCHASESKU);
 
-        if (noNetwork == false && (sku == "" || sku == null)) {
-
+        if (sku == "" || sku == null) {
             executeBillingServiceRequest(new Runnable() {
                 @Override
                 public void run() {
@@ -1807,7 +1800,7 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
                             // This recovers a purchase when an user switch phone
                             // or reinstall the app
                             if (hasAPurchase)
-                                _updateDonationLevel(true);
+                                _updateDonationLevelOnUI();
                         }
                     });
                     /*
@@ -1831,6 +1824,13 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
                 }
             }, false);
         }
+        else {
+            _updateDonationLevelOnUI();
+        }
+    }
+
+    private void _updateDonationLevelOnUI() {
+        String sku = mSharedPref.getString(AppConstants.DONATIONPURCHASESKU);
 
         switch (sku) {
             case "don_10":
@@ -1861,12 +1861,12 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
                 && purchases != null) {
             for (Purchase purchase : purchases) {
                 //String purchaseToken = purchase.getPurchaseToken();
-
-                String purchaseSku = "JENLA46"; //purchase.getSku();
+                List<String> allSkus = purchase.getSkus();
+                String purchaseSku = allSkus.get(0); // JENLA
                 //long purchaseTime = purchase.getPurchaseTime();
                 mSharedPref.putData(AppConstants.DONATIONPURCHASESKU, purchaseSku);
             }
-            _updateDonationLevel();
+            _syncDonationLevel();
         } else if (responseCode == BillingClient.BillingResponseCode.USER_CANCELED) {
             // Handle an error caused by a user cancelling the purchase flow.
             ToastText(R.string.DONATION_USER_CANCELED);

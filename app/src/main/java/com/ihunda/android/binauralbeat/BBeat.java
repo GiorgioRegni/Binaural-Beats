@@ -86,7 +86,6 @@ import com.android.billingclient.api.QueryPurchasesParams;
 import com.android.billingclient.api.SkuDetails;
 import com.android.billingclient.api.SkuDetailsParams;
 import com.android.billingclient.api.SkuDetailsResponseListener;
-// JENLA import com.crashlytics.android.Crashlytics;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 
 import com.facebook.FacebookSdk;
@@ -1781,7 +1780,6 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
                 @Override
                 public void run() {
                     // try to sync up purchase history of that user
-                    // JENLA43
                     mBillingClient.queryPurchasesAsync(QueryPurchasesParams.newBuilder()
                             .setProductType(BillingClient.ProductType.INAPP)
                             .build(), new PurchasesResponseListener() {
@@ -1792,7 +1790,7 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
                             for (Purchase purchase : purchases) {
                                 //String purchaseToken = purchase.getPurchaseToken();
                                 List<String> allSkus = purchase.getSkus();
-                                String purchaseSku = allSkus.get(0); //JENLA
+                                String purchaseSku = allSkus.get(0);
                                 //long purchaseTime = purchase.getPurchaseTime();
                                 mSharedPref.putData(AppConstants.DONATIONPURCHASESKU, purchaseSku);
                                 hasAPurchase = true;
@@ -1803,24 +1801,6 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
                                 _updateDonationLevelOnUI();
                         }
                     });
-                    /*
-                    Purchase.PurchasesResult purchasesRes = mBillingClient.queryPurchases(BillingClient.SkuType.INAPP);
-                    if (purchasesRes.getResponseCode() == BillingClient.BillingResponse.OK) {
-                        List<Purchase> purchasesList = purchasesRes.getPurchasesList();
-                        boolean hasAPurchase = false;
-                        for (Purchase purchase : purchasesList) {
-                            //String purchaseToken = purchase.getPurchaseToken();
-                            String purchaseSku = purchase.getSku();
-                            //long purchaseTime = purchase.getPurchaseTime();
-                            mSharedPref.putData(AppConstants.DONATIONPURCHASESKU, purchaseSku);
-                            hasAPurchase = true;
-                        }
-                        // This recovers a purchase when an user switch phone
-                        // or reinstall the app
-                        if (hasAPurchase)
-                            _updateDonationLevel(true);
-                    }
-                    */
                 }
             }, false);
         }
@@ -1862,7 +1842,7 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
             for (Purchase purchase : purchases) {
                 //String purchaseToken = purchase.getPurchaseToken();
                 List<String> allSkus = purchase.getSkus();
-                String purchaseSku = allSkus.get(0); // JENLA
+                String purchaseSku = allSkus.get(0);
                 //long purchaseTime = purchase.getPurchaseTime();
                 mSharedPref.putData(AppConstants.DONATIONPURCHASESKU, purchaseSku);
             }

@@ -1951,7 +1951,12 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
                                 }
                             });
 
-                            showDialogWithAllProducts(mProductSkuList);
+                            BBeat.this.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                showDialogWithAllProducts(mProductSkuList);
+                                }
+                            });
                         }
                     }
                 });

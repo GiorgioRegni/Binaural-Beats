@@ -15,12 +15,14 @@
 
     <application
         android:name=".BBeatApp"
-        android:allowBackup="false"
+
         android:icon="@drawable/icon"
         android:label="@string/app_name"
         android:theme="@style/Theme.BBT"
-        tools:replace="android:allowBackup">
-        <!--"@android:style/Theme.NoTitleBar">-->
+    >
+
+        <!--android:allowBackup="false" tools:replace="android:allowBackup" JENLA-->
+    <!--"@android:style/Theme.NoTitleBar">-->
         <activity
             android:name=".BBeat"
             android:alwaysRetainTaskState="true"

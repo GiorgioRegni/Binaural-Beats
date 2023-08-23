@@ -234,8 +234,8 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
 
     private LinearLayout mGraphVoicesLayout;
 
-    Map<String, ProgramMeta> programs;
-    ArrayList<CategoryGroup> groups;
+    Map<String, ProgramMeta> programNameToMetaMap;
+    ArrayList<CategoryGroup> allProgramCategories;
 
     private long numStarts;
 
@@ -420,10 +420,17 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
         mPresetList = (ExpandableListView) findViewById(R.id.presetListView);
         //final List<String> programs = new ArrayList<String>(DefaultProgramsBuilder.getProgramMethods(this).keySet());
 
-        programs = DefaultProgramsBuilder.getProgramMethods(this);
-        groups = new ArrayList<CategoryGroup>();
+        // JENLA change to new better code
+        programNameToMetaMap = DefaultProgramsBuilder.getProgramMethods(this);
+        allProgramCategories = new ArrayList<CategoryGroup>();
 
-        new LoadAdapter().execute();
+        // Refresh the list of presets with the custom ones
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                refreshPresetsListWithCustomPresets();
+            }
+        });
 
         mPresetList.setOnGroupClickListener(new OnGroupClickListener() {
 
@@ -440,10 +447,10 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
             @Override
             public boolean onChildClick(ExpandableListView parent, View v,
                                         int groupPosition, int childPosition, long id) {
-                if (groups.get(groupPosition).getObjets().get(childPosition).getMethod() != null) {
-                    selectProgram(groups.get(groupPosition).getObjets().get(childPosition));
+                if (allProgramCategories.get(groupPosition).getObjets().get(childPosition).getMethod() != null) {
+                    selectProgram(allProgramCategories.get(groupPosition).getObjets().get(childPosition));
                 } else {
-                    selectCreateProgram(groups.get(groupPosition).getProgram().get(childPosition));
+                    selectCreateProgram(allProgramCategories.get(groupPosition).getProgram().get(childPosition));
                 }
                 return true;
             }
@@ -2008,15 +2015,15 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
         @Override
         protected Void doInBackground(Void... params) {
             /* Creates the list of groups and attach ProgramMeta into each group */
-            for (String pname : programs.keySet()) {
+            for (String pname : programNameToMetaMap.keySet()) {
 
-                ProgramMeta pm = programs.get(pname);
+                ProgramMeta pm = programNameToMetaMap.get(pname);
                 String catName = pm.getCat().toString();
                 CategoryGroup g = null;
                 int catGroupIndex = -1;
 
                 /* Check if I already have a group with that name */
-                catGroupIndex = groups.indexOf(catName);
+                catGroupIndex = allProgramCategories.indexOf(catName);
                 if (catGroupIndex < 0) {
                     g = new CategoryGroup(catName);
 
@@ -2025,9 +2032,9 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
                     } catch (Exception e) {
                         // pass
                     }
-                    groups.add(g);
+                    allProgramCategories.add(g);
                 } else {
-                    g = groups.get(catGroupIndex);
+                    g = allProgramCategories.get(catGroupIndex);
                 }
 
                 g.add(pm, DefaultProgramsBuilder.getProgram(pm));
@@ -2146,7 +2153,7 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
-                        groups.add(categoryGroup);
+                        allProgramCategories.add(categoryGroup);
                         allUserPrograms.add(program);
                     }
                 }
@@ -2154,7 +2161,7 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
                 e.printStackTrace();
             }
 
-            ProgramListAdapter adapter = new ProgramListAdapter(BBeat.this, groups);
+            ProgramListAdapter adapter = new ProgramListAdapter(BBeat.this, allProgramCategories);
             mPresetList.setAdapter(adapter);
             // Expand all
             for (int groupPosition = 0; groupPosition < adapter.getGroupCount(); groupPosition++) {
@@ -2180,16 +2187,146 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
         }
     }
 
+    private void refreshPresetsListWithCustomPresets () {
+        programNameToMetaMap = DefaultProgramsBuilder.getProgramMethods(this);
+        allProgramCategories = new ArrayList<CategoryGroup>();
+
+        /* Creates the list of groups and attach ProgramMeta into each group */
+        for (String pname : programNameToMetaMap.keySet()) {
+
+            ProgramMeta pm = programNameToMetaMap.get(pname);
+            String catName = pm.getCat().toString();
+            CategoryGroup g = null;
+            int catGroupIndex = -1;
+
+            /* Check if I already have a group with that name */
+            for (int i = 0; i < allProgramCategories.size(); i++) {
+                if (allProgramCategories.get(i).getName().equals(catName)) {
+                    catGroupIndex = i;
+                    break;
+                }
+            }
+
+            if (catGroupIndex < 0) {
+                g = new CategoryGroup(catName);
+
+                try {
+                    g.setNiceName(getString(R.string.class.getField("group_" + catName.toLowerCase()).getInt(null)));
+                } catch (Exception e) {
+                    // pass
+                }
+                allProgramCategories.add(g);
+            } else {
+                g = allProgramCategories.get(catGroupIndex);
+            }
+
+            g.add(pm, DefaultProgramsBuilder.getProgram(pm));
+        }
+
+        try {
+            // Go through all the user presets
+            ArrayList<PresetModel> allUserPresetModels = (ArrayList<PresetModel>) ((BBeatApp) getApplicationContext()).getDbHelper().getAll(PresetModel.class);
+            if (allUserPresetModels != null && allUserPresetModels.size() > 0) {
+                // Create and add the custom preset category
+                CategoryGroup categoryGroup = new CategoryGroup("CP");
+                categoryGroup.setNiceName(BBeat.this.getString(R.string.custom_preset));
+                allProgramCategories.add(categoryGroup);
+
+                ArrayList<Program> allUserPrograms = new ArrayList<>();
+                for (int i = 0; i < allUserPresetModels.size(); i++) {
+                    PresetModel presetModel = allUserPresetModels.get(i);
+
+                    Program program = new Program(presetModel.getName());
+                    program.setAuthor(presetModel.getAuthor());
+                    program.setDescription(presetModel.getDescription());
+                    if (presetModel.getPeriodModelArray() != null && !TextUtils.isEmpty(presetModel.getPeriodModelArray())) {
+                        JsonParser parser = new JsonParser();
+                        JsonArray jsonArray = parser.parse(presetModel.getPeriodModelArray()).getAsJsonArray();
+                        Type listType = new TypeToken<ArrayList<PeriodModel>>() {
+                        }.getType();
+
+                        ArrayList<PeriodModel> allPresetPeriodModels = new Gson().fromJson(jsonArray, listType);
+                        if (allPresetPeriodModels != null && allPresetPeriodModels.size() > 0) {
+                            for (int j = 0; j < allPresetPeriodModels.size(); j++) {
+                                PeriodModel periodModel = allPresetPeriodModels.get(j);
+
+                                if (periodModel.getVoiceModelArray() != null && !TextUtils.isEmpty(periodModel.getVoiceModelArray())) {
+                                    JsonParser parser1 = new JsonParser();
+                                    JsonArray jsonArray1 = parser1.parse(periodModel.getVoiceModelArray()).getAsJsonArray();
+                                    Type listType1 = new TypeToken<ArrayList<VoiceModel>>() {
+                                    }.getType();
+
+                                    ArrayList<VoiceModel> voiceModelArrayList = new Gson().fromJson(jsonArray1, listType1);
+                                    periodModel.setVoiceModelArrayList(voiceModelArrayList);
+                                }
+                            }
+                        }
+                        presetModel.setPeriodModelArrayList(allPresetPeriodModels);
+                    }
+                    if (presetModel.getPeriodModelArrayList() != null && presetModel.getPeriodModelArrayList().size() > 0) {
+                        for (int a = 0; a < presetModel.getPeriodModelArrayList().size(); a++) {
+                            PeriodModel periodModel = presetModel.getPeriodModelArrayList().get(a);
+                            SoundLoop soundLoop = SoundLoop.NONE;
+                            if (periodModel.getBackground() != null && !TextUtils.isEmpty(periodModel.getBackground())) {
+                                if (periodModel.getBackground().equalsIgnoreCase("None")) {
+                                    soundLoop = SoundLoop.NONE;
+                                } else if (periodModel.getBackground().equalsIgnoreCase("White Noise")) {
+                                    soundLoop = SoundLoop.WHITE_NOISE;
+                                } else if (periodModel.getBackground().equalsIgnoreCase("Unity")) {
+                                    soundLoop = SoundLoop.UNITY;
+                                }
+                            }
+                            Visualization visualization = DefaultProgramsBuilder.getVizualisationfromName(periodModel.getVisualizer());
+
+                            Period period = new Period(periodModel.getDuration(), soundLoop, Float.valueOf(periodModel.getBackgroundVolume()) / 100f, null);
+                            if (periodModel.getVoiceModelArrayList() != null && periodModel.getVoiceModelArrayList().size() > 0) {
+                                for (int b = 0; b < periodModel.getVoiceModelArrayList().size(); b++) {
+                                    VoiceModel voiceModel = periodModel.getVoiceModelArrayList().get(b);
+                                    period.addVoice(new BinauralBeatVoice(voiceModel.getFreqStart(), voiceModel.getFreqEnd(), voiceModel.getVolume() / 100f));
+                                }
+                            }
+                            period.setV(visualization);
+                            program.addPeriod(period);
+                        }
+                    }
+//
+                    try {
+                        ProgramMeta.Category cat = ProgramMeta.Category.CP;
+                        ProgramMeta meta = new ProgramMeta(null, program.name, cat);
+                        categoryGroup.add(meta, program);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                    allUserPrograms.add(program);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        ProgramListAdapter adapter = new ProgramListAdapter(BBeat.this, allProgramCategories);
+        mPresetList.setAdapter(adapter);
+        // Expand all
+        for (int groupPosition = 0; groupPosition < adapter.getGroupCount(); groupPosition++) {
+            if (mPresetList.isGroupExpanded(groupPosition) == false) {
+                mPresetList.expandGroup(groupPosition);
+            }
+        }
+    }
+
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         if (intent.getExtras() != null) {
             if (intent.getExtras().getBoolean("refresh")) {
-                programs = DefaultProgramsBuilder.getProgramMethods(this);
-                groups = new ArrayList<CategoryGroup>();
-
-                new LoadAdapter().execute();
-
+                // Refresh the list of presets with the custom ones
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        refreshPresetsListWithCustomPresets();
+                    }
+                });
             }
         }
     }

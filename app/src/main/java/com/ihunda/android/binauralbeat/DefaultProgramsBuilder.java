@@ -30,14 +30,20 @@ import com.ihunda.android.binauralbeat.ProgramMeta.Category;
 import com.ihunda.android.binauralbeat.viz.Aurora;
 import com.ihunda.android.binauralbeat.viz.Black;
 import com.ihunda.android.binauralbeat.viz.Flash;
+import com.ihunda.android.binauralbeat.viz.GLBlack;
 import com.ihunda.android.binauralbeat.viz.Hiit;
 import com.ihunda.android.binauralbeat.viz.HypnoFlash;
+import com.ihunda.android.binauralbeat.viz.HypnoticSpiral;
 import com.ihunda.android.binauralbeat.viz.Image;
 import com.ihunda.android.binauralbeat.viz.LSD;
 import com.ihunda.android.binauralbeat.viz.Leds;
+import com.ihunda.android.binauralbeat.viz.Mandelbrot;
 import com.ihunda.android.binauralbeat.viz.Morphine;
 import com.ihunda.android.binauralbeat.viz.None;
+import com.ihunda.android.binauralbeat.viz.Plasma;
+import com.ihunda.android.binauralbeat.viz.SpiralDots;
 import com.ihunda.android.binauralbeat.viz.Starfield;
+import com.ihunda.android.binauralbeat.viz.Starfield3D;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -776,5 +782,48 @@ public class DefaultProgramsBuilder {
         }
 
         throw new RuntimeException(String.format("Missing category in program %s", name));
+    }
+
+    static public Visualization getVizualisationfromName(String vizName) {
+        Visualization v = new Black();
+        if (vizName == null || vizName.isEmpty())
+            return v;
+
+        if (vizName.equalsIgnoreCase("Aurora")) {
+            v = new Aurora();
+        } else if (vizName.equalsIgnoreCase("Black")) {
+            v = new Black();
+        } else if (vizName.equalsIgnoreCase("Flash")) {
+            v = new Flash();
+        } else if (vizName.equalsIgnoreCase("GL Black")) {
+            v = new GLBlack();
+        } else if (vizName.equalsIgnoreCase("Hiit")) {
+            v = new Hiit();
+        } else if (vizName.equalsIgnoreCase("Hypno Flash")) {
+            v = new HypnoFlash();
+        } else if (vizName.equalsIgnoreCase("Hypnotic Spiral")) {
+            v = new HypnoticSpiral();
+//                                    } else if (vizName.equalsIgnoreCase("Image")) {
+//                                        v = new Image();
+        } else if (vizName.equalsIgnoreCase("Leds")) {
+            v = new Leds();
+        } else if (vizName.equalsIgnoreCase("LSD")) {
+            v = new LSD();
+        } else if (vizName.equalsIgnoreCase("Mandelbrot")) {
+            v = new Mandelbrot();
+        } else if (vizName.equalsIgnoreCase("Morphine")) {
+            v = new Morphine();
+        } else if (vizName.equalsIgnoreCase("None")) {
+            v = new None();
+        } else if (vizName.equalsIgnoreCase("Plasma")) {
+            v = new Plasma();
+        } else if (vizName.equalsIgnoreCase("Spiral Dots")) {
+            v = new SpiralDots();
+        } else if (vizName.equalsIgnoreCase("Star Field")) {
+            v = new Starfield();
+        } else if (vizName.equalsIgnoreCase("Star Field 3D")) {
+            v = new Starfield3D();
+        }
+        return v;
     }
 }

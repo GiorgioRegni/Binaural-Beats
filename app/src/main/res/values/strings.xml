@@ -166,5 +166,5 @@
     <string name="description">Description</string>
     <string name="no_presets_created">No Presets Created</string>
     <string name="add_voice">Add Voice</string>
-    <string name="custom_preset">Custom Preset</string>
+    <string name="custom_preset">Custom Presets</string>
 </resources>

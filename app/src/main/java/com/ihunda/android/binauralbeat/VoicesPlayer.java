@@ -16,7 +16,7 @@ public class VoicesPlayer extends Thread {
 	private static final int MAX_VOICES = 10;
 	AudioTrack track;
 	static int HZ = 16384;
-	private static final int AUDIOBUF_SIZE = HZ/4;
+	private static final int AUDIOBUF_SIZE = HZ/2; // JENLA
 	float freqs[];
 	float pitchs[];
 	float vols[];

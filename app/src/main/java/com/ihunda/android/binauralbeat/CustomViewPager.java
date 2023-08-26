@@ -2,7 +2,7 @@ package com.ihunda.android.binauralbeat;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.support.v4.view.ViewPager;
+import androidx.viewpager.widget.ViewPager;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.View;

@@ -198,8 +198,9 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
     private static final String SOURCE_CODE_URL = "http://bit.ly/BBeats";
     private static final String BLOG_URL = "http://bit.ly/BBeatsBlog";
     private static final String HELP_URL = "http://bit.ly/BBeatsHelp";
-    private static final String FORUM_URL = "https://plus.google.com/u/1/communities/113832254482827107359";
     private static final String FACEBOOK_URL = "http://www.facebook.com/pages/Binaural-Beat-Therapy/121737064536801";
+    private static final String FORUM_URL = FACEBOOK_URL; //"https://plus.google.com/u/1/communities/113832254482827107359";
+
     private static final String CONTACT_EMAIL = "binaural-beats@ihunda.com";
     private static final String FACEBOOK_INSTALL_URL = "http://bit.ly/BBTFBSHARE";
     private static final String FACEBOOK_SHARE_IMG = "http://i.imgur.com/bG9coHF.png";
@@ -343,6 +344,9 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
                 showDialog(DIALOG_DONATE);
             }
         });
+        // TODO for now disable donate has my account has problems
+        b.setVisibility(View.GONE);
+        b.setEnabled(false);
 
         b = (Button) findViewById((R.id.historyButton));
         b.setOnClickListener(new OnClickListener() {
@@ -505,6 +509,9 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
                 showDialog(DIALOG_DONATE);
             }
         });
+        // TODO for now disable donate has my account has problems
+        b.setVisibility(View.GONE);
+        b.setEnabled(false);
 
         b = (Button) findViewById((R.id.NDPresetBuilderButton));
         b.setOnClickListener(new OnClickListener() {
@@ -702,10 +709,12 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
                 initSounds();
 
                 /* Check if its time to show a donate dialog */
+               /* TODO for now disable donate has my account has problems
                 if (!_isDonated())
                     if (numStarts % NUM_START_BEFORE_DONATE == NUM_START_BEFORE_DONATE - 1) {
                         showDialog(DIALOG_DONATE);
                     }
+                 */
 
                 break;
             case SETUP:
@@ -947,12 +956,15 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
                             public void onClick(DialogInterface dialog, int id) {
                                 emailAuthor(getString(R.string.app_name), getString(R.string.share_text));
                             }
-                        }).setNeutralButton(R.string.donate, new DialogInterface.OnClickListener() {
+                        });
+                /* TODO disable donate for now
+                    .setNeutralButton(R.string.donate, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
                         showDialog(DIALOG_DONATE);
                     }
                 });
+                 */
                 AlertDialog alert = builder.create();
                 return alert;
             }

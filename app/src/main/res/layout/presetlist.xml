@@ -37,7 +37,8 @@
             android:layout_weight="1"
             android:drawableTop="@drawable/ic_card_giftcard_black_36dp"
             android:text="@string/donate"
-            android:textSize="@dimen/dp_12" />
+            android:textSize="@dimen/dp_12"
+            />
 
         <View
             android:layout_width="@dimen/dp_1"

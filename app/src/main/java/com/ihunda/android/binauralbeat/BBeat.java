@@ -25,7 +25,6 @@ package com.ihunda.android.binauralbeat;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.ProgressDialog;
@@ -42,11 +41,11 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.PowerManager;
 import android.os.SystemClock;
-import android.support.annotation.Nullable;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import androidx.annotation.Nullable;
+import androidx.core.app.NotificationCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
@@ -79,12 +78,16 @@ import android.widget.Toast;
 import com.android.billingclient.api.BillingClient;
 import com.android.billingclient.api.BillingClientStateListener;
 import com.android.billingclient.api.BillingFlowParams;
+import com.android.billingclient.api.BillingResult;
 import com.android.billingclient.api.Purchase;
+import com.android.billingclient.api.PurchasesResponseListener;
 import com.android.billingclient.api.PurchasesUpdatedListener;
+import com.android.billingclient.api.QueryPurchasesParams;
 import com.android.billingclient.api.SkuDetails;
 import com.android.billingclient.api.SkuDetailsParams;
 import com.android.billingclient.api.SkuDetailsResponseListener;
-import com.crashlytics.android.Crashlytics;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
+
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
 import com.facebook.share.model.ShareLinkContent;
@@ -92,7 +95,6 @@ import com.facebook.share.widget.ShareDialog;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
-import com.google.android.gms.plus.PlusShare;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonParser;
@@ -136,8 +138,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
-
-import io.fabric.sdk.android.Fabric;
 
 public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener {
 
@@ -234,8 +234,8 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
 
     private LinearLayout mGraphVoicesLayout;
 
-    Map<String, ProgramMeta> programs;
-    ArrayList<CategoryGroup> groups;
+    Map<String, ProgramMeta> programNameToMetaMap;
+    ArrayList<CategoryGroup> allProgramCategories;
 
     private long numStarts;
 
@@ -298,12 +298,16 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         /* Facebook */
+        // This is deprecated but I keep it for older devices and android versions
         FacebookSdk.sdkInitialize(getApplicationContext());
+        // Facebook
+        // Logs 'install' and 'app activate' App Events.
+        AppEventsLogger.activateApp(getApplication());
 
         setContentView(R.layout.main);
 
         /* Initialize Fabric and Crashlytics */
-        Fabric.with(this, new Crashlytics());
+        FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(true);
 
         /* Init sounds */
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
@@ -312,7 +316,9 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
 
         mSharedPref.initialize(this);
         //in app purchase billing client initialization
-        mBillingClient = BillingClient.newBuilder(this).setListener(this).build();
+        mBillingClient = BillingClient.newBuilder(this).setListener(this)
+                .enablePendingPurchases()
+                .build();
         mIsBillingServiceConnected = false;
 
         /*
@@ -414,10 +420,17 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
         mPresetList = (ExpandableListView) findViewById(R.id.presetListView);
         //final List<String> programs = new ArrayList<String>(DefaultProgramsBuilder.getProgramMethods(this).keySet());
 
-        programs = DefaultProgramsBuilder.getProgramMethods(this);
-        groups = new ArrayList<CategoryGroup>();
+        // JENLA change to new better code
+        programNameToMetaMap = DefaultProgramsBuilder.getProgramMethods(this);
+        allProgramCategories = new ArrayList<CategoryGroup>();
 
-        new LoadAdapter().execute();
+        // Refresh the list of presets with the custom ones
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                refreshPresetsListWithCustomPresets();
+            }
+        });
 
         mPresetList.setOnGroupClickListener(new OnGroupClickListener() {
 
@@ -434,10 +447,10 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
             @Override
             public boolean onChildClick(ExpandableListView parent, View v,
                                         int groupPosition, int childPosition, long id) {
-                if (groups.get(groupPosition).getObjets().get(childPosition).getMethod() != null) {
-                    selectProgram(groups.get(groupPosition).getObjets().get(childPosition));
+                if (allProgramCategories.get(groupPosition).getObjets().get(childPosition).getMethod() != null) {
+                    selectProgram(allProgramCategories.get(groupPosition).getObjets().get(childPosition));
                 } else {
-                    selectCreateProgram(groups.get(groupPosition).getProgram().get(childPosition));
+                    selectCreateProgram(allProgramCategories.get(groupPosition).getProgram().get(childPosition));
                 }
                 return true;
             }
@@ -527,7 +540,7 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
 
         initSounds();
 
-        _updateDonationLevel();
+        _syncDonationLevel();
 
         state = appState.NONE;
         goToState(appState.SETUP);
@@ -877,17 +890,16 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
 
         // Facebook
         // Logs 'app deactivate' App Event.
-        AppEventsLogger.deactivateApp(this);
+        // This seems to be unnecessary now, see
+        // https://stackoverflow.com/questions/42649153/appeventslogger-deactivateappcontext-context-deprecated
+        // https://developers.facebook.com/docs/reference/androidsdk/current/facebook/com/facebook/appevents/appeventslogger.html/
+        // AppEventsLogger.deactivateApp(this);
     }
 
     @Override
     protected void onResume() {
         Log.v(LOGBBEAT, "onResume");
         super.onResume();
-
-        // Facebook
-        // Logs 'install' and 'app activate' App Events.
-        AppEventsLogger.activateApp(this);
     }
 
     @Override
@@ -1042,13 +1054,13 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
                 (NotificationCompat.Builder) new NotificationCompat.Builder(this)
                         .setSmallIcon(R.drawable.ic_notification)
                         // Show controls on lock screen even when user hides sensitive content.
-                        .setVisibility(Notification.VISIBILITY_PUBLIC)
+                        .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                         .setContentTitle(getString(R.string.notif_started))
                         .setContentText(getString(R.string.notif_descr, programName))
                         .setOngoing(true);
 
         Intent notificationIntent = this.getIntent(); //new Intent(this, hiit.class);
-        PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
+        PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_IMMUTABLE);
 
         mBuilder.setContentIntent(contentIntent);
 
@@ -1735,10 +1747,11 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
         if (ShareDialog.canShow(ShareLinkContent.class)) {
             ShareDialog shareDialog = new ShareDialog(this);
             ShareLinkContent linkContent = new ShareLinkContent.Builder()
-                    .setContentTitle("Binaural Beats Therapy App")
-                    .setContentDescription("Already approved by hundred thousands of people, a very powerful self-improvement, brain enhancement and stress-relief app.")
+                    // JENLA45
+                    // .setContentTitle("Binaural Beats Therapy App")
+                    //.setContentDescription("Already approved by hundred thousands of people, a very powerful self-improvement, brain enhancement and stress-relief app.")
                     .setContentUrl(Uri.parse(FACEBOOK_INSTALL_URL))
-                    .setImageUrl(Uri.parse(FACEBOOK_SHARE_IMG))
+                    //.setImageUrl(Uri.parse(FACEBOOK_SHARE_IMG))
                     .build();
 
             shareDialog.show(linkContent);
@@ -1756,74 +1769,55 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
         }
     }
 
-    private boolean displayGooglePlusShare() {
-        PlusShare.Builder builder = new PlusShare.Builder(this);
-
-        // Set call-to-action metadata.
-        builder.addCallToAction(
-                "CREATE_ITEM", /** call-to-action button label */
-                Uri.parse("http://plus.google.com/pages/create"), /** call-to-action url (for desktop use) */
-                "/pages/create" /** call to action deep-link ID (for mobile use), 512 characters or fewer */);
-
-        // Set the content url (for desktop use).
-        builder.setContentUrl(Uri.parse(FORUM_URL));
-
-        // Set the target deep-link ID (for mobile use).
-        //builder.setContentDeepLinkId("/pages/",
-        //        null, null, null);
-
-        // Set the share text.
-        builder.setText("Create your Google+ Page too!");
-
-        startActivityForResult(builder.getIntent(), 0);
-
-        return true;
-    }
-
     private long _getClock() {
         return SystemClock.elapsedRealtime();
     }
-
 
     private boolean _isDonated() {
         return (mDonationLevel != null);
     }
 
-    private void _updateDonationLevel() {
-        _updateDonationLevel(false);
-    }
-
-    private void _updateDonationLevel(boolean noNetwork) {
+    private void _syncDonationLevel() {
         mDonationLevel = null;
 
         String sku = mSharedPref.getString(AppConstants.DONATIONPURCHASESKU);
 
-        if (noNetwork == false && (sku == "" || sku == null)) {
-
+        if (sku == "" || sku == null) {
             executeBillingServiceRequest(new Runnable() {
                 @Override
                 public void run() {
                     // try to sync up purchase history of that user
-                    Purchase.PurchasesResult purchasesRes = mBillingClient.queryPurchases(BillingClient.SkuType.INAPP);
-                    if (purchasesRes.getResponseCode() == BillingClient.BillingResponse.OK) {
-                        List<Purchase> purchasesList = purchasesRes.getPurchasesList();
-                        boolean hasAPurchase = false;
-                        for (Purchase purchase : purchasesList) {
-                            //String purchaseToken = purchase.getPurchaseToken();
-                            String purchaseSku = purchase.getSku();
-                            //long purchaseTime = purchase.getPurchaseTime();
-                            mSharedPref.putData(AppConstants.DONATIONPURCHASESKU, purchaseSku);
-                            hasAPurchase = true;
+                    mBillingClient.queryPurchasesAsync(QueryPurchasesParams.newBuilder()
+                            .setProductType(BillingClient.ProductType.INAPP)
+                            .build(), new PurchasesResponseListener() {
+                        public void onQueryPurchasesResponse(BillingResult billingResult, List<Purchase> purchases) {
+                            // check billingResult
+                            // process returned purchase list, e.g. display the plans user owns
+                            boolean hasAPurchase = false;
+                            for (Purchase purchase : purchases) {
+                                //String purchaseToken = purchase.getPurchaseToken();
+                                List<String> allSkus = purchase.getSkus();
+                                String purchaseSku = allSkus.get(0);
+                                //long purchaseTime = purchase.getPurchaseTime();
+                                mSharedPref.putData(AppConstants.DONATIONPURCHASESKU, purchaseSku);
+                                hasAPurchase = true;
+                            }
+                            // This recovers a purchase when an user switch phone
+                            // or reinstall the app
+                            if (hasAPurchase)
+                                _updateDonationLevelOnUI();
                         }
-                        // This recovers a purchase when an user switch phone
-                        // or reinstall the app
-                        if (hasAPurchase)
-                            _updateDonationLevel(true);
-                    }
+                    });
                 }
             }, false);
-
         }
+        else {
+            _updateDonationLevelOnUI();
+        }
+    }
+
+    private void _updateDonationLevelOnUI() {
+        String sku = mSharedPref.getString(AppConstants.DONATIONPURCHASESKU);
 
         switch (sku) {
             case "don_10":
@@ -1847,21 +1841,23 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
     }
 
     @Override
-    public void onPurchasesUpdated(int responseCode, @Nullable List<Purchase> purchases) {
+    public void onPurchasesUpdated(BillingResult billingResult, @Nullable List<Purchase> purchases) {
         //after payment success
-        if (responseCode == BillingClient.BillingResponse.OK
+        int responseCode = billingResult.getResponseCode();
+        if (responseCode == BillingClient.BillingResponseCode.OK
                 && purchases != null) {
             for (Purchase purchase : purchases) {
                 //String purchaseToken = purchase.getPurchaseToken();
-                String purchaseSku = purchase.getSku();
+                List<String> allSkus = purchase.getSkus();
+                String purchaseSku = allSkus.get(0);
                 //long purchaseTime = purchase.getPurchaseTime();
                 mSharedPref.putData(AppConstants.DONATIONPURCHASESKU, purchaseSku);
             }
-            _updateDonationLevel();
-        } else if (responseCode == BillingClient.BillingResponse.USER_CANCELED) {
+            _syncDonationLevel();
+        } else if (responseCode == BillingClient.BillingResponseCode.USER_CANCELED) {
             // Handle an error caused by a user cancelling the purchase flow.
             ToastText(R.string.DONATION_USER_CANCELED);
-        } else if (responseCode == BillingClient.BillingResponse.ITEM_ALREADY_OWNED) {
+        } else if (responseCode == BillingClient.BillingResponseCode.ITEM_ALREADY_OWNED) {
             // Handle an error caused by a user cancelling the purchase flow.
             ToastText(R.string.DONATION_ALREADY_OWNED);
         } else {
@@ -1873,10 +1869,11 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
     private void startBillingServiceConnection(final Runnable executeOnSuccess, final boolean toastOnError) {
         mBillingClient.startConnection(new BillingClientStateListener() {
             @Override
-            public void onBillingSetupFinished(int billingResponseCode) {
+            public void onBillingSetupFinished(BillingResult billingResult) {
+                int billingResponseCode = billingResult.getResponseCode();
                 Log.d(LOGBBEAT, "Billing Setup finished. Response code: " + billingResponseCode);
 
-                if (billingResponseCode == BillingClient.BillingResponse.OK) {
+                if (billingResponseCode == BillingClient.BillingResponseCode.OK) {
                     mIsBillingServiceConnected = true;
                     if (executeOnSuccess != null) {
                         synchronized (BBeat.this) {
@@ -1926,8 +1923,9 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
                 params.setSkusList(skuList).setType(BillingClient.SkuType.INAPP);
                 mBillingClient.querySkuDetailsAsync(params.build(), new SkuDetailsResponseListener() {
                     @Override
-                    public void onSkuDetailsResponse(int responseCode, List<SkuDetails> skuDetailsList) {
-                        if (responseCode == BillingClient.BillingResponse.OK && skuDetailsList != null) {
+                    public void onSkuDetailsResponse(BillingResult br, List<SkuDetails> skuDetailsList) {
+                        int responseCode = br.getResponseCode();
+                        if (responseCode == BillingClient.BillingResponseCode.OK && skuDetailsList != null) {
                             mProductSkuList = new ArrayList<>();
                             for (SkuDetails skuDetails : skuDetailsList) {
                                 mProductSkuList.add(skuDetails);
@@ -1940,7 +1938,12 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
                                 }
                             });
 
-                            showDialogWithAllProducts(mProductSkuList);
+                            BBeat.this.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                showDialogWithAllProducts(mProductSkuList);
+                                }
+                            });
                         }
                     }
                 });
@@ -2011,28 +2014,27 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
 
         @Override
         protected Void doInBackground(Void... params) {
-            for (String pname : programs.keySet()) {
+            /* Creates the list of groups and attach ProgramMeta into each group */
+            for (String pname : programNameToMetaMap.keySet()) {
 
-                ProgramMeta pm = programs.get(pname);
-                String catname = pm.getCat().toString();
+                ProgramMeta pm = programNameToMetaMap.get(pname);
+                String catName = pm.getCat().toString();
                 CategoryGroup g = null;
+                int catGroupIndex = -1;
 
                 /* Check if I already have a group with that name */
-                for (CategoryGroup g2 : groups) {
-                    if (g2.getName().equals(catname)) {
-                        g = g2;
-                    }
-                }
-                if (g == null) {
-                    g = new CategoryGroup(catname);
+                catGroupIndex = allProgramCategories.indexOf(catName);
+                if (catGroupIndex < 0) {
+                    g = new CategoryGroup(catName);
 
                     try {
-                        g.setNiceName(getString(R.string.class.getField("group_" + catname.toLowerCase()).getInt(null)));
+                        g.setNiceName(getString(R.string.class.getField("group_" + catName.toLowerCase()).getInt(null)));
                     } catch (Exception e) {
                         // pass
                     }
-
-                    groups.add(g);
+                    allProgramCategories.add(g);
+                } else {
+                    g = allProgramCategories.get(catGroupIndex);
                 }
 
                 g.add(pm, DefaultProgramsBuilder.getProgram(pm));
@@ -2044,40 +2046,45 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
         @Override
         protected void onPostExecute(Void result) {
             try {
-                ArrayList<PresetModel> arrayList = (ArrayList<PresetModel>) ((BBeatApp) getApplicationContext()).getDbHelper().getAll(PresetModel.class);
-                if (arrayList != null && arrayList.size() > 0) {
+                // Go through all the user presets
+                ArrayList<PresetModel> allUserPresetModels = (ArrayList<PresetModel>) ((BBeatApp) getApplicationContext()).getDbHelper().getAll(PresetModel.class);
+                if (allUserPresetModels != null && allUserPresetModels.size() > 0) {
                     CategoryGroup categoryGroup = new CategoryGroup("CP");
                     categoryGroup.setNiceName(BBeat.this.getString(R.string.custom_preset));
-                    ArrayList<Program> programArrayList = new ArrayList<>();
-                    for (int i = 0; i < arrayList.size(); i++) {
-                        Program program = new Program(arrayList.get(i).getName());
-                        program.setAuthor(arrayList.get(i).getAuthor());
-                        program.setDescription(arrayList.get(i).getDescription());
-                        if (arrayList.get(i).getPeriodModelArray() != null && !TextUtils.isEmpty(arrayList.get(i).getPeriodModelArray())) {
+                    ArrayList<Program> allUserPrograms = new ArrayList<>();
+                    for (int i = 0; i < allUserPresetModels.size(); i++) {
+                        PresetModel presetModel = allUserPresetModels.get(i);
+
+                        Program program = new Program(presetModel.getName());
+                        program.setAuthor(presetModel.getAuthor());
+                        program.setDescription(presetModel.getDescription());
+                        if (presetModel.getPeriodModelArray() != null && !TextUtils.isEmpty(presetModel.getPeriodModelArray())) {
                             JsonParser parser = new JsonParser();
-                            JsonArray jsonArray = parser.parse(arrayList.get(i).getPeriodModelArray()).getAsJsonArray();
+                            JsonArray jsonArray = parser.parse(presetModel.getPeriodModelArray()).getAsJsonArray();
                             Type listType = new TypeToken<ArrayList<PeriodModel>>() {
                             }.getType();
 
-                            ArrayList<PeriodModel> periodModelArrayList = new Gson().fromJson(jsonArray, listType);
-                            if (periodModelArrayList != null && periodModelArrayList.size() > 0) {
-                                for (int j = 0; j < periodModelArrayList.size(); j++) {
-                                    if (periodModelArrayList.get(j).getVoiceModelArray() != null && !TextUtils.isEmpty(periodModelArrayList.get(j).getVoiceModelArray())) {
+                            ArrayList<PeriodModel> allPresetPeriodModels = new Gson().fromJson(jsonArray, listType);
+                            if (allPresetPeriodModels != null && allPresetPeriodModels.size() > 0) {
+                                for (int j = 0; j < allPresetPeriodModels.size(); j++) {
+                                    PeriodModel periodModel = allPresetPeriodModels.get(j);
+
+                                    if (periodModel.getVoiceModelArray() != null && !TextUtils.isEmpty(periodModel.getVoiceModelArray())) {
                                         JsonParser parser1 = new JsonParser();
-                                        JsonArray jsonArray1 = parser1.parse(periodModelArrayList.get(j).getVoiceModelArray()).getAsJsonArray();
+                                        JsonArray jsonArray1 = parser1.parse(periodModel.getVoiceModelArray()).getAsJsonArray();
                                         Type listType1 = new TypeToken<ArrayList<VoiceModel>>() {
                                         }.getType();
 
                                         ArrayList<VoiceModel> voiceModelArrayList = new Gson().fromJson(jsonArray1, listType1);
-                                        periodModelArrayList.get(j).setVoiceModelArrayList(voiceModelArrayList);
+                                        periodModel.setVoiceModelArrayList(voiceModelArrayList);
                                     }
                                 }
                             }
-                            arrayList.get(i).setPeriodModelArrayList(periodModelArrayList);
+                            presetModel.setPeriodModelArrayList(allPresetPeriodModels);
                         }
-                        if (arrayList.get(i).getPeriodModelArrayList() != null && arrayList.get(i).getPeriodModelArrayList().size() > 0) {
-                            for (int a = 0; a < arrayList.get(i).getPeriodModelArrayList().size(); a++) {
-                                PeriodModel periodModel = arrayList.get(i).getPeriodModelArrayList().get(a);
+                        if (presetModel.getPeriodModelArrayList() != null && presetModel.getPeriodModelArrayList().size() > 0) {
+                            for (int a = 0; a < presetModel.getPeriodModelArrayList().size(); a++) {
+                                PeriodModel periodModel = presetModel.getPeriodModelArrayList().get(a);
                                 SoundLoop soundLoop = SoundLoop.NONE;
                                 if (periodModel.getBackground() != null && !TextUtils.isEmpty(periodModel.getBackground())) {
                                     if (periodModel.getBackground().equalsIgnoreCase("None")) {
@@ -2146,15 +2153,15 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
-                        groups.add(categoryGroup);
-                        programArrayList.add(program);
+                        allProgramCategories.add(categoryGroup);
+                        allUserPrograms.add(program);
                     }
                 }
             } catch (SQLException e) {
                 e.printStackTrace();
             }
 
-            ProgramListAdapter adapter = new ProgramListAdapter(BBeat.this, groups);
+            ProgramListAdapter adapter = new ProgramListAdapter(BBeat.this, allProgramCategories);
             mPresetList.setAdapter(adapter);
             // Expand all
             for (int groupPosition = 0; groupPosition < adapter.getGroupCount(); groupPosition++) {
@@ -2180,16 +2187,146 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
         }
     }
 
+    private void refreshPresetsListWithCustomPresets () {
+        programNameToMetaMap = DefaultProgramsBuilder.getProgramMethods(this);
+        allProgramCategories = new ArrayList<CategoryGroup>();
+
+        /* Creates the list of groups and attach ProgramMeta into each group */
+        for (String pname : programNameToMetaMap.keySet()) {
+
+            ProgramMeta pm = programNameToMetaMap.get(pname);
+            String catName = pm.getCat().toString();
+            CategoryGroup g = null;
+            int catGroupIndex = -1;
+
+            /* Check if I already have a group with that name */
+            for (int i = 0; i < allProgramCategories.size(); i++) {
+                if (allProgramCategories.get(i).getName().equals(catName)) {
+                    catGroupIndex = i;
+                    break;
+                }
+            }
+
+            if (catGroupIndex < 0) {
+                g = new CategoryGroup(catName);
+
+                try {
+                    g.setNiceName(getString(R.string.class.getField("group_" + catName.toLowerCase()).getInt(null)));
+                } catch (Exception e) {
+                    // pass
+                }
+                allProgramCategories.add(g);
+            } else {
+                g = allProgramCategories.get(catGroupIndex);
+            }
+
+            g.add(pm, DefaultProgramsBuilder.getProgram(pm));
+        }
+
+        try {
+            // Go through all the user presets
+            ArrayList<PresetModel> allUserPresetModels = (ArrayList<PresetModel>) ((BBeatApp) getApplicationContext()).getDbHelper().getAll(PresetModel.class);
+            if (allUserPresetModels != null && allUserPresetModels.size() > 0) {
+                // Create and add the custom preset category
+                CategoryGroup categoryGroup = new CategoryGroup("CP");
+                categoryGroup.setNiceName(BBeat.this.getString(R.string.custom_preset));
+                allProgramCategories.add(categoryGroup);
+
+                ArrayList<Program> allUserPrograms = new ArrayList<>();
+                for (int i = 0; i < allUserPresetModels.size(); i++) {
+                    PresetModel presetModel = allUserPresetModels.get(i);
+
+                    Program program = new Program(presetModel.getName());
+                    program.setAuthor(presetModel.getAuthor());
+                    program.setDescription(presetModel.getDescription());
+                    if (presetModel.getPeriodModelArray() != null && !TextUtils.isEmpty(presetModel.getPeriodModelArray())) {
+                        JsonParser parser = new JsonParser();
+                        JsonArray jsonArray = parser.parse(presetModel.getPeriodModelArray()).getAsJsonArray();
+                        Type listType = new TypeToken<ArrayList<PeriodModel>>() {
+                        }.getType();
+
+                        ArrayList<PeriodModel> allPresetPeriodModels = new Gson().fromJson(jsonArray, listType);
+                        if (allPresetPeriodModels != null && allPresetPeriodModels.size() > 0) {
+                            for (int j = 0; j < allPresetPeriodModels.size(); j++) {
+                                PeriodModel periodModel = allPresetPeriodModels.get(j);
+
+                                if (periodModel.getVoiceModelArray() != null && !TextUtils.isEmpty(periodModel.getVoiceModelArray())) {
+                                    JsonParser parser1 = new JsonParser();
+                                    JsonArray jsonArray1 = parser1.parse(periodModel.getVoiceModelArray()).getAsJsonArray();
+                                    Type listType1 = new TypeToken<ArrayList<VoiceModel>>() {
+                                    }.getType();
+
+                                    ArrayList<VoiceModel> voiceModelArrayList = new Gson().fromJson(jsonArray1, listType1);
+                                    periodModel.setVoiceModelArrayList(voiceModelArrayList);
+                                }
+                            }
+                        }
+                        presetModel.setPeriodModelArrayList(allPresetPeriodModels);
+                    }
+                    if (presetModel.getPeriodModelArrayList() != null && presetModel.getPeriodModelArrayList().size() > 0) {
+                        for (int a = 0; a < presetModel.getPeriodModelArrayList().size(); a++) {
+                            PeriodModel periodModel = presetModel.getPeriodModelArrayList().get(a);
+                            SoundLoop soundLoop = SoundLoop.NONE;
+                            if (periodModel.getBackground() != null && !TextUtils.isEmpty(periodModel.getBackground())) {
+                                if (periodModel.getBackground().equalsIgnoreCase("None")) {
+                                    soundLoop = SoundLoop.NONE;
+                                } else if (periodModel.getBackground().equalsIgnoreCase("White Noise")) {
+                                    soundLoop = SoundLoop.WHITE_NOISE;
+                                } else if (periodModel.getBackground().equalsIgnoreCase("Unity")) {
+                                    soundLoop = SoundLoop.UNITY;
+                                }
+                            }
+                            Visualization visualization = DefaultProgramsBuilder.getVizualisationfromName(periodModel.getVisualizer());
+
+                            Period period = new Period(periodModel.getDuration(), soundLoop, Float.valueOf(periodModel.getBackgroundVolume()) / 100f, null);
+                            if (periodModel.getVoiceModelArrayList() != null && periodModel.getVoiceModelArrayList().size() > 0) {
+                                for (int b = 0; b < periodModel.getVoiceModelArrayList().size(); b++) {
+                                    VoiceModel voiceModel = periodModel.getVoiceModelArrayList().get(b);
+                                    period.addVoice(new BinauralBeatVoice(voiceModel.getFreqStart(), voiceModel.getFreqEnd(), voiceModel.getVolume() / 100f));
+                                }
+                            }
+                            period.setV(visualization);
+                            program.addPeriod(period);
+                        }
+                    }
+//
+                    try {
+                        ProgramMeta.Category cat = ProgramMeta.Category.CP;
+                        ProgramMeta meta = new ProgramMeta(null, program.name, cat);
+                        categoryGroup.add(meta, program);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                    allUserPrograms.add(program);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        ProgramListAdapter adapter = new ProgramListAdapter(BBeat.this, allProgramCategories);
+        mPresetList.setAdapter(adapter);
+        // Expand all
+        for (int groupPosition = 0; groupPosition < adapter.getGroupCount(); groupPosition++) {
+            if (mPresetList.isGroupExpanded(groupPosition) == false) {
+                mPresetList.expandGroup(groupPosition);
+            }
+        }
+    }
+
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         if (intent.getExtras() != null) {
             if (intent.getExtras().getBoolean("refresh")) {
-                programs = DefaultProgramsBuilder.getProgramMethods(this);
-                groups = new ArrayList<CategoryGroup>();
-
-                new LoadAdapter().execute();
-
+                // Refresh the list of presets with the custom ones
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        refreshPresetsListWithCustomPresets();
+                    }
+                });
             }
         }
     }

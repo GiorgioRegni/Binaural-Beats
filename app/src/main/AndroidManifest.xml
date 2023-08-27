@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.ihunda.android.binauralbeat"
     android:installLocation="auto">
 
 
     <supports-screens android:smallScreens="false" />
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -15,18 +15,21 @@
 
     <application
         android:name=".BBeatApp"
-        android:allowBackup="false"
+
         android:icon="@drawable/icon"
         android:label="@string/app_name"
         android:theme="@style/Theme.BBT"
-        tools:replace="android:allowBackup">
-        <!--"@android:style/Theme.NoTitleBar">-->
+    >
+
+        <!--android:allowBackup="false" tools:replace="android:allowBackup" JENLA-->
+    <!--"@android:style/Theme.NoTitleBar">-->
         <activity
             android:name=".BBeat"
             android:alwaysRetainTaskState="true"
             android:label="@string/app_name"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -65,7 +68,8 @@
             android:name=".Comments"
             android:label="@string/comments_title" />
 
-        <receiver android:name="com.ihunda.android.binauralbeat.IncomingCallReceiver">
+        <receiver android:name="com.ihunda.android.binauralbeat.IncomingCallReceiver"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.PHONE_STATE" />
             </intent-filter>
@@ -76,18 +80,18 @@
             android:value="@integer/google_play_services_version" />
 
         <!-- Facebook -->
-        <meta-data
-            android:name="com.facebook.sdk.ApplicationId"
-            android:value="@string/facebook_app_id" />
+        <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
+        <meta-data android:name="com.facebook.sdk.ClientToken" android:value="@string/facebook_client_token"/>
+
         <!--        <activity
                     android:name="com.facebook.FacebookActivity"
                     android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
                     android:label="@string/app_name"
-                    android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+                    android:theme="@android:style/Theme.Translucent.NoTitleBar" /> -->
                 <provider
                     android:name="com.facebook.FacebookContentProvider"
                     android:authorities="com.facebook.app.FacebookContentProvider117055728638150"
-                    android:exported="true" />-->
+                    android:exported="true" />
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="e3541eda753f40ce343f8c75b51c794b6998e065" />

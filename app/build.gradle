@@ -34,8 +34,8 @@ android {
         applicationId "com.ihunda.android.binauralbeat"
         minSdkVersion 19
         targetSdkVersion 33
-        versionCode 90
-	      versionName "9.0"
+        versionCode 91
+	      versionName "9.1"
     }
 
     buildTypes {

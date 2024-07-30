@@ -519,6 +519,10 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
             }
         });
 
+        // TODO for now disable preset builder to decide if people need to buy it
+        b.setVisibility(View.GONE);
+        b.setEnabled(false);
+
         b = (Button) findViewById((R.id.NDRateButton));
         b.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {

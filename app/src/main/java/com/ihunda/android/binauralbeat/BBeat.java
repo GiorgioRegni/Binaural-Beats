@@ -195,14 +195,14 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
     private SeekBar soundBGV;
     private float mSoundBGVolume;
 
-    private static final String SOURCE_CODE_URL = "http://bit.ly/BBeats";
-    private static final String BLOG_URL = "http://bit.ly/BBeatsBlog";
-    private static final String HELP_URL = "http://bit.ly/BBeatsHelp";
-    private static final String FORUM_URL = "https://plus.google.com/u/1/communities/113832254482827107359";
-    private static final String FACEBOOK_URL = "http://www.facebook.com/pages/Binaural-Beat-Therapy/121737064536801";
+    private static final String SOURCE_CODE_URL = "https://bit.ly/BBeats";
+    private static final String BLOG_URL = "https://bit.ly/BBeatsBlog";
+    private static final String HELP_URL = "https://bit.ly/BBeatsHelp";
+    private static final String FACEBOOK_URL = "https://www.facebook.com/pages/Binaural-Beat-Therapy/121737064536801";
+    private static final String FORUM_URL = FACEBOOK_URL;
     private static final String CONTACT_EMAIL = "binaural-beats@ihunda.com";
-    private static final String FACEBOOK_INSTALL_URL = "http://bit.ly/BBTFBSHARE";
-    private static final String FACEBOOK_SHARE_IMG = "http://i.imgur.com/bG9coHF.png";
+    private static final String FACEBOOK_INSTALL_URL = "https://bit.ly/BBTFBSHARE";
+    private static final String FACEBOOK_SHARE_IMG = "https://i.imgur.com/bG9coHF.png";
     private static final String LOGBBEAT = "BBT-MAIN";
     private static final int NUM_START_BEFORE_DONATE = 2;
 

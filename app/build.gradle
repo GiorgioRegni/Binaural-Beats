@@ -81,7 +81,7 @@ dependencies {
     //compile 'com.codemybrainsout.onboarding:onboarder:1.0.2'
     // implementation 'com.github.GiorgioRegni:ahoy-onboarding:1.0.2'
     implementation 'com.github.GiorgioRegni:ahoy-onboarding:v1.1'
-    implementation 'com.android.billingclient:billing:6.0.1'
+    implementation 'com.android.billingclient:billing:6.1.0'
     implementation 'com.j256.ormlite:ormlite-android:5.1'
     implementation 'com.j256.ormlite:ormlite-core:5.1'
     implementation 'com.github.vipulasri:timelineview:1.1.0'

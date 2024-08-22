@@ -2,9 +2,6 @@ apply plugin: 'com.android.application'
 apply plugin: 'com.google.gms.google-services'
 apply plugin: 'com.google.firebase.crashlytics'
 repositories {
-    /*flatDir {
-        dirs 'facebook'
-    }*/
     mavenCentral()
 }
 
@@ -32,10 +29,11 @@ android {
     compileSdkVersion 33
     defaultConfig {
         applicationId "com.ihunda.android.binauralbeat"
-        minSdkVersion 19
+        minSdkVersion 26
         targetSdkVersion 33
+        multiDexEnabled true
         versionCode 81
-	      versionName "8.1"
+        versionName "8.1"
     }
 
     buildTypes {
@@ -85,7 +83,9 @@ dependencies {
     implementation 'com.j256.ormlite:ormlite-android:5.1'
     implementation 'com.j256.ormlite:ormlite-core:5.1'
     implementation 'com.github.vipulasri:timelineview:1.1.0'
-    implementation 'com.muditsen.multilevelrecyclerview:multilevelview:1.0.0'
+
+    //implementation 'com.muditsen.multilevelrecyclerview:multilevelview:1.0.4'
+    implementation files('libs/multilevelview.jar')
     implementation 'com.google.code.gson:gson:2.8.9'
     //implementation 'com.google.firebase:firebase-core:16.0.1'
     implementation platform('com.google.firebase:firebase-bom:30.5.0')

@@ -40,6 +40,7 @@ proguard/
 .idea/workspace.xml
 # These are generated automatically by gradle
 .idea/libraries
+.idea/
 
 # This has a cache info
 .gradle/

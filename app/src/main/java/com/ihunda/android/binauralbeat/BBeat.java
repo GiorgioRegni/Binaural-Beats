@@ -43,6 +43,10 @@ import android.os.PowerManager;
 import android.os.SystemClock;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowCompat;
+import androidx.core.view.WindowInsetsCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -305,6 +309,18 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
         AppEventsLogger.activateApp(getApplication());
 
         setContentView(R.layout.main);
+
+        /* Prevent using the entire vertical space on notched phones */
+        View content = findViewById(android.R.id.content);
+        ViewCompat.setOnApplyWindowInsetsListener(content, (v, insets) -> {
+            Insets sys = insets.getInsets(
+                    WindowInsetsCompat.Type.statusBars()
+                            | WindowInsetsCompat.Type.navigationBars()
+            );
+            // apply as padding to your root view:
+            v.setPadding(sys.left, sys.top, sys.right, sys.bottom);
+            return insets;
+        });
 
         /* Initialize Fabric and Crashlytics */
         FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(true);

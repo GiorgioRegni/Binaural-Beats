@@ -79,17 +79,6 @@ import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.billingclient.api.BillingClient;
-import com.android.billingclient.api.BillingClientStateListener;
-import com.android.billingclient.api.BillingFlowParams;
-import com.android.billingclient.api.BillingResult;
-import com.android.billingclient.api.Purchase;
-import com.android.billingclient.api.PurchasesResponseListener;
-import com.android.billingclient.api.PurchasesUpdatedListener;
-import com.android.billingclient.api.QueryPurchasesParams;
-import com.android.billingclient.api.SkuDetails;
-import com.android.billingclient.api.SkuDetailsParams;
-import com.android.billingclient.api.SkuDetailsResponseListener;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 
 import com.facebook.FacebookSdk;
@@ -143,7 +132,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
-public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener {
+public class BBeat extends AppCompatActivity {
 
     enum eState {
         START,
@@ -208,7 +197,6 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
     private static final String FACEBOOK_INSTALL_URL = "https://bit.ly/BBTFBSHARE";
     private static final String FACEBOOK_SHARE_IMG = "https://i.imgur.com/bG9coHF.png";
     private static final String LOGBBEAT = "BBT-MAIN";
-    private static final int NUM_START_BEFORE_DONATE = 2;
 
     /* All dialogs declaration go here */
     private static final int DIALOG_WELCOME = 1;
@@ -216,7 +204,6 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
     private static final int DIALOG_GETTING_INVOLVED = 3;
     private static final int DIALOG_JOIN_COMMUNITY = 4;
     private static final int DIALOG_PROGRAM_PREVIEW = 5;
-    private static final int DIALOG_DONATE = 6;
 
     private static final float DEFAULT_VOLUME = 0.6f;
 
@@ -284,11 +271,9 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
     /**
      * In app purchase objects declaration
      */
-    BillingClient mBillingClient;
     boolean mIsBillingServiceConnected = false;
     int mBillingClientResponseCode = 0;
 
-    List<SkuDetails> mProductSkuList;
     SharedPref mSharedPref = SharedPref.getInstance();
     String mDonationLevel = null;
     private int currentHistoryId = -1;
@@ -331,11 +316,6 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
         mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 
         mSharedPref.initialize(this);
-        //in app purchase billing client initialization
-        mBillingClient = BillingClient.newBuilder(this).setListener(this)
-                .enablePendingPurchases()
-                .build();
-        mIsBillingServiceConnected = false;
 
         /*
          * Sets up power management, device should not go to sleep during a program
@@ -350,13 +330,6 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
         b.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
                 gotoHelp();
-            }
-        });
-
-        b = (Button) findViewById((R.id.donateButton));
-        b.setOnClickListener(new OnClickListener() {
-            public void onClick(View v) {
-                showDialog(DIALOG_DONATE);
             }
         });
 
@@ -515,13 +488,6 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
             }
         });
 
-        b = (Button) findViewById((R.id.NDDonateButton));
-        b.setOnClickListener(new OnClickListener() {
-            public void onClick(View v) {
-                showDialog(DIALOG_DONATE);
-            }
-        });
-
         b = (Button) findViewById((R.id.NDPresetBuilderButton));
         b.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
@@ -559,8 +525,6 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
             _show_tutorial();
 
         initSounds();
-
-        _syncDonationLevel();
 
         state = appState.NONE;
         goToState(appState.SETUP);
@@ -720,13 +684,6 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
 
                 /* Reinit all sounds */
                 initSounds();
-
-                /* Check if its time to show a donate dialog */
-                if (!_isDonated())
-                    if (numStarts % NUM_START_BEFORE_DONATE == NUM_START_BEFORE_DONATE - 1) {
-                        showDialog(DIALOG_DONATE);
-                    }
-
                 break;
             case SETUP:
                 runGoneAnimationOnView(mPresetView);
@@ -967,12 +924,7 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
                             public void onClick(DialogInterface dialog, int id) {
                                 emailAuthor(getString(R.string.app_name), getString(R.string.share_text));
                             }
-                        }).setNeutralButton(R.string.donate, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.cancel();
-                        showDialog(DIALOG_DONATE);
-                    }
-                });
+                        });
                 AlertDialog alert = builder.create();
                 return alert;
             }
@@ -1020,35 +972,6 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
                         formatTimeNumberwithLeadingZero((length / 60) % 60)));
 
                 return dialog;
-
-            case DIALOG_DONATE: {
-                _track_ui_click("DONATE", "DIALOG");
-
-                AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.setMessage(R.string.donate_text)
-                        .setCancelable(true)
-                        .setPositiveButton(R.string.donate, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                getAllProductsList();
-
-                            }
-                        }).setNeutralButton(R.string.share_facebook, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        removeDialog(DIALOG_DONATE);
-                        displayFacebookShare();
-                    }
-                });
-                /*.setNegativeButton(R.string.like, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        removeDialog(DIALOG_DONATE);
-                        gotoFacebook();
-                    }
-                });;*/
-
-                AlertDialog alert = builder.create();
-                return alert;
-
-            }
         }
 
         return null;
@@ -1791,242 +1714,6 @@ public class BBeat extends AppCompatActivity implements PurchasesUpdatedListener
 
     private long _getClock() {
         return SystemClock.elapsedRealtime();
-    }
-
-    private boolean _isDonated() {
-        return (mDonationLevel != null);
-    }
-
-    private void _syncDonationLevel() {
-        mDonationLevel = null;
-
-        String sku = mSharedPref.getString(AppConstants.DONATIONPURCHASESKU);
-
-        if (sku == "" || sku == null) {
-            executeBillingServiceRequest(new Runnable() {
-                @Override
-                public void run() {
-                    // try to sync up purchase history of that user
-                    mBillingClient.queryPurchasesAsync(QueryPurchasesParams.newBuilder()
-                            .setProductType(BillingClient.ProductType.INAPP)
-                            .build(), new PurchasesResponseListener() {
-                        public void onQueryPurchasesResponse(BillingResult billingResult, List<Purchase> purchases) {
-                            // check billingResult
-                            // process returned purchase list, e.g. display the plans user owns
-                            boolean hasAPurchase = false;
-                            for (Purchase purchase : purchases) {
-                                //String purchaseToken = purchase.getPurchaseToken();
-                                List<String> allSkus = purchase.getSkus();
-                                String purchaseSku = allSkus.get(0);
-                                //long purchaseTime = purchase.getPurchaseTime();
-                                mSharedPref.putData(AppConstants.DONATIONPURCHASESKU, purchaseSku);
-                                hasAPurchase = true;
-                            }
-                            // This recovers a purchase when an user switch phone
-                            // or reinstall the app
-                            if (hasAPurchase)
-                                _updateDonationLevelOnUI();
-                        }
-                    });
-                }
-            }, false);
-        }
-        else {
-            _updateDonationLevelOnUI();
-        }
-    }
-
-    private void _updateDonationLevelOnUI() {
-        String sku = mSharedPref.getString(AppConstants.DONATIONPURCHASESKU);
-
-        switch (sku) {
-            case "don_10":
-                mDonationLevel = getString(R.string.don_10_level);
-                break;
-            case "don_50":
-                mDonationLevel = getString(R.string.don_50_level);
-                break;
-            case "don_100":
-                mDonationLevel = getString(R.string.don_100_level);
-                break;
-        }
-
-        if (mDonationLevel != null) {
-            Button b;
-            b = (Button) findViewById((R.id.donateButton));
-            b.setText(mDonationLevel);
-            b = (Button) findViewById((R.id.NDDonateButton));
-            b.setText(mDonationLevel);
-        }
-    }
-
-    @Override
-    public void onPurchasesUpdated(BillingResult billingResult, @Nullable List<Purchase> purchases) {
-        //after payment success
-        int responseCode = billingResult.getResponseCode();
-        if (responseCode == BillingClient.BillingResponseCode.OK
-                && purchases != null) {
-            for (Purchase purchase : purchases) {
-                //String purchaseToken = purchase.getPurchaseToken();
-                List<String> allSkus = purchase.getSkus();
-                String purchaseSku = allSkus.get(0);
-                //long purchaseTime = purchase.getPurchaseTime();
-                mSharedPref.putData(AppConstants.DONATIONPURCHASESKU, purchaseSku);
-            }
-            _syncDonationLevel();
-        } else if (responseCode == BillingClient.BillingResponseCode.USER_CANCELED) {
-            // Handle an error caused by a user cancelling the purchase flow.
-            ToastText(R.string.DONATION_USER_CANCELED);
-        } else if (responseCode == BillingClient.BillingResponseCode.ITEM_ALREADY_OWNED) {
-            // Handle an error caused by a user cancelling the purchase flow.
-            ToastText(R.string.DONATION_ALREADY_OWNED);
-        } else {
-            // Handle any other error codes.
-            ToastText(getString(R.string.DONATION_OTHER_ERROR) + " " + new Integer(responseCode).toString());
-        }
-    }
-
-    private void startBillingServiceConnection(final Runnable executeOnSuccess, final boolean toastOnError) {
-        mBillingClient.startConnection(new BillingClientStateListener() {
-            @Override
-            public void onBillingSetupFinished(BillingResult billingResult) {
-                int billingResponseCode = billingResult.getResponseCode();
-                Log.d(LOGBBEAT, "Billing Setup finished. Response code: " + billingResponseCode);
-
-                if (billingResponseCode == BillingClient.BillingResponseCode.OK) {
-                    mIsBillingServiceConnected = true;
-                    if (executeOnSuccess != null) {
-                        synchronized (BBeat.this) {
-                            executeOnSuccess.run();
-                        }
-                    }
-                } else {
-                    if (toastOnError == true)
-                        ToastText(R.string.DONATION_CONNECTION_ERROR);
-                }
-                mBillingClientResponseCode = billingResponseCode;
-            }
-
-            @Override
-            public void onBillingServiceDisconnected() {
-                mIsBillingServiceConnected = false;
-            }
-        });
-    }
-
-    private void executeBillingServiceRequest(Runnable runnable) {
-        executeBillingServiceRequest(runnable, true);
-    }
-
-    private void executeBillingServiceRequest(Runnable runnable, boolean toastOnError) {
-        if (mIsBillingServiceConnected) {
-            synchronized (BBeat.this) {
-                runnable.run();
-            }
-        } else {
-            // If billing service was disconnected, we try to reconnect 1 time.
-            // (feel free to introduce your retry policy here).
-            startBillingServiceConnection(runnable, toastOnError);
-        }
-    }
-
-    public void getAllProductsList() {
-        executeBillingServiceRequest(new Runnable() {
-            @Override
-            public void run() {
-
-                List<String> skuList = new ArrayList<>();
-                skuList.add("don_10");
-                skuList.add("don_50");
-                skuList.add("don_100");
-                SkuDetailsParams.Builder params = SkuDetailsParams.newBuilder();
-                params.setSkusList(skuList).setType(BillingClient.SkuType.INAPP);
-                mBillingClient.querySkuDetailsAsync(params.build(), new SkuDetailsResponseListener() {
-                    @Override
-                    public void onSkuDetailsResponse(BillingResult br, List<SkuDetails> skuDetailsList) {
-                        int responseCode = br.getResponseCode();
-                        if (responseCode == BillingClient.BillingResponseCode.OK && skuDetailsList != null) {
-                            mProductSkuList = new ArrayList<>();
-                            for (SkuDetails skuDetails : skuDetailsList) {
-                                mProductSkuList.add(skuDetails);
-                            }
-
-                            Collections.sort(mProductSkuList, new Comparator<SkuDetails>() {
-                                @Override
-                                public int compare(SkuDetails lhs, SkuDetails rhs) {
-                                    return (int) (lhs.getPriceAmountMicros() - rhs.getPriceAmountMicros());
-                                }
-                            });
-
-                            BBeat.this.runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                showDialogWithAllProducts(mProductSkuList);
-                                }
-                            });
-                        }
-                    }
-                });
-
-            }
-        });
-    }
-
-    public void showDialogWithAllProducts(final List<SkuDetails> list) {
-
-        // for testing
-        /*
-        final String titles[] = {"t", "t", "t"};
-        final String descriptions[] = {"d1", "d2", "d3"};
-        final String prices[] = {"p1", "p2", "p3"};
-        */
-        _track_ui_click("DONATE", "DIALOG_SKU");
-
-        final String titles[] = {list.get(0).getTitle(), list.get(1).getTitle(), list.get(2).getTitle()};
-        final String descriptions[] = {list.get(0).getDescription(), list.get(1).getDescription(), list.get(2).getDescription()};
-        final String prices[] = {list.get(0).getPrice(), list.get(1).getPrice(), list.get(2).getPrice()};
-
-
-        final Dialog dialog = new Dialog(BBeat.this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.dialog_show_sku_products_list);
-
-        ListView lv = (ListView) dialog.findViewById(R.id.dialog_show_sku_listview);
-        lv.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-        ProductSkuListAdapter mAdapter;
-
-        mAdapter = new ProductSkuListAdapter(BBeat.this, titles, descriptions, prices);
-        lv.setAdapter(mAdapter);
-
-        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parentView, View view, int position, long id) {
-                dialog.dismiss();
-                _track_ui_click("DONATE", String.format("SKUCLICK-%d", position));
-                startBillingFlow(list.get(position));
-            }
-        });
-
-        ImageView ivClose = (ImageView) dialog.findViewById(R.id.image_dialog_inapp_close);
-        ivClose.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
-
-        dialog.show();
-    }
-
-    public void startBillingFlow(SkuDetails skuDetails) {
-        final BillingFlowParams billingFlowParams = BillingFlowParams.newBuilder().setSkuDetails(skuDetails).build();
-
-        executeBillingServiceRequest(new Runnable() {
-            @Override
-            public void run() {
-                mBillingClient.launchBillingFlow(BBeat.this, billingFlowParams);
-            }
-        });
     }
 
     private class LoadAdapter extends AsyncTask<Void, Void, Void> {

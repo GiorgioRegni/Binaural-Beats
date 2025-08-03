@@ -90,19 +90,6 @@
                 android:textSize="@dimen/dp_12" />
 
             <Button
-                android:id="@+id/NDDonateButton"
-                style="@style/Widget.AppCompat.Button.Borderless"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/dp_5"
-                android:layout_marginTop="@dimen/dp_4"
-                android:drawableLeft="@drawable/ic_card_giftcard_black_36dp"
-                android:drawablePadding="@dimen/dp_10"
-                android:gravity="left|center_vertical"
-                android:text="@string/donate"
-                android:textSize="@dimen/dp_12" />
-
-            <Button
                 android:id="@+id/NDPresetBuilderButton"
                 style="@style/Widget.AppCompat.Button.Borderless"
                 android:layout_width="match_parent"

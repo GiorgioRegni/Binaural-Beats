@@ -26,15 +26,8 @@
     <string name="contact">Contact</string>
     <string name="blog">Blog</string>
     <string name="rate_on_market">Rate on market</string>
-    <string name="donate">Donate</string>
     <string name="preset_builder">Preset Builder</string>
     <string name="history">History</string>
-    <string name="donate_text">This application is free and will stay free.\n\n
-        Developing Binaural Beat Therapy,
-        researching and staying up to date on binaural beats and mind science takes time and a lot of efforts.\n\n
-        Donating will help me spend more time on Binaural Beat Therapy and continue delivering updates and answering requests!\n\n
-        Thanks for your help!\n
-        Giorgio Regni</string>
 
     <string name="voices">Voices</string>
     <string name="background">Background</string>
@@ -115,15 +108,6 @@
     <string name="tutorial_6_text">Please make sure you are in a safe &amp; relaxed environment.</string>
     <string name="tutorial_start">Start</string>
     <string name="like_facebook">Like on Facebook</string>
-    <string name="dialog_donate_thank">Thank you for your help, it\'s greatly appreciated.</string>
-    <string name="dialog_donation_title">Please pick a donation level</string>
-    <string name="don_10_level">Supporter</string>
-    <string name="don_50_level">Ambassador</string>
-    <string name="don_100_level">Spiritual Leader</string>
-    <string name="DONATION_USER_CANCELED">User canceled</string>
-    <string name="DONATION_ALREADY_OWNED">Already donated at that level, thank you!</string>
-    <string name="DONATION_OTHER_ERROR">Donation error, please try again later</string>
-    <string name="DONATION_CONNECTION_ERROR">Could\'t connect to Google Play Store</string>
 
     <string name="title_activity_history">History</string>
     <string name="program_name">Program Name : </string>

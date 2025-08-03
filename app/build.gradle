@@ -26,14 +26,14 @@ if (project.hasProperty("MyProject.properties")
 
 
 android {
-    compileSdkVersion 33
+    compileSdkVersion 35
     defaultConfig {
         applicationId "com.ihunda.android.binauralbeat"
         minSdkVersion 26
-        targetSdkVersion 33
+        targetSdkVersion 35
         multiDexEnabled true
-        versionCode 95
-        versionName "9.5"
+        versionCode 96
+        versionName "9.6"
     }
 
     buildTypes {

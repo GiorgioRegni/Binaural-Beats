@@ -28,17 +28,22 @@ import android.app.Dialog;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.ProgressDialog;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.IBinder;
+import android.os.Looper;
 import android.os.PowerManager;
 import android.os.SystemClock;
 import androidx.annotation.Nullable;
@@ -120,6 +125,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.ref.WeakReference;
 import java.lang.reflect.Type;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -280,6 +286,10 @@ public class BBeat extends AppCompatActivity {
     private long historyTotalTimeElapsed = 0;
     private String historyProgramName = "";
     private DrawerLayout drawerLayout;
+
+    private BBeatService.LocalBinder   beatSvc;   // will hold the binder
+    private boolean                    boundSvc = false;
+    private ServiceConnection connSvc;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -604,6 +614,8 @@ public class BBeat extends AppCompatActivity {
         }
 
         super.onStop();
+
+        if (boundSvc) { unbindService(connSvc); boundSvc = false; }
     }
 
     @Override
@@ -725,22 +737,12 @@ public class BBeat extends AppCompatActivity {
                 if (vizEnabled) {
                     mWl.acquire();
                 }
-
-                _start_notification(programFSM.getProgram().getName());
-                runComeBackAnimationOnView(mInProgram);
-                mVizHolder.setVisibility(View.VISIBLE);
-
-                glMode = programFSM.pR.doesUseGL();
-                if (glMode) {
-                    mVizV = new GLVizualizationView(getBaseContext());
-                } else {
-                    mVizV = new CanvasVizualizationView(getBaseContext());
-                }
-                mVizHolder.addView(mVizV);
-
-                // JENLA managed state of pause button mPlayPause.setChecked(true);
                 pause_time = -1;
 
+
+                //_start_notification(programFSM.getProgram().getName());
+                runComeBackAnimationOnView(mInProgram);
+                /* JENLA
                 try {
                     HistoryModel historyModel = new HistoryModel();
                     historyModel.setProgramName(historyProgramName);
@@ -751,6 +753,8 @@ public class BBeat extends AppCompatActivity {
                     e.printStackTrace();
                 }
                 historyTotalTimeElapsed = new Date().getTime();
+                */
+
                 break;
         }
         invalidateOptionsMenu(); // Force re-evaluation of option menu
@@ -776,7 +780,7 @@ public class BBeat extends AppCompatActivity {
         if (state == appState.INPROGRAM) {
             if (pause_time > 0) {
                 long delta = _getClock() - pause_time;
-                programFSM.catchUpAfterPause(delta);
+                beatSvc.catchUpAfterPause(delta);
                 pause_time = -1;
                 historyTotalTimeElapsed = new Date().getTime();
                 unmuteAll();
@@ -800,42 +804,9 @@ public class BBeat extends AppCompatActivity {
 
     private void setGraphicsEnabled(boolean on) {
         if (state == appState.INPROGRAM) {
-            if (vizEnabled && on == false) {
-                // Disable Viz
-                Period p = programFSM.getCurrentPeriod();
-                Visualization v;
-
-                if (((Object) mVizV).getClass() == GLVizualizationView.class) {
-                    v = new GLBlack();
-                } else {
-                    v = new Black();
-                }
-
-                ((VizualisationView) mVizV).stopVisualization();
-                ((VizualisationView) mVizV).startVisualization(v, p.getLength());
-                ((VizualisationView) mVizV).setFrequency(p.getVoices().get(0).freqStart);
-                vizEnabled = false;
-
-                if (mWl.isHeld()) {
-                    mWl.release();
-                }
-
-                ToastText(R.string.graphics_off);
-            } else if (!vizEnabled && on == true) {
-                // Enable viz
-                Period p = programFSM.getCurrentPeriod();
-                ((VizualisationView) mVizV).stopVisualization();
-                ((VizualisationView) mVizV).startVisualization(p.getV(), p.getLength());
-                ((VizualisationView) mVizV).setFrequency(p.getVoices().get(0).freqStart);
-                vizEnabled = true;
-
-                if (mWl.isHeld() == false) {
-                    mWl.acquire();
-                }
-
-                ToastText(R.string.graphics_on);
-            }
+            beatSvc.setGraphicsEnabled(on);
         }
+        vizEnabled = on;
         _save_config();
     }
 
@@ -1064,21 +1035,51 @@ public class BBeat extends AppCompatActivity {
 
         mToolbar.setTitle(p.getName());
 
-        programFSM = new RunProgram(p, mHandler);
+        //programFSM = new RunProgram(p, mHandler);
+
+        /* --- connection object ------------------------------------------------ */
+        connSvc = new ServiceConnection() {
+            @Override
+            public void onServiceConnected(ComponentName n, IBinder b) {
+                beatSvc = (BBeatService.LocalBinder) b;
+                boundSvc = true;
+
+                /* >>> Start the program now that we’re connected <<< */
+
+                beatSvc.startProgram(p /* Program */,
+                        BBeat.this       /* Activity instance */);
+            }
+
+            @Override
+            public void onServiceDisconnected(ComponentName n) {
+                boundSvc = false;
+                beatSvc = null;
+                connSvc = null;
+            }
+        };
+        Intent i = new Intent(this, BBeatService.class);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+                startForegroundService(i);   // make sure the service exists
+        else
+                startService(i);
+
+        bindService(i, connSvc, Context.BIND_AUTO_CREATE); // get the binder
+
         goToState(appState.INPROGRAM);
     }
 
     private void stopProgram() {
-        if (programFSM != null) {
-            programFSM.stopProgram();
-            programFSM = null;
+        if (beatSvc != null) {
+            beatSvc.stopProgram();
+            beatSvc = null;
         }
-        panic();
+        panic(); // stop all sound
 
         mToolbar.setTitle(getString(R.string.app_name));
 
-        goToState(appState.SETUP);
-
+        // Leave time for the services to stop
+        new Handler().postDelayed(() -> {goToState(appState.SETUP);}
+        , RunProgram.TIMER_FSM_DELAY*10);
     }
 
     int play(int soundID, float leftVolume, float rightVolume, int priority, int loop, float rate) {
@@ -1227,9 +1228,9 @@ public class BBeat extends AppCompatActivity {
         vp.stopVoices();
     }
 
-    class RunProgram implements Runnable {
+    public static class RunProgram implements Runnable {
 
-        private static final long TIMER_FSM_DELAY = 1000 / 20;
+        public static final long TIMER_FSM_DELAY = 1000 / 20;
 
         private static final int GRAPH_VOICE_VIEW_PAST = 60;
         private static final int GRAPH_VOICE_SPAN = 600;
@@ -1246,28 +1247,53 @@ public class BBeat extends AppCompatActivity {
         private String format_INFO_TIMING_MIN_SEC;
         private long oldDelta; // Utilized to reduce the amount of redraw for the program legend
         private eState s;
-        private Handler h;
+        private Handler srvH; // Handler for sound, timer and CPU task, no UI calls
+        private Handler uiH; // Handler for UI update tasks
         LineGraphView graphView;
-
+        private final WeakReference<BBeat> uiRef;  // weak ref
         private long _last_graph_update;
 
-        public RunProgram(Program pR, Handler h) {
+        /** Quick helper; returns null after the activity is destroyed. */
+        @Nullable
+        private BBeat ui() { return uiRef.get(); }
+
+        public RunProgram(Program pR, Handler srvH, Handler uiH, @Nullable BBeat ui) {
             this.pR = pR;
-            this.h = h;
+            this.srvH = srvH;
+            this.uiRef   = new WeakReference<>(ui);
+            this.uiH = uiH;
 
             programLength = pR.getLength();
-            sProgramLength = getString(R.string.time_format,
+            sProgramLength = ui().getString(R.string.time_format,
                     formatTimeNumberwithLeadingZero((int) programLength / 60),
                     formatTimeNumberwithLeadingZero((int) programLength % 60));
-            formatString = getString(R.string.info_timing);
-            format_INFO_TIMING_MIN_SEC = getString(R.string.time_format_min_sec);
+            formatString = ui().getString(R.string.info_timing);
+            format_INFO_TIMING_MIN_SEC = ui().getString(R.string.time_format_min_sec);
             startTime = _getClock();
             oldDelta = -1;
             _last_graph_update = 0;
 
             s = eState.START;
 
-            h.postDelayed(this, TIMER_FSM_DELAY);
+            uiH.post(new Runnable() {
+                @Override
+                public void run() {
+                    BBeat u = ui();
+                    if (u == null) return;
+
+                    u.mVizHolder.setVisibility(View.VISIBLE);
+
+                    boolean glMode = pR.doesUseGL();
+                    if (glMode) {
+                        u.mVizV = new GLVizualizationView(u.getBaseContext());
+                    } else {
+                        u.mVizV = new CanvasVizualizationView(u.getBaseContext());
+                    }
+                    u.mVizHolder.addView(u.mVizV);
+                }
+            });
+
+            srvH.postDelayed(this, TIMER_FSM_DELAY);
         }
 
         public Period getCurrentPeriod() {
@@ -1275,68 +1301,142 @@ public class BBeat extends AppCompatActivity {
         }
 
         public void stopProgram() {
-            stopAllVoices();
-            endPeriod();
-            h.removeCallbacks(this);
+            BBeat u = ui();
+            if (u != null) {
+                u.stopAllVoices();
+                u.stopBackgroundSample();
+            }
+
+            uiH = null;
+            srvH.removeCallbacks(this);
         }
 
         private void startPeriod(Period p) {
-            if (vizEnabled) {
-                ((VizualisationView) mVizV).startVisualization(p.getV(), p.getLength());
-            } else {
-                Visualization v;
-                if (((Object) mVizV).getClass() == GLVizualizationView.class) {
-                    v = new GLBlack();
-                } else {
-                    v = new Black();
-                }
-                ((VizualisationView) mVizV).startVisualization(v, p.getLength());
-            }
+            uiH.post(() -> {
+                BBeat u = ui();
+                if (u == null) return;
 
-            ((VizualisationView) mVizV).setFrequency(p.getVoices().get(0).freqStart);
-            playVoices(p.voices);
-            vp.setFade(FADE_MIN);
-            playBackgroundSample(p.background, p.getBackgroundvol());
+                if (u.vizEnabled) {
+                    ((VizualisationView) u.mVizV).startVisualization(p.getV(), p.getLength());
+                } else {
+                    Visualization v;
+                    if (((Object) u.mVizV).getClass() == GLVizualizationView.class) {
+                        v = new GLBlack();
+                    } else {
+                        v = new Black();
+                    }
+                    ((VizualisationView) u.mVizV).startVisualization(v, p.getLength());
+                }
+
+                ((VizualisationView) u.mVizV).setFrequency(p.getVoices().get(0).freqStart);
+            });
+            BBeat u = ui();
+            if (u != null) {
+                u.playVoices(p.voices);
+                u.vp.setFade(FADE_MIN);
+                u.playBackgroundSample(p.background, p.getBackgroundvol());
+            }
 
             Log.v(LOGBBEAT, String.format("New Period - duration %d", p.length));
         }
 
         private void inPeriod(long now, Period p, float pos) {
             long delta = (now - startTime) / 50; // Do not refresh too often
+            BBeat u = ui();
+            if (u == null) return;
 
-            float freq = skewVoices(p.voices, pos, p.length, oldDelta != delta);
+            float freq = u.skewVoices(p.voices, pos, p.length, oldDelta != delta);
 
-            ((VizualisationView) mVizV).setFrequency(freq);
-            ((VizualisationView) mVizV).setProgress(pos);
+            uiH.post(() -> {
+                try{
+                        ((VizualisationView) u.mVizV).setFrequency(freq);
+                        ((VizualisationView) u.mVizV).setProgress(pos);
+                        updatePeriodGraph((now - startTime) / 1000);
+                    }
+                catch (Exception e) {}
+            });
 
             if (oldDelta != delta) {
                 oldDelta = delta;
                 delta = delta / 20; // Down to seconds
-                mStatus.setText(String.format(formatString,
-                        freq,
-                        formatTimeNumberwithLeadingZero((int) delta / 60),
-                        formatTimeNumberwithLeadingZero((int) delta % 60)
-                        )
-                                +
-                                sProgramLength
-                );
 
-                updatePeriodGraph((now - startTime) / 1000);
+                long finalDelta = delta; // required to be passed as into the runnable below
+                uiH.post(() -> {
+                    u.mStatus.setText(String.format(formatString,
+                                    freq,
+                                    formatTimeNumberwithLeadingZero((int) finalDelta / 60),
+                                    formatTimeNumberwithLeadingZero((int) finalDelta % 60)
+                            )
+                                    +
+                                    sProgramLength
+                    );
+                });
             }
         }
 
         private void endPeriod() {
-            //stopAllVoices();
-            stopBackgroundSample();
-            ((VizualisationView) mVizV).stopVisualization();
+            BBeat u = ui();
+            if (u != null) {
+                u.stopAllVoices();
+                u.stopBackgroundSample();
+            }
+
+            uiH.post(() -> {
+                ((VizualisationView) u.mVizV).stopVisualization();
+            });
         }
 
         public void catchUpAfterPause(long delta) {
             cT += delta;
             startTime += delta;
         }
+        public void setGraphicsEnabled(boolean on) {
+            uiH.post(() -> {
+                BBeat u = ui();
+                if (u == null) return;
+
+                if (on == false) {
+                    // Disable Viz
+                    Period p = getCurrentPeriod();
+                    Visualization v;
+
+                    if (((Object) u.mVizV).getClass() == GLVizualizationView.class) {
+                        v = new GLBlack();
+                    } else {
+                        v = new Black();
+                    }
+
+                    ((VizualisationView) u.mVizV).stopVisualization();
+                    ((VizualisationView) u.mVizV).startVisualization(v, p.getLength());
+                    ((VizualisationView) u.mVizV).setFrequency(p.getVoices().get(0).freqStart);
+
+                    if (u.mWl.isHeld()) {
+                        u.mWl.release();
+                    }
+
+                    u.ToastText(R.string.graphics_off);
+                } else  {
+                    // Enable viz
+                    Period p = getCurrentPeriod();
+                    ((VizualisationView) u.mVizV).stopVisualization();
+                    ((VizualisationView) u.mVizV).startVisualization(p.getV(), p.getLength());
+                    ((VizualisationView) u.mVizV).setFrequency(p.getVoices().get(0).freqStart);
+
+                    if (u.mWl.isHeld() == false) {
+                        u.mWl.acquire();
+                    }
+
+                    u.ToastText(R.string.graphics_on);
+                }
+            });
+        }
 
         public void run() {
+            // Just a quick check if the service was stopped while the postdelayed was still in program
+            BBeat u = ui();
+            if (u == null) return;
+            if (u.beatSvc == null) return;
+
             long now = _getClock();
 
             switch (s) {
@@ -1344,12 +1444,14 @@ public class BBeat extends AppCompatActivity {
                     s = eState.RUNNING;
                     periodsIterator = pR.getPeriodsIterator();
                     cT = now;
-                    drawPeriodGraph();
+                    uiH.post(() -> {
+                                drawPeriodGraph();
+                            });
                     nextPeriod();
                     break;
 
                 case RUNNING:
-                    if (isPaused()) {
+                    if (u.isPaused()) {
                         break;
                     }
 
@@ -1376,11 +1478,11 @@ public class BBeat extends AppCompatActivity {
                     break;
 
                 case END:
-                    BBeat.this.stopProgram();
+                    u.stopProgram();
                     return;
             }
 
-            h.postDelayed(this, TIMER_FSM_DELAY);
+            srvH.postDelayed(this, TIMER_FSM_DELAY);
         }
 
         private void nextPeriod() {
@@ -1435,8 +1537,11 @@ public class BBeat extends AppCompatActivity {
 
             GraphViewSeries voiceSeries = new GraphViewSeries(data);
 
+            BBeat u = ui();
+            if (u == null) return;
+
             graphView = new LineGraphView(
-                    BBeat.this // context
+                    u // context
                     , "Beat frequency" // heading
             ) {
                 @Override
@@ -1464,8 +1569,8 @@ public class BBeat extends AppCompatActivity {
 
             graphView.setDrawBackground(false);
 
-            mGraphVoicesLayout.removeAllViews();
-            mGraphVoicesLayout.addView(graphView);
+            u.mGraphVoicesLayout.removeAllViews();
+            u.mGraphVoicesLayout.addView(graphView);
         }
     }
 
@@ -1515,7 +1620,7 @@ public class BBeat extends AppCompatActivity {
         return animation;
     }
 
-    private String formatTimeNumberwithLeadingZero(int t) {
+    private static String formatTimeNumberwithLeadingZero(int t) {
         if (t > 9) {
             return String.format("%2d", t);
         } else {
@@ -1712,7 +1817,7 @@ public class BBeat extends AppCompatActivity {
         }
     }
 
-    private long _getClock() {
+    private static long _getClock() {
         return SystemClock.elapsedRealtime();
     }
 
